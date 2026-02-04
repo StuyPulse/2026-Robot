@@ -27,9 +27,6 @@ public class IntakeSim extends Intake {
     private final Mechanism2d pivotCanvas;
     private final MechanismRoot2d pivotRoot;
     private final MechanismLigament2d ligament;
-    
-    //need to impl abstract methods
-    
 
     public IntakeSim() {
         //TODO: get actual gear ratio and apply it
@@ -86,5 +83,6 @@ public class IntakeSim extends Intake {
         ligament.setAngle(Math.toDegrees(intakeMotorSimulated.getAngularPositionRad()));
         
     }
+
     
 }

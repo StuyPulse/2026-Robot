@@ -10,9 +10,11 @@ public abstract class Intake extends SubsystemBase {
     private IntakeState state;
 
     static {
-        //if (Robot.isReal()) {
+        if (Robot.isReal()) {
             instance = new IntakeImpl();
-        //}
+        } else {
+            instance = new IntakeSim();
+        }
     }
 
     public static Intake getInstance() {

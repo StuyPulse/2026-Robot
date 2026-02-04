@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems.intake;
 
+import com.stuypulse.robot.Robot;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -8,22 +10,50 @@ public class Intake extends SubsystemBase {
     private IntakeState state;
 
     static {
-        instance = new IntakeImpl();
+        if (Robot.isReal()) {
+            instance = new IntakeImpl();
+        } else {
+            instance = new IntakeSim();
+        }
     }
 
     public static Intake getInstance() {
         return instance;
     }
 
-    public enum IntakeState {
-        STOW();
+    public enum IntakeState { 
+        INTAKE(new Rotation2d(), 1.0), // change later
+        OUTAKE(new Rotation2d(), -1.0),
+        STOW(new Rotation2d(), 0.0);
 
         private double targetDutyCycle;
         private Rotation2d targetAngle;
         
-        private IntakeState() {
 
+        private IntakeState(Rotation2d targetAngle, double targetDutyCycle) {
+            this.targetAngle = targetAngle;
+            this.targetDutyCycle = targetDutyCycle;
         }
+        
+        private Rotation2d getTargetAngle() {
+            return targetAngle;
+        }
+
+        private double getTargetDutyCycle() {
+            return targetDutyCycle;
+        }
+    }
+
+    public IntakeState getPivotState() {
+        return state;
+    }
+    
+    public void setPivotState(IntakeState)  {
+        this.state = state;
+    }
+
+    public Rotation2d getPivotAngle() {
+        return state.targetAngle;
     }
 
     @Override

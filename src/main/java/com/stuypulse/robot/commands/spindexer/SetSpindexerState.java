@@ -1,5 +1,8 @@
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+package com.stuypulse.robot.commands.spindexer;
+
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
+
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class SetSpindexerState extends InstantCommand {
     private final Spindexer spindexer;

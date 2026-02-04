@@ -4,13 +4,12 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class abstract Spindexer extends SubsystemBase {
+public class Spindexer extends SubsystemBase {
     private static final Spindexer instance;
     private SpindexerState spindexerState;
-    public double voltage;
+    private double voltage; 
 
     static {
         instance = new SpindexerImpl();
@@ -20,15 +19,15 @@ public class abstract Spindexer extends SubsystemBase {
         return instance;
     }
 
-    public enum SpindexerState {
+    public enum SpindexerState{
         STOP,
         DYNAMIC,
         FORWARD,
         REVERSE;
     }
 
-    public Spindexer{
-        spindexerState = 
+    public Spindexer() {
+        spindexerState = spindexerState.STOP;
     }
 
     public SpindexerState getSpindexerState() {
@@ -39,7 +38,7 @@ public class abstract Spindexer extends SubsystemBase {
         this.spindexerState = state;
     }
 
-    public double setTargetVolage(voltage) {
+    public void setTargetVoltage(double voltage) {
         this.voltage = voltage;
     }
 
@@ -47,16 +46,18 @@ public class abstract Spindexer extends SubsystemBase {
         return switch(getSpindexerState()) {
             case STOP -> 0;
             case DYNAMIC -> getVoltageBasedOnDistance();            
-            case FORWARD -> getForwardVoltage();
-            case REVERSE -> getReverseVoltage();
+            case FORWARD -> Settings.Spindexer.FORWARD_VOLTAGE;
+            case REVERSE -> Settings.Spindexer.REVERSE_VOLTAGE;
         };
     }
 
-    public abstract double getVoltageBasedOnDistance();
+    public double getVoltageBasedOnDistance(){
+        return 0;
+    }
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Spindexer/state", state.);
-
+        SmartDashboard.putString("Spindexer/State", getSpindexerState().toString());
+        
     }
 }

@@ -1,18 +1,21 @@
 package com.stuypulse.robot.subsystems.intake;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeImpl extends Intake {
     private final TalonFX pivot;
@@ -48,7 +51,7 @@ public class IntakeImpl extends Intake {
         return Rotation2d.fromRotations(pivot.getPosition().getValueAsDouble());
     }
 
-    @Override
+    
     public Rotation2d getCurrentAngleFromAbsoluteEncoder() {
         double angleRotations = absoluteEncoder.get() - Settings.Intake.ANGLE_OFFSET.getRotations();
         return Rotation2d.fromRotations(angleRotations > Settings.Intake.MAXIMUM_ANGLE.getRotations() + Units.degreesToRotations(10)

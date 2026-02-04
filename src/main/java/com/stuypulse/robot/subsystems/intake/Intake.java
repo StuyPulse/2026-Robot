@@ -10,9 +10,12 @@ public abstract class Intake extends SubsystemBase {
     private IntakeState state;
 
     static {
-        //if (Robot.isReal()) {
+        if (Robot.isReal()) {
             instance = new IntakeImpl();
-        //}
+        }
+        else {
+            instance = new IntakeSim();
+        }
     }
 
     public static Intake getInstance() {
@@ -20,9 +23,9 @@ public abstract class Intake extends SubsystemBase {
     }
 
     public enum IntakeState { 
-        INTAKE(new Rotation2d(), 1.0), // change later
-        OUTAKE(new Rotation2d(), -1.0),
-        STOW(new Rotation2d(), 0.0);
+        INTAKE(Rotation2d.k180deg, 1.0), // change later
+        OUTAKE(Rotation2d.k180deg, -1.0),
+        STOW(Rotation2d.kCCW_90deg, 0.0);
 
         private double targetDutyCycle;
         private Rotation2d targetAngle;
@@ -42,6 +45,10 @@ public abstract class Intake extends SubsystemBase {
         }
     }
 
+    public Intake() {
+        state = IntakeState.STOW;
+    }
+
     public IntakeState getIntakeState() {
         return state;
     }
@@ -53,8 +60,6 @@ public abstract class Intake extends SubsystemBase {
     public abstract boolean isAtTargetAngle();
 
     public abstract Rotation2d getCurrentAngle();
-
-    public abstract Rotation2d getCurrentAngleFromAbsoluteEncoder();
 
     @Override
     public void periodic() {

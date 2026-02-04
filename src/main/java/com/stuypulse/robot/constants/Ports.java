@@ -35,12 +35,13 @@ public interface Ports {
     }
 
     public interface Spindexer {
-        int SPINDEXER = 11;
+        int SPINDEXER_1 = 11;
+        int SPINDEXER_2 = 12;
     }
 
     public interface Turret {
-        int TURRET = 12;
-        int ENCODER_17 = 13;
-        int ENCODER_18 = 14;
+        int TURRET = 13;
+        int ENCODER_17 = 14;
+        int ENCODER_18 = 15;
     }
 }

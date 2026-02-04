@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class abstract Spindexer extends SubsystemBase {
+public abstract class Spindexer extends SubsystemBase {
     private static final Spindexer instance;
     private SpindexerState spindexerState;
     public double voltage;
@@ -25,10 +25,6 @@ public class abstract Spindexer extends SubsystemBase {
         DYNAMIC,
         FORWARD,
         REVERSE;
-    }
-
-    public Spindexer{
-        spindexerState = 
     }
 
     public SpindexerState getSpindexerState() {

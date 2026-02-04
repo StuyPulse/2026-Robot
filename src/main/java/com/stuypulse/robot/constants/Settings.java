@@ -50,8 +50,10 @@ public interface Settings {
     public interface Intake {
 
     }
-    public interface Spindexeer {
-
+    public interface Spindexer {
+        double STOP = 0.0;
+        double REVERSE_SPEED = -1.0;
+        double FORWARD_SPEED = 1.0;
     }
     public interface HoodedShooter {
 

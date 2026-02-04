@@ -1,6 +1,7 @@
+import com.stuypulse.robot.subsystems.spindexer.Spindexer.SpindexerState;
 
-public class SetSpindexerZero extends SetSpindexerState{
-    public SetSpindexerZero(Spindexer spindexer) {
-        super(spindexer, Spindexer.SpindexerState.ZERO);
+public class SetSpindexerStop extends SetSpindexerState{
+    public SetSpindexerStop() {
+        super(SpindexerState.STOP);
     }
 }

@@ -22,7 +22,7 @@ public class SpindexerImpl extends Spindexer {
     }
 
     public double getVoltageBasedOnDistance() {
-        return 2; //return distanceFromHub * some constant
+        return 2; //return distanceFromHub * dynamic
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SpindexerImpl extends Spindexer {
             follower.setVoltage(0);
         } else{
             leadMotor.setControl(new VoltageOut(getTargetVoltage()));
-            follower.setControl(new Follower(Ports.Spindexer.SPINDEXER_1, MotorAlignmentValue.Aligned)); //implement follower control later
+            follower.setControl(new Follower(Ports.Spindexer.SPINDEXER_1, MotorAlignmentValue.Aligned));
         }
         
     }

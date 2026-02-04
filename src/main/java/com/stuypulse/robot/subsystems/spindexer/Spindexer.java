@@ -19,7 +19,7 @@ public class Spindexer extends SubsystemBase {
         return instance;
     }
 
-    public enum SpindexerState{
+    public enum SpindexerState {
         STOP,
         DYNAMIC,
         FORWARD,
@@ -27,7 +27,7 @@ public class Spindexer extends SubsystemBase {
     }
 
     public Spindexer() {
-        spindexerState = spindexerState.STOP;
+        spindexerState = SpindexerState.STOP;
     }
 
     public SpindexerState getSpindexerState() {

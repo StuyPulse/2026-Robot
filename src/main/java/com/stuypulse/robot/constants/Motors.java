@@ -40,8 +40,29 @@ public interface Motors {
     }
 
     public interface Intake {
+        TalonFXConfig ROLLER_MASTER_CONFIG = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Coast)
+            .withInvertedValue(InvertedValue.Clockwise_Positive);   // TODO: change later
+                                                                    // TODO: Add Gear ratio
 
+        TalonFXConfig ROLLER_SLAVE_CONFIG = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Coast)
+            .withInvertedValue(InvertedValue.Clockwise_Positive);   // TODO: change later
+                                                                    // TODO: Add Gear ratio
+    
+        TalonFXConfig PIVOT_CONFIG = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Coast)
+            .withInvertedValue(InvertedValue.Clockwise_Positive)    // TODO: change later
+            .withPIDConstants(Gains.Intake.Pivot.kP, Gains.Intake.Pivot.kI, Gains.Intake.Pivot.kD, 0)
+            .withFFConstants(Gains.Intake.Pivot.kS, Gains.Intake.Pivot.kV, Gains.Intake.Pivot.kA, Gains.Intake.Pivot.kG, 0); // TODO: Add gear ratio
     }
+
     public interface Spindexeer {
 
     }

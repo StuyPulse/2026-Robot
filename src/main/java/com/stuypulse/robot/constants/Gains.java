@@ -51,6 +51,8 @@ public class Gains {
             double kS = 0.0;
             double kV = 0.2;
             double kA = 0.01;
+
+            double kG = 0.1967; // TODO: tune ts :wilt: 🥀
         }
     }
 

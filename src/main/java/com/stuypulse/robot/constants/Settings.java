@@ -48,7 +48,9 @@ public interface Settings {
     }
 
     public interface Intake {
-
+        public final double PIVOT_ANGLE_TOLERANCE = 0.1; // 5 deg
+        public final Rotation2d ANGLE_OFFSET = new Rotation2d(); // TODO: Add angle
+        public final Rotation2d MAXIMUM_ANGLE = new Rotation2d(); // TODO: Add angle
     }
     public interface Spindexeer {
 

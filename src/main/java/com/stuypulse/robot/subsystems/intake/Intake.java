@@ -5,7 +5,7 @@ import com.stuypulse.robot.Robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase {
+public abstract class Intake extends SubsystemBase {
     private static final Intake instance;
     private IntakeState state;
 
@@ -34,12 +34,12 @@ public class Intake extends SubsystemBase {
             this.targetAngle = targetAngle;
             this.targetDutyCycle = targetDutyCycle;
         }
-        
-        private Rotation2d getTargetAngle() {
+
+        public Rotation2d getTargetAngle() {
             return targetAngle;
         }
 
-        private double getTargetDutyCycle() {
+        public double getTargetDutyCycle() {
             return targetDutyCycle;
         }
     }
@@ -48,13 +48,15 @@ public class Intake extends SubsystemBase {
         return state;
     }
     
-    public void setPivotState(IntakeState)  {
+    public void setPivotState(IntakeState state)  {
         this.state = state;
     }
 
-    public Rotation2d getPivotAngle() {
-        return state.targetAngle;
-    }
+    public abstract boolean isAtTargetAngle();
+
+    public abstract Rotation2d getCurrentAngle();
+
+    public abstract Rotation2d getCurrentAngleFromAbsoluteEncoder();
 
     @Override
     public void periodic() {

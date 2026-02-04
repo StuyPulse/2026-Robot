@@ -30,8 +30,9 @@ public interface Ports {
 
     public interface Intake {
         int PIVOT = 8;
-        int ROLLER_LEADER = 9;
-        int ROLLER_FOLLOWER = 10;
+        int ROLLER_MASTER = 9;
+        int ROLLER_SLAVE = 10;
+        int ABSOLUTE_ENCODER = 11;
     }
 
     public interface Spindexer {

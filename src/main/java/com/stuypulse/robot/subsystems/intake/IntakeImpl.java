@@ -3,8 +3,6 @@ package com.stuypulse.robot.subsystems.intake;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
@@ -14,7 +12,6 @@ import com.stuypulse.robot.constants.Settings;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeImpl extends Intake {
@@ -36,14 +33,14 @@ public class IntakeImpl extends Intake {
         absoluteEncoder = new DutyCycleEncoder(Ports.Intake.ABSOLUTE_ENCODER);
         absoluteEncoder.setInverted(false);
 
-        pivot.setControl(new PositionVoltage(getIntakeState().getTargetAngle().getDegrees()));
+        pivot.setControl(new PositionVoltage(getIntakeState().getTargetAngle().get().getDegrees()));
         rollerMaster.setControl(new DutyCycleOut(getIntakeState().getTargetDutyCycle()));
         rollerSlave.setControl(new Follower(Ports.Intake.ROLLER_MASTER, MotorAlignmentValue.Opposed));
     }
 
     @Override
     public boolean isAtTargetAngle() {
-        return Math.abs(getCurrentAngle().getRadians() - getIntakeState().getTargetAngle().getRadians()) < Settings.Intake.PIVOT_ANGLE_TOLERANCE; 
+        return Math.abs(getCurrentAngle().getRadians() - getIntakeState().getTargetAngle().get().getRadians()) < Settings.Intake.PIVOT_ANGLE_TOLERANCE; 
     }
 
     @Override
@@ -53,8 +50,8 @@ public class IntakeImpl extends Intake {
 
     
     public Rotation2d getCurrentAngleFromAbsoluteEncoder() {
-        double angleRotations = absoluteEncoder.get() - Settings.Intake.ANGLE_OFFSET.getRotations();
-        return Rotation2d.fromRotations(angleRotations > Settings.Intake.MAXIMUM_ANGLE.getRotations() + Units.degreesToRotations(10)
+        double angleRotations = absoluteEncoder.get() - Settings.Intake.PIVOT_ANGLE_OFFSET.getRotations();
+        return Rotation2d.fromRotations(angleRotations > Settings.Intake.PIVOT_MAX_ANGLE.getRotations() + Units.degreesToRotations(10)
             ? angleRotations - 1
             : angleRotations);
     }

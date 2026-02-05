@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems.intake;
 
+import java.util.function.Supplier;
+
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
@@ -13,7 +15,10 @@ public abstract class Intake extends SubsystemBase {
     static {
         if (Robot.isReal()) {
             instance = new IntakeImpl();
-        //}
+        }
+        else {
+            instance = new IntakeSim();
+        }
     }
 
     public static Intake getInstance() {
@@ -21,20 +26,20 @@ public abstract class Intake extends SubsystemBase {
     }
 
     public enum IntakeState { 
-        INTAKE(new Rotation2d(), 1.0), // change later
-        OUTAKE(new Rotation2d(), -1.0),
-        STOW(new Rotation2d(), 0.0);
+        INTAKE(() -> Rotation2d.fromDegrees(Settings.Intake.PIVOT_INTAKE_OUTAKE_ANGLE.get()), 1.0), // change later
+        OUTAKE(() -> Rotation2d.fromDegrees(Settings.Intake.PIVOT_INTAKE_OUTAKE_ANGLE.get()), -1.0),
+        STOW(() -> Rotation2d.fromDegrees(Settings.Intake.PIVOT_STOW_ANGLE.get()), 0.0);
 
         private double targetDutyCycle;
-        private Rotation2d targetAngle;
+        private Supplier<Rotation2d> targetAngle;
         
 
-        private IntakeState(Rotation2d targetAngle, double targetDutyCycle) {
+        private IntakeState(Supplier<Rotation2d> targetAngle, double targetDutyCycle) {
             this.targetAngle = targetAngle;
             this.targetDutyCycle = targetDutyCycle;
         }
 
-        public Rotation2d getTargetAngle() {
+        public Supplier<Rotation2d> getTargetAngle() {
             return targetAngle;
         }
 
@@ -61,6 +66,6 @@ public abstract class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        
     }
 }

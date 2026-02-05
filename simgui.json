@@ -3,10 +3,11 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Autonomous": "String Chooser",
-      "/SmartDashboard/PIVOT SIM": "Mechanism2d"
+      "/SmartDashboard/PIVOT SIM": "Mechanism2d",
+      "/SmartDashboard/Pivot_Mechanism2d_SIM": "Mechanism2d"
     },
     "windows": {
-      "/SmartDashboard/PIVOT SIM": {
+      "/SmartDashboard/Pivot_Mechanism2d_SIM": {
         "window": {
           "visible": true
         }
@@ -17,6 +18,15 @@
     "transitory": {
       "SmartDashboard": {
         "INTAKE_SIMULATION": {
+          "open": true
+        },
+        "Intake": {
+          "Settings": {
+            "Pivot": {
+              "open": true
+            },
+            "open": true
+          },
           "open": true
         },
         "PIVOT SIM": {

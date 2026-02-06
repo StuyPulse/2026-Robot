@@ -17,6 +17,7 @@ public class ClimberHopperDefaultCommand extends Command {
     private final CommandSwerveDrivetrain swerve;
     private final Pigeon2 gyro;
     private Pose2d pose;
+    private boolean flag = false;
 
     public ClimberHopperDefaultCommand() {
         climberHopper = ClimberHopper.getInstance();
@@ -26,8 +27,6 @@ public class ClimberHopperDefaultCommand extends Command {
 
         
         addRequirements(climberHopper);
-
-        
     }
 
     @Override
@@ -36,16 +35,21 @@ public class ClimberHopperDefaultCommand extends Command {
         // double x = pose.getX() * Math.cos(pose.getRotation().getRadians());
         // double y = pose.getY() * Math.sin(pose.getRotation().getRadians());
 
-        boolean under = (Field.RightTrench.farEdge.getY() < pose.getY() && pose.getY() < Field.RightTrench.nearEdge.getY())
-            || (Field.LeftTrench.farEdge.getY() > pose.getY() && pose.getY() > Field.LeftTrench.nearEdge.getY())
-            && (Math.abs(pose.getY() - Field.RightTrench.farEdge.getY()) < Field.trenchYTolerance
-            || Math.abs(pose.getY() - Field.RightTrench.farEdge.getY()) < Field.trenchYTolerance);
+        boolean under = ((Field.NearRightTrench.rightEdge.getY() < pose.getY() && Field.NearRightTrench.leftEdge.getY() > pose.getY())
+                      || (Field.NearLeftTrench.rightEdge.getY() < pose.getY() && Field.NearLeftTrench.leftEdge.getY() > pose.getY()))
+                      && (Math.abs(pose.getX() - Field.NearRightTrench.rightEdge.getX()) < Field.trenchXTolerance
+                      || (Math.abs(pose.getX() - Field.FarRightTrench.rightEdge.getX())) < Field.trenchXTolerance);
         
-        // TO-DO FIX SOON
-        if (level && under && !climberHopper.getStalling()){ // shouldn't be stalling in hopper_up with 0 voltage
+        if (level && under && !climberHopper.getStalling() && !flag){ // shouldn't be stalling in hopper_up with 0 voltage
             climberHopper.setState(ClimberHopperState.HOPPER_DOWN);
         }   else { // if stalling after hopper down, set to hopper up
             climberHopper.setState(ClimberHopperState.HOPPER_UP);
+            flag = true; // prevent hopper from going back down while still under trench with too many balls
+        }
+
+        if (!under) {
+            // TODO: If we have LEDs, have them show the flag status.
+            flag = false;
         }
     }
 }

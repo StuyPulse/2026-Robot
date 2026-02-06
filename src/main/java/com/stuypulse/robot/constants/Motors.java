@@ -48,7 +48,9 @@ public interface Motors {
             .withCurrentLimitAmps(80)
             .withRampRate(0.25)
             .withNeutralMode(NeutralModeValue.Coast)
-            .withInvertedValue(InvertedValue.Clockwise_Positive);
+            .withInvertedValue(InvertedValue.Clockwise_Positive)
+            .withPIDConstants(Gains.Spindexer.kP,Gains.Spindexer.kI,Gains.Spindexer.kD,0)
+            .withFFConstants(Gains.Spindexer.kS,Gains.Spindexer.kV,Gains.Spindexer.kA,0);
     }
 
     public interface HoodedShooter {

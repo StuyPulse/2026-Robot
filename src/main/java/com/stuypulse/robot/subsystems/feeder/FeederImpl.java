@@ -37,7 +37,7 @@ public class FeederImpl extends Feeder {
    public void periodic(){
     super.periodic();
 
-    if(getTargetRPM() == 0){
+    if(getTargetRPM() == 0){ // change this if statement to get state instead
         leadMotor.setVoltage(0);
         followerMotor.setVoltage(0);
     }

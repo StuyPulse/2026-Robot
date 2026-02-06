@@ -10,7 +10,7 @@ public class SetFeederState extends InstantCommand{
     private FeederState state;
 
 
-    public SetFeederState(FeederState state){
+    public setFeederState(FeederState state){
         this.feeder = Feeder.getInstance();
         this.state = state;
         addRequirements(feeder);

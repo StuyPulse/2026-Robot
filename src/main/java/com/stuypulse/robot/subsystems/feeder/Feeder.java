@@ -27,18 +27,18 @@ public class Feeder extends SubsystemBase {
 
     public double getTargetRPM() {
         return switch (getFeederState()) {
-            case STOP -> 0;
+            case STOP -> 0.0;
             case FORWARD -> Settings.Feeder.FORWARD_RPM;
             case REVERSE -> Settings.Feeder.REVERSE_RPM;
             case STOW -> Settings.Feeder.STOW_RPM;
         };
     }
 
-        private double RPM;
+        // private double RPM;
 
-        private double targetRPM;
+        // private double targetRPM;
 
-        private FeederState feederstate;
+        // private FeederState feederstate;
 
         public FeederState getFeederState(){
             return state;
@@ -48,11 +48,11 @@ public class Feeder extends SubsystemBase {
             this.state = state;
         }
 
-        public void setTargetRPM(double targetRPM){
-            this.targetRPM = targetRPM;
-        }
+        // public void setTargetRPM(double targetRPM){
+        //     this.targetRPM = targetRPM;
+        // }
 
-        protected void Feeder() {
+        public Feeder() {
             state = FeederState.STOP;
         }
     

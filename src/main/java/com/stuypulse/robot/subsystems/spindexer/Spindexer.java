@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class Spindexer extends SubsystemBase {
     private static final Spindexer instance;
     private SpindexerState spindexerState;
-    private double rpm;
 
     static {
         instance = new SpindexerImpl();
@@ -35,10 +34,6 @@ public abstract class Spindexer extends SubsystemBase {
 
     public void setSpindexerState(SpindexerState state) {
         this.spindexerState = state;
-    }
-
-    public void setTargetRPM(double rpm) {
-        this.rpm = rpm;
     }
 
     public double getTargetRPM() {

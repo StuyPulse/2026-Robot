@@ -52,8 +52,10 @@ public interface Settings {
     }
     public interface Spindexer {
         double STOP = 0.0;
-        double REVERSE_RPM = -1.0;
-        double FORWARD_RPM= 1.0;
+        double REVERSE_RPM = -10000; //placeholder
+        double FORWARD_RPM= 10000; //placeholder
+        double SECONDS_IN_A_MINUTE = 60; // RAHUL DEB
+        double SPINDEXER_TOLERANCE = 0.03; //placeholder
     }
     public interface HoodedShooter {
 

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SpindexerInterpolation;
 
@@ -30,22 +31,26 @@ public class SpindexerImpl extends Spindexer {
      * @return RPM of the lead motor for the spindexer
      */
     public double getCurrentLeadMotorRPM() {
-        return leadMotor.getVelocity().getValueAsDouble() * 60;
+        return leadMotor.getVelocity().getValueAsDouble() * Settings.Spindexer.SECONDS_IN_A_MINUTE; 
     }
 
     /**
      * @return RPM of the follower motor for the spindexer
      */
     public double getCurrentFollowerMotorRPM() {
-        return follower.getVelocity().getValueAsDouble() * 60;
+        return follower.getVelocity().getValueAsDouble() * Settings.Spindexer.SECONDS_IN_A_MINUTE; 
     }
 
     @Override
     public double getRPMBasedOnDistance() {
-        Translation2d hub = Field.getHubCenterPose().getTranslation();
-        Translation2d rob = CommandSwerveDrivetrain.getInstance().getPose().getTranslation();
-        double distance = hub.getDistance(rob);
+        Translation2d hubPos = Field.getHubCenterPose().getTranslation();
+        Translation2d robotPos = CommandSwerveDrivetrain.getInstance().getPose().getTranslation();
+        double distance = hubPos.getDistance(robotPos);
         return SpindexerInterpolation.getRPM(distance);
+    }
+
+    public boolean atTargetRPM(){
+        return Math.abs(getCurrentLeadMotorRPM() - getTargetRPM()) < Settings.Spindexer.SPINDEXER_TOLERANCE * getTargetRPM();
     }
 
     @Override
@@ -63,5 +68,6 @@ public class SpindexerImpl extends Spindexer {
         SmartDashboard.putNumber("Spindexer/Lead Motor Speed", getCurrentLeadMotorRPM());
         SmartDashboard.putNumber("Spindexer/Follower Motor RPM", getCurrentFollowerMotorRPM());
         SmartDashboard.putNumber("Spindexer/Projected RPM Based on Distance", getRPMBasedOnDistance());
+        SmartDashboard.putBoolean("Spindexer/At Target RPM", atTargetRPM());
     }
 }

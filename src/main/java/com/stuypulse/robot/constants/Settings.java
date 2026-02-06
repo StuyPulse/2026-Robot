@@ -42,16 +42,16 @@ public interface Settings {
     public interface ClimberHopper {
         // TODO: GET THESE
         // Voltages
-        double CLIMBER_UP = 0.5;
-        double CLIMBER_DOWN = -0.5;
-        double HOPPER_DOWN = -0.5;
-        double HOPPER_UP = 0.5;
+        double CLIMBER_UP = 2;
+        double CLIMBER_DOWN = -3;
+        double HOPPER_DOWN = -3;
+        double HOPPER_UP = 2;
 
         double MASS_KG = 67;
         
         double STALL = 10;
-        double RETRACTED_UP = 0;
-        double RETRACTED_DOWN = -3;
+        double EXTENDED = 0;
+        double RETRACTED = -1;
 
         // TODO: get these limits
         double MIN_HEIGHT_METERS = 0;

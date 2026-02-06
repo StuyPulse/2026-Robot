@@ -20,7 +20,9 @@ public abstract class ClimberHopper extends SubsystemBase {
         CLIMBER_UP(Settings.ClimberHopper.CLIMBER_UP),
         CLIMBER_DOWN(Settings.ClimberHopper.CLIMBER_DOWN),
         HOPPER_UP(Settings.ClimberHopper.HOPPER_UP),
-        HOPPER_DOWN(Settings.ClimberHopper.HOPPER_DOWN);
+        HOPPER_DOWN(Settings.ClimberHopper.HOPPER_DOWN),
+        HOLDING_UP(Settings.ClimberHopper.EXTENDED),
+        HOLDING_DOWN(Settings.ClimberHopper.RETRACTED);
     
         private double targetVoltage;
         

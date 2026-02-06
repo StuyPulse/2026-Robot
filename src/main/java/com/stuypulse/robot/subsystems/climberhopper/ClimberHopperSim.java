@@ -33,17 +33,18 @@ public class ClimberHopperSim extends ClimberHopper {
     public void periodic() {
         super.periodic();
 
-        double voltage = getState().getTargetVoltage();
-        
         BStream stalling = BStream.create(() -> sim.getCurrentDrawAmps() > Settings.ClimberHopper.STALL)
             .filtered(new BDebounce.Both(Settings.ClimberHopper.DEBOUNCE));
 
         if ((getState() == ClimberHopperState.CLIMBER_UP || getState() == ClimberHopperState.HOPPER_UP) && stalling.getAsBoolean()) {
-            voltage = Settings.ClimberHopper.RETRACTED_UP;
+            setState(ClimberHopperState.HOLDING_UP);
         }
         else if ((getState() == ClimberHopperState.CLIMBER_DOWN || getState() == ClimberHopperState.HOPPER_DOWN) && stalling.getAsBoolean()) {
-            voltage = Settings.ClimberHopper.RETRACTED_DOWN;
+            
+            setState(ClimberHopperState.HOLDING_DOWN);
         }
+
+        double voltage = getState().getTargetVoltage();
 
         sim.setInputVoltage(voltage);
         SmartDashboard.putNumber("ClimberHopper/voltage", voltage);

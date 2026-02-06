@@ -29,18 +29,21 @@ public class ClimberHopperImpl extends ClimberHopper {
 
     @Override
     public void periodic() {
-        voltage = getState().getTargetVoltage();
-        
+                
         stalling = BStream.create(() -> motor.getSupplyCurrent().getValueAsDouble() > Settings.ClimberHopper.STALL)
             .filtered(new BDebounce.Both(Settings.ClimberHopper.DEBOUNCE));
 
-        if ((getState() == ClimberHopperState.CLIMBER_UP || getState() == ClimberHopperState.HOPPER_UP) && stalling.getAsBoolean()) {
-            voltage = Settings.ClimberHopper.RETRACTED_UP;
+        boolean isUp = (getState() == ClimberHopperState.CLIMBER_UP || getState() == ClimberHopperState.HOPPER_UP);
+        boolean isDown = (getState() == ClimberHopperState.CLIMBER_DOWN || getState() == ClimberHopperState.HOPPER_DOWN);
+
+        if (isUp && stalling.getAsBoolean()) {
+            setState(ClimberHopperState.HOLDING_UP);
         }
-        else if ((getState() == ClimberHopperState.CLIMBER_DOWN || getState() == ClimberHopperState.HOPPER_DOWN) && stalling.getAsBoolean()) {
-            voltage = Settings.ClimberHopper.RETRACTED_DOWN;
+        else if (isDown && stalling.getAsBoolean()) {
+            setState(ClimberHopperState.HOLDING_DOWN);
         }
         
+        voltage = getState().getTargetVoltage();
 
         motor.setVoltage(voltage);
         SmartDashboard.putNumber("ClimberHopper/voltage", voltage);

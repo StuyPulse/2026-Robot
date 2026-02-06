@@ -35,8 +35,8 @@ public interface Ports {
     }
 
     public interface Spindexer {
-        int SPINDEXER_1 = 11;
-        int SPINDEXER_2 = 12;
+        int SPINDEXER_LEAD_MOTOR = 11;
+        int SPINDEXER_FOLLOW_MOTOR = 12;
     }
 
     public interface Turret {

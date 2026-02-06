@@ -19,9 +19,8 @@ public class SpindexerImpl extends Spindexer {
     private final TalonFX follower;
 
     protected SpindexerImpl() {
-        super();
-        leadMotor = new TalonFX(Ports.Spindexer.SPINDEXER_1);
-        follower = new TalonFX(Ports.Spindexer.SPINDEXER_2);
+        leadMotor = new TalonFX(Ports.Spindexer.SPINDEXER_LEAD_MOTOR);
+        follower = new TalonFX(Ports.Spindexer.SPINDEXER_FOLLOW_MOTOR);
 
         Motors.Spindexer.MOTOR_CONFIG.configure(leadMotor);
         Motors.Spindexer.MOTOR_CONFIG.configure(follower);
@@ -53,27 +52,29 @@ public class SpindexerImpl extends Spindexer {
     }
 
     /**
-     * @return a boolean if lead motor is with a 3% tolerance of target RPM
+     * @return a boolean if lead motor is within tolerance range
      */
     public boolean atTargetRPM(){
-        return Math.abs(getCurrentLeadMotorRPM() - getTargetRPM()) < Settings.Spindexer.SPINDEXER_TOLERANCE * getTargetRPM();
+        return Math.abs(getCurrentLeadMotorRPM() - getTargetRPM()) <= Settings.Spindexer.SPINDEXER_TOLERANCE;
     }
 
     @Override
     public void periodic(){
         super.periodic();
 
-        if (getTargetRPM() == 0) {
+        if (getSpindexerState() == SpindexerState.STOP || !Settings.EnabledSubsystems.SPINDEXER.getAsBoolean()) {
             leadMotor.setVoltage(0);
             follower.setVoltage(0);
         } else {
             leadMotor.setControl(new VelocityVoltage(getTargetRPM()));
-            follower.setControl(new Follower(Ports.Spindexer.SPINDEXER_1, MotorAlignmentValue.Aligned));
+            follower.setControl(new Follower(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, MotorAlignmentValue.Aligned));
         }
         
-        SmartDashboard.putNumber("Spindexer/Lead Motor Speed", getCurrentLeadMotorRPM());
-        SmartDashboard.putNumber("Spindexer/Follower Motor RPM", getCurrentFollowerMotorRPM());
-        SmartDashboard.putNumber("Spindexer/Projected RPM Based on Distance", getRPMBasedOnDistance());
-        SmartDashboard.putBoolean("Spindexer/At Target RPM", atTargetRPM());
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Spindexer/Lead Motor Speed", getCurrentLeadMotorRPM());
+            SmartDashboard.putNumber("Spindexer/Follower Motor RPM", getCurrentFollowerMotorRPM());
+            SmartDashboard.putNumber("Spindexer/Projected RPM Based on Distance", getRPMBasedOnDistance());
+            SmartDashboard.putBoolean("Spindexer/At Target RPM", atTargetRPM());
+        }
     }
 }

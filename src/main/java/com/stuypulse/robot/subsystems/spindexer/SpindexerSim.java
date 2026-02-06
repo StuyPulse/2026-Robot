@@ -3,9 +3,10 @@ package com.stuypulse.robot.subsystems.spindexer;
 import com.stuypulse.robot.constants.Gains;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+
+// sim will be done one day
 
 public class SpindexerSim extends Spindexer {
     private final DCMotorSim leadMotor;
@@ -29,7 +30,7 @@ public class SpindexerSim extends Spindexer {
 
     @Override
     public double getTargetRPM() {
-
+        return 0;
     }
 
     @Override

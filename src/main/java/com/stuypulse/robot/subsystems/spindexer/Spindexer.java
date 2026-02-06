@@ -19,7 +19,7 @@ public abstract class Spindexer extends SubsystemBase {
 
     public enum SpindexerState {
         STOP,
-        DYNAMIC,
+        DYNAMIC, // Dynamically updates the RPM based on the robot's distance to hub
         FORWARD,
         REVERSE;
     }
@@ -39,7 +39,7 @@ public abstract class Spindexer extends SubsystemBase {
     public double getTargetRPM() {
         return switch (getSpindexerState()) {
             case STOP -> 0;
-            case DYNAMIC -> getRPMBasedOnDistance();
+            case DYNAMIC -> getRPMBasedOnDistance(); 
             case FORWARD -> Settings.Spindexer.FORWARD_RPM;
             case REVERSE -> Settings.Spindexer.REVERSE_RPM;
         };
@@ -49,7 +49,9 @@ public abstract class Spindexer extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Spindexer/State", getSpindexerState().toString());
-        SmartDashboard.putNumber("Spindexer/Target RPM", getTargetRPM());
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putString("Spindexer/State", getSpindexerState().toString());
+            SmartDashboard.putNumber("Spindexer/Target RPM", getTargetRPM());
+        }
     }
 }

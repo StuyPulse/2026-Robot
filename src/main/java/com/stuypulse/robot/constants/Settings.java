@@ -55,7 +55,7 @@ public interface Settings {
         double REVERSE_RPM = -10000; //placeholder
         double FORWARD_RPM= 10000; //placeholder
         double SECONDS_IN_A_MINUTE = 60; // RAHUL DEB
-        double SPINDEXER_TOLERANCE = 0.03; //placeholder
+        double SPINDEXER_TOLERANCE = 150.0; //placeholder
     }
     public interface HoodedShooter {
 

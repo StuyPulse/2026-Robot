@@ -1,6 +1,7 @@
 package com.stuypulse.robot.subsystems.feeder;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.feeder.Feeder.FeederState;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,44 +19,54 @@ public class Feeder extends SubsystemBase {
     }
 
     public enum FeederState {
-        // STOW(),
-        FOWARD(Settings.Feeder.FORWARD_SPEED),
-        REVERSE(Settings.Feeder.REVERSE_SPEED),
-        STOP(0);
-        
+        STOW(),
+        FORWARD(),
+        REVERSE(),
+        STOP();
+    }
 
-        private Number speed;
+    public double getTargetRPM() {
+        return switch (getFeederState()) {
+            case STOP -> 0;
+            case FORWARD -> Settings.Feeder.FORWARD_RPM;
+            case REVERSE -> Settings.Feeder.REVERSE_RPM;
+            case STOW -> Settings.Feeder.STOW_RPM;
+        };
+    }
 
-        private FeederState(Number speed){
-            this.speed = speed;
-        }
+        private double RPM;
 
-        public double getSpeed(){
-            return this.speed.doubleValue();
-        }
+        private double targetRPM;
 
-        private FeederState state;
+        private FeederState feederstate;
 
-        protected void Feeder(){
-            this.state = FeederState.STOP;
-        }
-
-        public FeederState getState(){
+        public FeederState getFeederState(){
             return state;
         }
 
-        public void setState(FeederState state){
+        public void setFeederState(FeederState state){
             this.state = state;
         }
-    }
+
+        public void setTargetRPM(double targetRPM){
+            this.targetRPM = targetRPM;
+        }
+
+        protected void Feeder() {
+            state = FeederState.STOP;
+        }
+    
     
 
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putString("Feeder/State", state.getState().toString());
-        SmartDashboard.putNumber("Feeder/Speed", state.getSpeed());
+        SmartDashboard.putString("Feeder/State", getFeederState().toString());
+        SmartDashboard.putNumber("Feeder/speed", getTargetRPM());
 
         
     }
+
+
+
 }

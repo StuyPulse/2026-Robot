@@ -53,13 +53,15 @@ public interface Settings {
         double EXTENDED = 0;
         double RETRACTED = -1;
 
+        double ROTATIONS_AT_BOTTOM = 0;
         // TODO: get these limits
         double MIN_HEIGHT_METERS = 0;
         double MAX_HEIGHT_METERS = 0;
 
         double DEBOUNCE = 0.25;
 
-        double TOLERANCE = 0;
+        double GYRO_TOLERANCE = 0;
+        double HEIGHT_TOLERANCE = 0;
 
         public interface Encoders {
             // TODO: get these

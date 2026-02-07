@@ -20,11 +20,16 @@ public class ClimberHopperImpl extends ClimberHopper {
         super();
         motor = new TalonFX(Ports.ClimberHopper.CLIMBER_HOPPER);
         Motors.ClimberHopper.climberHopperMotor.configure(motor);
+        motor.setPosition(0); // hopper all the way down according to le henry
     }
 
     @Override
     public boolean getStalling() {
         return stalling.getAsBoolean();
+    }
+
+    public double getPosition() { // TODO: convert motor encoder position to meters somehow
+        return this.motor.getPosition().getValueAsDouble();
     }
 
     @Override

@@ -51,6 +51,7 @@ public abstract class ClimberHopper extends SubsystemBase {
     }
 
     public abstract boolean getStalling();
+    public abstract double getPosition();
 
     @Override
     public void periodic() {

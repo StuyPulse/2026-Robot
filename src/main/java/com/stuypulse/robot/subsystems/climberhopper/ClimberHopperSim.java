@@ -25,8 +25,12 @@ public class ClimberHopperSim extends ClimberHopper {
     }
 
     // wrote ts so it would compile (ろく なな)
-    public Boolean getStalling() {
+    public boolean getStalling() {
         return sim.getCurrentDrawAmps() > Settings.ClimberHopper.STALL;
+    }
+
+    public double getPosition() {
+        return sim.getPositionMeters();
     }
 
     @Override

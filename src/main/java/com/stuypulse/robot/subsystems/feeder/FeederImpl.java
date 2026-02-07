@@ -1,7 +1,6 @@
 package com.stuypulse.robot.subsystems.feeder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -11,42 +10,50 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 
 public class FeederImpl extends Feeder {
-
     private final TalonFX leadMotor;
     private final TalonFX followerMotor;
 
-    protected FeederImpl() {
-        super();
-         leadMotor = new TalonFX(Ports.Feeder.FEEDER1);
-         Motors.Feeder.motorConfig.configure(leadMotor);
+    private final VelocityVoltage leadMotorController;
+    private final Follower follower;
 
-         followerMotor = new TalonFX(Ports.Feeder.FEEDER2);
-         Motors.Feeder.motorConfig.configure(followerMotor);
+    public FeederImpl() {
+        leadMotor = new TalonFX(Ports.Feeder.FEEDER_LEADER);
+        Motors.Feeder.motorConfig.configure(leadMotor);
 
+        followerMotor = new TalonFX(Ports.Feeder.FEEDER_FOLLOWER);
+        Motors.Feeder.motorConfig.configure(followerMotor);
+
+        leadMotorController = new VelocityVoltage(0.0);
+        follower = new Follower(Ports.Feeder.FEEDER_LEADER, MotorAlignmentValue.Aligned);
     }
+
+    /**
+     * @return lead motor RPM
+     */
     public double getCurrentLeadMotorRPM() {
-        return leadMotor.getVelocity().getValueAsDouble() * Settings.Feeder.SECONDS_IN_A_MINUTE; 
+        return leadMotor.getVelocity().getValueAsDouble() * Settings.Feeder.SECONDS_IN_A_MINUTE;
     }
 
+    /**
+     * @return follower motor RPM
+     */
     public double getCurrentFollowerMotorRPM() {
-        return followerMotor.getVelocity().getValueAsDouble() * Settings.Feeder.SECONDS_IN_A_MINUTE; 
+        return followerMotor.getVelocity().getValueAsDouble() * Settings.Feeder.SECONDS_IN_A_MINUTE;
     }
-    
 
-   @Override
-   public void periodic(){
-    super.periodic();
+    @Override
+    public void periodic() {
+        super.periodic();
 
-    if(getTargetRPM() == 0){ // change this if statement to get state instead
-        leadMotor.setVoltage(0);
-        followerMotor.setVoltage(0);
+        if (!Settings.EnabledSubsystems.FEEDER.get()) {
+            leadMotor.stopMotor();
+        } else {
+            leadMotor.setControl(leadMotorController.withVelocity(getTargetRPM() / Settings.Feeder.SECONDS_IN_A_MINUTE));
+        }
+
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Feeder/Lead Motor Speed", getCurrentLeadMotorRPM());
+            SmartDashboard.putNumber("Feeder/Follower Motor RPM", getCurrentFollowerMotorRPM());
+        }
     }
-    else{
-        leadMotor.setControl(new VelocityVoltage(getTargetRPM()));
-        followerMotor.setControl(new Follower(Ports.Feeder.FEEDER1,MotorAlignmentValue.Aligned));
-    }
-    
-    SmartDashboard.putNumber("Feeder/Lead Motor Speed", getCurrentLeadMotorRPM());
-    SmartDashboard.putNumber("Feeder/Follower Motor RPM", getCurrentFollowerMotorRPM());
-   }
 }

@@ -1,14 +1,11 @@
 package com.stuypulse.robot.subsystems.feeder;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.feeder.Feeder.FeederState;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
     private static final Feeder instance;
-    private FeederState state;
 
     static {
         instance = new FeederImpl();
@@ -19,51 +16,53 @@ public class Feeder extends SubsystemBase {
     }
 
     public enum FeederState {
-        STOW(),
-        FORWARD(),
-        REVERSE(),
-        STOP();
+        STOW(Settings.Feeder.STOW_RPM),
+        FORWARD(Settings.Feeder.FORWARD_RPM),
+        REVERSE(Settings.Feeder.REVERSE_RPM),
+        STOP(0.0);
+
+        private double targetRPM;
+
+        private FeederState(double targetRPM) {
+            this.targetRPM = targetRPM;
+        }
+
+        public double getTargetRPM() {
+            return this.targetRPM;
+        }
     }
 
+    private FeederState state;
+
+    public Feeder() {
+        state = FeederState.STOP;
+    }
+
+    /**
+     * @return target RPM based on current state 
+     */
     public double getTargetRPM() {
-        return switch (getFeederState()) {
-            case STOP -> 0.0;
-            case FORWARD -> Settings.Feeder.FORWARD_RPM;
-            case REVERSE -> Settings.Feeder.REVERSE_RPM;
-            case STOW -> Settings.Feeder.STOW_RPM;
-        };
+        return state.getTargetRPM();
     }
 
-        // private double RPM;
+    /**
+     * @return current feeder state
+     */
+    public FeederState getFeederState(){
+        return state;
+    }
 
-        // private double targetRPM;
-
-        // private FeederState feederstate;
-
-        public FeederState getFeederState(){
-            return state;
-        }
-
-        public void setFeederState(FeederState state){
-            this.state = state;
-        }
-
-        // public void setTargetRPM(double targetRPM){
-        //     this.targetRPM = targetRPM;
-        // }
-
-        public Feeder() {
-            state = FeederState.STOP;
-        }
-    
-    
+    /**
+     * @param state to set new feeder state
+     */
+    public void setFeederState(FeederState state){
+        this.state = state;
+    }
 
     @Override
     public void periodic() {
         super.periodic();
         SmartDashboard.putString("Feeder/State", getFeederState().toString());
-        SmartDashboard.putNumber("Feeder/speed", getTargetRPM());
-
-        
+        SmartDashboard.putNumber("Feeder/Speed", getTargetRPM());
     }
 }

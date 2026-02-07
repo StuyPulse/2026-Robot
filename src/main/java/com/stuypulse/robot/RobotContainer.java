@@ -6,6 +6,8 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.intake.IntakeIntake;
+import com.stuypulse.robot.commands.intake.IntakeStow;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.climber.Climber;
 import com.stuypulse.robot.subsystems.feeder.Feeder;
@@ -59,7 +61,10 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        driver.getBottomButton().onTrue(new IntakeIntake());
+        driver.getTopButton().onTrue(new IntakeStow());
+    }
 
     /**************/
     /*** AUTONS ***/

@@ -1,9 +1,5 @@
 package com.stuypulse.robot.subsystems.intake;
-//RENAME
-//SMART NUMBERS
-//ORGANIZATION
 
-import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.math.SLMath;
@@ -33,8 +29,8 @@ public class IntakeSim extends Intake {
         intakeSimMotor = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
                 DCMotor.getKrakenX60(1),
-                Constants.Intake.JKgMetersSquared,
-                Constants.Intake.GEAR_RATIO
+                Settings.Intake.JKgMetersSquared,
+                Settings.Intake.GEAR_RATIO
             ), 
             DCMotor.getKrakenX60(1));
 
@@ -63,7 +59,7 @@ public class IntakeSim extends Intake {
             Gains.Intake.Pivot.kG,
             Gains.Intake.Pivot.kV,
             Gains.Intake.Pivot.kA,
-            Constants.Intake.dT
+            Settings.Intake.dT
         );
 
         intakeSimMotor.setAngle(Math.toRadians(90));
@@ -94,12 +90,12 @@ public class IntakeSim extends Intake {
         
         double voltageInput = SLMath.clamp(
             pidOutput + ffOutput,
-            Constants.Intake.VOLTAGE_MIN,
-            Constants.Intake.VOLTAGE_MAX
+            Settings.Intake.VOLTAGE_MIN,
+            Settings.Intake.VOLTAGE_MAX
         );
     
         intakeSimMotor.setInputVoltage(voltageInput);
-        intakeSimMotor.update(Constants.Intake.dT);
+        intakeSimMotor.update(Settings.Intake.dT);
 
         pivotLigament.setAngle(getCurrentAngle().getDegrees());
 

@@ -47,15 +47,24 @@ public interface Settings {
 
     }
 
-    public interface Intake {
-        SmartNumber PIVOT_STOW_ANGLE = new SmartNumber("Intake/Settings/Pivot/Stow Angle (CHANGEABLE)", 90); 
-        SmartNumber PIVOT_INTAKE_OUTAKE_ANGLE = new SmartNumber("Intake/Settings/Pivot/Intake and Outake Angle (CHANGEABLE)", 180);
+    public interface Intake { // TODO: Get all values for this
+        SmartNumber PIVOT_STOW_ANGLE = new SmartNumber("Intake/Pivot/Stow Angle", 90); 
+        SmartNumber PIVOT_INTAKE_OUTAKE_ANGLE = new SmartNumber("Intake/Pivot/Intake and Outake Angle", 180);
 
         public final double PIVOT_ANGLE_TOLERANCE = 0.1; 
 
-        Rotation2d PIVOT_ANGLE_OFFSET = new Rotation2d(); //TODO: update
+        Rotation2d PIVOT_ANGLE_OFFSET = new Rotation2d();
         Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(190);
         Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(80);
+
+
+        double GEAR_RATIO = 48;
+        double JKgMetersSquared = 0.001;
+
+        double VOLTAGE_MAX = 12;
+        double VOLTAGE_MIN = -12;
+
+        double dT = 0.02;
     }
     public interface Spindexeer {
 

@@ -1,20 +1,20 @@
 package com.stuypulse.robot.subsystems.feeder;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class FeederImpl extends Feeder {
     private final TalonFX leadMotor;
     private final TalonFX followerMotor;
 
     private final VelocityVoltage leadMotorController;
-    private final Follower follower;
 
     public FeederImpl() {
         leadMotor = new TalonFX(Ports.Feeder.FEEDER_LEADER);
@@ -24,7 +24,7 @@ public class FeederImpl extends Feeder {
         Motors.Feeder.motorConfig.configure(followerMotor);
 
         leadMotorController = new VelocityVoltage(0.0);
-        follower = new Follower(Ports.Feeder.FEEDER_LEADER, MotorAlignmentValue.Aligned);
+        followerMotor.setControl(new Follower(Ports.Feeder.FEEDER_LEADER, MotorAlignmentValue.Aligned));
     }
 
     /**

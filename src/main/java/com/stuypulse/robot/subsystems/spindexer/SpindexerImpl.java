@@ -16,14 +16,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SpindexerImpl extends Spindexer {
     private final TalonFX leadMotor;
-    private final TalonFX follower;
+    private final TalonFX followerMotor;
+
+    private final Follower follower;
 
     public SpindexerImpl() {
         leadMotor = new TalonFX(Ports.Spindexer.SPINDEXER_LEAD_MOTOR);
-        follower = new TalonFX(Ports.Spindexer.SPINDEXER_FOLLOW_MOTOR);
+        followerMotor = new TalonFX(Ports.Spindexer.SPINDEXER_FOLLOW_MOTOR);
 
         Motors.Spindexer.MOTOR_CONFIG.configure(leadMotor);
-        Motors.Spindexer.MOTOR_CONFIG.configure(follower);
+        Motors.Spindexer.MOTOR_CONFIG.configure(followerMotor);
+
+        follower = new Follower(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, MotorAlignmentValue.Opposed);
     }
 
     /**
@@ -37,7 +41,7 @@ public class SpindexerImpl extends Spindexer {
      * @return RPM of the follower motor for the spindexer
      */
     public double getCurrentFollowerMotorRPM() {
-        return follower.getVelocity().getValueAsDouble() * Settings.Spindexer.SECONDS_IN_A_MINUTE; 
+        return followerMotor.getVelocity().getValueAsDouble() * Settings.Spindexer.SECONDS_IN_A_MINUTE; 
     }
 
     /**
@@ -62,18 +66,18 @@ public class SpindexerImpl extends Spindexer {
     public void periodic(){
         super.periodic();
 
-        if (getSpindexerState() == SpindexerState.STOP || !Settings.EnabledSubsystems.SPINDEXER.getAsBoolean()) {
-            leadMotor.setVoltage(0);
-            follower.setVoltage(0);
+        if (!Settings.EnabledSubsystems.SPINDEXER.getAsBoolean()) {
+            leadMotor.stopMotor();
         } else {
-            leadMotor.setControl(new VelocityVoltage(getTargetRPM()));
-            follower.setControl(new Follower(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, MotorAlignmentValue.Aligned));
+            leadMotor.setControl(new VelocityVoltage(getTargetRPM() * 60 ));
         }
+
+        followerMotor.setControl(follower);
         
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("Spindexer/Lead Motor Speed", getCurrentLeadMotorRPM());
             SmartDashboard.putNumber("Spindexer/Follower Motor RPM", getCurrentFollowerMotorRPM());
-            SmartDashboard.putNumber("Spindexer/Projected RPM Based on Distance", getRPMBasedOnDistance());
+            SmartDashboard.putNumber("Spindexer/Est. RPM Based on Distance", getRPMBasedOnDistance());
             SmartDashboard.putBoolean("Spindexer/At Target RPM", atTargetRPM());
         }
     }

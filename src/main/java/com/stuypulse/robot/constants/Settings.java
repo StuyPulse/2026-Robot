@@ -58,6 +58,8 @@ public interface Settings {
         Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(190);
         Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(80);
 
+        double ROLLER_MAX_VEL = 0.0;
+        double ROLLER_MAX_ACCEL = 0.0;
 
         double GEAR_RATIO = 48;
         double JKgMetersSquared = 0.001;

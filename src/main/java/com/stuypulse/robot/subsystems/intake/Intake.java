@@ -4,11 +4,14 @@ import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Intake extends SubsystemBase {
     private static final Intake instance;
     private IntakeState state;
+    protected TrapezoidProfile.State currentPivotState; 
+    protected TrapezoidProfile.State targetPivotState;
 
     static {
         if (Robot.isReal()) {
@@ -24,13 +27,14 @@ public abstract class Intake extends SubsystemBase {
     }
 
     public enum IntakeState { 
-        INTAKE(Settings.Intake.PIVOT_INTAKE_OUTAKE_ANGLE, 1.0), // change later
+        INTAKE(Settings.Intake.PIVOT_INTAKE_OUTAKE_ANGLE, 1.0),
         OUTAKE(Settings.Intake.PIVOT_INTAKE_OUTAKE_ANGLE, -1.0),
         STOW(Settings.Intake.PIVOT_STOW_ANGLE, 0.0);
 
         private double targetDutyCycle;
         private Rotation2d targetAngle;
-    
+
+
         private IntakeState(Rotation2d targetAngle, double targetDutyCycle) {
             this.targetAngle = targetAngle;
             this.targetDutyCycle = targetDutyCycle;
@@ -38,7 +42,7 @@ public abstract class Intake extends SubsystemBase {
 
         /**
          * Gets the Target Angle for the Pivot of the Current State of the Intake
-         * @return Rotation2d Target Angle
+         * @return Rotation2d: Target Angle
          */
         public Rotation2d getTargetAngle() {
             return targetAngle;
@@ -46,18 +50,24 @@ public abstract class Intake extends SubsystemBase {
 
         /**
          * Gets the Target Duty Cycle for the Rollers of the Current State of the Intake
-         * @return double Target Duty Cycle
+         * @return double: Target Duty Cycle
          */
         public double getTargetDutyCycle() {
             return targetDutyCycle;
         }
     }
 
+    /**
+     * Creates a new Intake object 
+     * @return Intake: New Intake Object
+     */
     public Intake() {
         state = IntakeState.STOW;
+        currentPivotState = new TrapezoidProfile.State(state.getTargetAngle().getRadians(), 0.0);
+        targetPivotState = new TrapezoidProfile.State(state.getTargetAngle().getRadians(), 0.0);
     }
-
-    /**
+ 
+    /** 
      * Gets the current IntakeState of the Intake
      * @return IntakeState: Current Intake State
      */
@@ -72,6 +82,7 @@ public abstract class Intake extends SubsystemBase {
      */
     public void setIntakeState(IntakeState state)  {
         this.state = state;
+        targetPivotState = new TrapezoidProfile.State(state.getTargetAngle().getRadians(), 0.0);
     }
 
     public abstract boolean isAtTargetAngle();

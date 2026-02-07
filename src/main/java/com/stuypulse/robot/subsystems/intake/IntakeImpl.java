@@ -13,6 +13,7 @@ import com.stuypulse.stuylib.streams.numbers.filters.MotionProfile;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,6 +22,14 @@ public class IntakeImpl extends Intake {
     private final TalonFX rollerLeader;
     private final TalonFX rollerFollower;
     private final DutyCycleEncoder absoluteEncoder;
+
+    private final DutyCycleOut rollerDutyCycleController;
+
+    private final DutyCycleOut pivotDutyCycleController;
+
+    private final PositionVoltage pivotPositionVoltageController;
+
+    private final Follower follower;
 
     public IntakeImpl() {
         pivot = new TalonFX(Ports.Intake.PIVOT);
@@ -31,8 +40,18 @@ public class IntakeImpl extends Intake {
 
         rollerFollower = new TalonFX(Ports.Intake.ROLLER_FOLLOWER);
         Motors.Intake.ROLLER_FOLLOWER_CONFIG.configure(rollerFollower);
+        
+        follower = new Follower(Ports.Intake.ROLLER_LEADER, MotorAlignmentValue.Opposed);
 
-        absoluteEncoder = new DutyCycleEncoder(Ports.Intake.ABSOLUTE_ENCODER, 1.00, Settings.Intake.PIVOT_ANGLE_OFFSET.getRotations()); // TODO: Set Full Range, Verify Expected_Zero wants a Rotation and not Degrees
+        absoluteEncoder = new DutyCycleEncoder(
+            Ports.Intake.ABSOLUTE_ENCODER, 
+            1.00, 
+            Settings.Intake.PIVOT_ANGLE_OFFSET.getRotations()
+            ); // TODO: Set Full Range, Verify Expected_Zero wants a Rotation and not Degrees
+
+        rollerDutyCycleController = new DutyCycleOut(0.0);
+        pivotDutyCycleController = new DutyCycleOut(0.0);
+        pivotPositionVoltageController = new PositionVoltage(0.0);
     }
 
     /**
@@ -61,52 +80,49 @@ public class IntakeImpl extends Intake {
         return Rotation2d.fromRotations(absoluteEncoder.get());
     }
 
-    /**
-     * Runs Motors based off Target Values of the Target State
-     */
-    private void runMotors() {
-        pivot.setControl(new PositionVoltage(getIntakeState().getTargetAngle().getDegrees())); // TODO: make this use the absolute encoder to ensure it works even when belt skip
-        rollerLeader.setControl(new DutyCycleOut(getIntakeState().getTargetDutyCycle()));
-        rollerFollower.setControl(new Follower(Ports.Intake.ROLLER_LEADER, MotorAlignmentValue.Opposed));
-    }
-
     @Override
     public void periodic() {
-        // ROLLER CONTROLS
-        if (Settings.EnabledSubsystems.INTAKE.getAsBoolean()) {
-            runMotors();
-        } else {
-            pivot.setControl(new DutyCycleOut(0));
-            rollerLeader.setControl(new DutyCycleOut(0));
-            rollerFollower.setControl(new DutyCycleOut(0));
-        }
+
+        currentPivotState.position = getCurrentAngle().getRadians();
+        currentPivotState.velocity = 0.0;
 
         TrapezoidProfile profile = new TrapezoidProfile(
             new Constraints(Settings.Intake.ROLLER_MAX_VEL, Settings.Intake.ROLLER_MAX_ACCEL)
         );
-        
-        // this is the next step in the profile
-        TrapezoidProfile.State nextShoulderState = shoulderProfile.calculate(
-            dt,
-            currentShoulderState, 
-            targetShoulderState
-        );
-        
-        TrapezoidProfile.State nextElbowState = elbowProfile.calculate(
-            dt,
-            currentElbowState,
-            targetElbowState
-        );
 
-        // DEBUG
-        if (Settings.DEBUG_MODE) { // TODO: Make some of these always shown (Not in debug mode)
+        // this is the next step in the profile
+        TrapezoidProfile.State nextPivot = profile.calculate(
+            Settings.Intake.dT,
+            currentPivotState, 
+            targetPivotState
+        );
+    
+        // ROLLER CONTROLS
+        if (Settings.EnabledSubsystems.INTAKE.getAsBoolean()) {
+            pivot.setControl(pivotPositionVoltageController.withPosition(nextPivot.position)); // TODO: make this use the absolute encoder to ensure it works even when belt skip
+            rollerLeader.setControl(rollerDutyCycleController.withOutput(getIntakeState().getTargetDutyCycle()));
+        } 
+        else 
+        {
+            pivot.setControl(pivotDutyCycleController.withOutput(0.0)); 
+            rollerLeader.setControl(rollerDutyCycleController.withOutput(0.0));
+        }
+        rollerFollower.setControl(follower);
+
+        // SMART DASHBOARD
+        SmartDashboard.putBoolean("Intake/Pivot/At Target Angle", isAtTargetAngle());
+
+        SmartDashboard.putNumber("Intake/Pivot/Current Angle (deg)", getCurrentAngle().getDegrees());
+        SmartDashboard.putNumber("Intake/Pivot/Target Angle (deg)", getIntakeState().getTargetAngle().getDegrees());
+
+        SmartDashboard.putNumber("Intake/Pivot/Angle Error (deg)", Math.abs(getIntakeState().getTargetAngle().getDegrees() - getCurrentAngle().getDegrees()));
+        
+        if (Settings.DEBUG_MODE) {
 
             // PIVOT
             SmartDashboard.putString("Intake/Pivot/Current State", getIntakeState().toString());
-            SmartDashboard.putBoolean("Intake/Pivot/At Target Angle", isAtTargetAngle());
             SmartDashboard.putNumber("Intake/Pivot/Current Velocity", pivot.getVelocity().getValueAsDouble());
-            SmartDashboard.putNumber("Intake/Pivot/Current Angle (Relative Encoder)", getRelativeAngle().getDegrees());
-            SmartDashboard.putNumber("Intake/Pivot/Current Angle (Absolute Encoder)", getCurrentAngle().getDegrees());
+            SmartDashboard.putNumber("Intake/Pivot/Current Angle (Relative Encoder, deg)", getRelativeAngle().getDegrees());
 
             // ROLLERS
             SmartDashboard.putNumber("Intake/Roller/Duty Cycle Target Speed", getIntakeState().getTargetDutyCycle());

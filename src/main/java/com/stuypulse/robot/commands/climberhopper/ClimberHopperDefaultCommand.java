@@ -9,6 +9,7 @@ import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
@@ -29,6 +30,8 @@ public class ClimberHopperDefaultCommand extends Command {
 
     @Override
     public void execute() {
+        pose = swerve.getPose();
+
         boolean isUp = climberHopper.getState() == ClimberHopperState.CLIMBER_UP || climberHopper.getState() == ClimberHopperState.HOPPER_UP;
         boolean isDown = climberHopper.getState() == ClimberHopperState.CLIMBER_DOWN || climberHopper.getState() == ClimberHopperState.HOPPER_DOWN;
 
@@ -68,5 +71,7 @@ public class ClimberHopperDefaultCommand extends Command {
             // TODO: If we have LEDs, have them show the flag status.
             flag = false;
         }
+
+        SmartDashboard.putBoolean("ClimberHopper/UnderTrench", isUnderTrench);
     }
 }

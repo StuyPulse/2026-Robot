@@ -1,9 +1,12 @@
 package com.stuypulse.robot.subsystems.spindexer;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public abstract class Spindexer extends SubsystemBase {
     private static final Spindexer instance;
@@ -45,7 +48,10 @@ public abstract class Spindexer extends SubsystemBase {
         };
     }
 
+    public abstract SysIdRoutine getSysIdRoutine();
     public abstract double getRPMBasedOnDistance(); // implement in SpindexerImpl
+    public abstract double getVoltageOverride();
+    public abstract void setVoltageOverride(Optional<Double> voltage);
 
     @Override
     public void periodic() {

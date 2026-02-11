@@ -21,13 +21,15 @@ import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class RobotContainer {
 
     // Gamepads
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
-    
+
     // Subsystem
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final Climber climber = Climber.getInstance();
@@ -53,13 +55,15 @@ public class RobotContainer {
     /*** DEFAULTS ***/
     /****************/
 
-    private void configureDefaultCommands() {}
+    private void configureDefaultCommands() {
+    }
 
     /***************/
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+    }
 
     /**************/
     /*** AUTONS ***/
@@ -69,6 +73,14 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
 
         SmartDashboard.putData("Autonomous", autonChooser);
+    }
+
+    public void configureSysids() {
+        SysIdRoutine spindexerSysId = spindexer.getSysIdRoutine();
+        autonChooser.addOption("SysID spindexer Dynamic Forward", spindexerSysId.dynamic(Direction.kForward));
+        autonChooser.addOption("SysID spindexer Dynamic Backwards", spindexerSysId.dynamic(Direction.kReverse));
+        autonChooser.addOption("SysID spindexer Quasi Forwards", spindexerSysId.quasistatic(Direction.kForward));
+        autonChooser.addOption("SysID spindexer Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
     }
 
     public Command getAutonomousCommand() {

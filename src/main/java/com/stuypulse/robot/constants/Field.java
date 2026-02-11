@@ -52,7 +52,7 @@ public interface Field {
         public static final Pose2d rightEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), Units.inchesToMeters(0), new Rotation2d());
     }
 
-    public static final double trenchXTolerance = Units.inchesToMeters(25);
+    public static final double trenchXTolerance = Units.inchesToMeters(50);
 
     // Alliance relative hub center coordinates
     public final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());

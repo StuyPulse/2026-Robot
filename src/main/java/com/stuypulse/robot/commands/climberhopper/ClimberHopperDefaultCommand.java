@@ -71,9 +71,12 @@ public class ClimberHopperDefaultCommand extends Command {
                 flag = true; // prevent hopper from going back down while still under trench with too many balls
             }
         } else { // If not under trench, set hopper up
-            if (!isExtended) {
+            if (climberHopper.getState() == ClimberHopperState.CLIMBER_DOWN || climberHopper.getState() == ClimberHopperState.HOLDING_DOWN) {
+                // We're climbing, do nothing
+            } else if (!isExtended) {
                 climberHopper.setState(ClimberHopperState.HOPPER_UP);
             } else if (climberHopper.getStalling()) {
+                // This is assuming HOLDING_UP will not cause stalling
                 climberHopper.setState(ClimberHopperState.HOLDING_UP);
             }
         }

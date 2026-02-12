@@ -31,9 +31,9 @@ public interface Settings {
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
         SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
         SmartBoolean CLIMBER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Superstructure Is Enabled", false);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
@@ -69,8 +69,12 @@ public interface Settings {
 
         double dT = 0.02;
     }
-    public interface Spindexeer {
-
+    public interface Spindexer {
+        double STOP = 0.0;
+        double REVERSE_RPM = -10000; //placeholder
+        double FORWARD_RPM= 10000; //placeholder
+        double SECONDS_IN_A_MINUTE = 60; // RAHUL DEB
+        double SPINDEXER_TOLERANCE = 150.0; //placeholder
     }
     public interface HoodedShooter {
 

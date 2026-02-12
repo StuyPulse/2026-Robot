@@ -62,12 +62,20 @@ public interface Motors {
             .withRemoteSensor(Ports.Intake.ABSOLUTE_ENCODER, FeedbackSensorSourceValue.RemoteCANcoder, 1.0); // TODO: Add gear ratio
     }
 
-    public interface Spindexeer {
-
+    public interface Spindexer {
+        TalonFXConfig MOTOR_CONFIG = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Coast)
+            .withInvertedValue(InvertedValue.Clockwise_Positive)
+            .withPIDConstants(Gains.Spindexer.kP,Gains.Spindexer.kI,Gains.Spindexer.kD,0)
+            .withFFConstants(Gains.Spindexer.kS,Gains.Spindexer.kV,Gains.Spindexer.kA,0);
     }
+
     public interface HoodedShooter {
 
     }
+    
     public interface Turret {
         
     }

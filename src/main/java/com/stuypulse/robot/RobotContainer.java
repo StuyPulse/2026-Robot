@@ -33,7 +33,7 @@ public class RobotContainer {
     // Gamepads
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
-    
+
     // Subsystem
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final Climber climber = Climber.getInstance();
@@ -90,7 +90,7 @@ public class RobotContainer {
         autonChooser.addOption("SysID Intake Pivot Quasi Forwards", intakePivotSysId.quasistatic(Direction.kForward));
         autonChooser.addOption("SysID Intake Pivot Quasi Backwards", intakePivotSysId.quasistatic(Direction.kReverse));
 
-        SysIdRoutine intakeRollerSysId = intake.getPivotSysIdRoutine();
+        SysIdRoutine intakeRollerSysId = intake.getRollerSysIdRoutine();
         autonChooser.addOption("SysID Intake Roller Dynamic Forward", intakeRollerSysId.dynamic(Direction.kForward));
         autonChooser.addOption("SysID Intake Roller Dynamic Backwards", intakeRollerSysId.dynamic(Direction.kReverse));
         autonChooser.addOption("SysID Intake Roller Quasi Forwards", intakeRollerSysId.quasistatic(Direction.kForward));

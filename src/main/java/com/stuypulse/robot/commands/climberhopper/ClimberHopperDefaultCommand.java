@@ -53,8 +53,8 @@ public class ClimberHopperDefaultCommand extends Command {
 
         boolean isExtended = Math.abs(Settings.ClimberHopper.MAX_HEIGHT_METERS - climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
 
-        // boolean stalledByBalls = climberHopper.getStalling() && !isRetracted;
-        boolean stalledByBalls = true;
+        boolean stalledByBalls = climberHopper.getStalling() && !isRetracted;
+        // boolean stalledByBalls = true;
 
         if (isUp && climberHopper.getStalling()) {
             climberHopper.setState(ClimberHopperState.HOLDING_UP);

@@ -51,7 +51,7 @@ public interface Settings {
         
         double STALL = 10;
         double EXTENDED = 0;
-        double RETRACTED = -1;
+        double RETRACTED = 0;
 
         double ROTATIONS_AT_BOTTOM = 0;
         // TODO: get these limits

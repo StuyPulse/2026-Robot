@@ -38,7 +38,9 @@ public interface Motors {
             .withNeutralMode(NeutralModeValue.Brake)
             .withCurrentLimitAmps(50)
             .withSupplyCurrentLimitAmps(50)
-            .withRampRate(Settings.ClimberHopper.RAMP_RATE);
+            .withRampRate(Settings.ClimberHopper.RAMP_RATE)
+            .withFFConstants(Gains.ClimberHopper.kS, Gains.ClimberHopper.kV, Gains.ClimberHopper.kA, 0)
+            .withPIDConstants(Gains.ClimberHopper.kP, Gains.ClimberHopper.kI, Gains.ClimberHopper.kD, 0);
     }
 
     public interface Feeder {

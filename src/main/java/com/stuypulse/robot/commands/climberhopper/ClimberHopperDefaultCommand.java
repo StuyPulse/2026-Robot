@@ -5,6 +5,7 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper.ClimberHopperState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -49,9 +50,9 @@ public class ClimberHopperDefaultCommand extends Command {
 
         boolean isDown = climberHopper.getState() == ClimberHopperState.CLIMBER_DOWN || climberHopper.getState() == ClimberHopperState.HOPPER_DOWN;
 
-        boolean isRetracted = Math.abs(climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
+        boolean isRetracted = Math.abs(climberHopper.getCurrentHeight()) < Settings.ClimberHopper.HEIGHT_TOLERANCE_METERS;
 
-        boolean isExtended = Math.abs(Settings.ClimberHopper.MAX_HEIGHT_METERS - climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
+        boolean isExtended = Math.abs(Constants.ClimberHopper.MAX_HEIGHT_METERS - climberHopper.getCurrentHeight()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
 
         boolean stalledByBalls = climberHopper.getStalling() && !isRetracted;
         // boolean stalledByBalls = true;
@@ -70,7 +71,7 @@ public class ClimberHopperDefaultCommand extends Command {
                     climberHopper.setState(ClimberHopperState.HOPPER_DOWN);
                 }
                 if (climberHopper.getStalling()) {
-                    climberHopper.setState(ClimberHopperState.HOLDING_DOWN);
+                    climberHopper.setState(ClimberHopperState.HOPPER_UP);
                 }
             } else {
                 if (climberHopper.getState() != ClimberHopperState.HOLDING_UP && climberHopper.getState() != ClimberHopperState.HOPPER_UP) {

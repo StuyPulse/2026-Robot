@@ -6,14 +6,22 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.feeder.SetFeederForward;
+import com.stuypulse.robot.commands.feeder.SetFeederStop;
 import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.intake.IntakeStow;
+import com.stuypulse.robot.commands.spindexer.SetSpindexerDynamic;
+import com.stuypulse.robot.commands.spindexer.SetSpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.climber.Climber;
 import com.stuypulse.robot.subsystems.feeder.Feeder;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
+import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -35,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+
 
 public class RobotContainer {
 
@@ -98,14 +107,14 @@ public class RobotContainer {
             .whileTrue(new TurretZero()
                 .alongWith(new HoodedShooterShoot())
                     .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
-                    .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
+                    .andThen(new SetFeederForward().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
                         .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
-                            .andThen(new SpindexerRun().onlyIf(() -> hoodedShooter.isShooterAtTolerance()))
+                            .andThen(new SetSpindexerDynamic().onlyIf(() -> hoodedShooter.isShooterAtTolerance()))
                     )
             )
-            .onFalse(new SpindexerStop()
+            .onFalse(new SetSpindexerStop()
                 // .alongWith(new HoodedShooterStow())
-                .alongWith(new FeederStop()));
+                .alongWith(new SetFeederStop()));
 
         driver.getBottomButton()
             .onTrue(new TurretShoot());
@@ -318,6 +327,29 @@ public class RobotContainer {
     }
 
     public void configureSysids() {
+
+        // autonChooser.addOption("SysID Module Translation Dynamic Forward", swerve.sysIdDynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse));
+
+        // autonChooser.addOption("SysID Module Rotation Dynamic Forwards", swerve.sysIdRotDynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Rotation Dynamic Backwards", swerve.sysIdRotDynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Module Rotation Quasi Forwards", swerve.sysIdRotQuasi(Direction.kForward));
+        // autonChooser.addOption("SysID Module Rotation Quasi Backwards", swerve.sysIdRotQuasi(Direction.kReverse));
+
+        // SysIdRoutine shooterSysId = shooter.getShooterSysIdRoutine();
+        // autonChooser.addOption("SysID Shooter Dynamic Forward", shooterSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Shooter Dynamic Backwards", shooterSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Shooter Quasi Forwards", shooterSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Shooter Quasi Backwards", shooterSysId.quasistatic(Direction.kReverse));
+
+        // SysIdRoutine hoodSysId = hood.getHoodSysIdRoutine();
+        // autonChooser.addOption("SysID Hood Dynamic Forward", hoodSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Hood Dynamic Backwards", hoodSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Hood Quasi Forwards", hoodSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Hood Quasi Backwards", hoodSysId.quasistatic(Direction.kReverse));
+
         SysIdRoutine intakePivotSysId = intake.getPivotSysIdRoutine();
         autonChooser.addOption("SysID Intake Pivot Dynamic Forward", intakePivotSysId.dynamic(Direction.kForward));
         autonChooser.addOption("SysID Intake Pivot Dynamic Backwards", intakePivotSysId.dynamic(Direction.kReverse));

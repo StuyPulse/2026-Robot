@@ -28,10 +28,16 @@ public interface Ports {
     }
 
     public interface HoodedShooter {
-        int HOOD = 5;
+        // all these ports are copied from alphabot
+        public interface Hood {
+            int MOTOR = 25;
+            int THROUGHBORE_ENCODER = 37;
+        }
 
-        int SHOOTER_LEADER = 6;
-        int SHOOTER_FOLLOWER = 7;
+        public interface Shooter {
+            int MOTOR_LEAD = 17;
+            int MOTOR_FOLLOW = 14;
+        }
     }
 
     public interface Intake {
@@ -47,6 +53,7 @@ public interface Ports {
     }
 
     public interface Turret {
+        // from alphabot
         int MOTOR = 50;
         int ENCODER17T = 38;
         int ENCODER18T = 21;

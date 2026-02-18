@@ -21,25 +21,27 @@ public class Gains {
     }
 
     public interface HoodedShooter {
-        public interface Hood {
-            double kP = 1.0;
-            double kI = 0.0;
-            double kD = 0.20;
-
-            double kS = 0.1;
-            double kV = 0.2;
-            double kA = 0.01;
-        }
-
+        // from alphabot
         public interface Shooter {
-            double kP = 1.0;
+            double kP = 5.0;
             double kI = 0.0;
-            double kD = 0.20;
+            double kD = 0.0;
 
-            double kS = 0.1;
-            double kV = 0.2;
-            double kA = 0.01;
+            double kS = 0.0;
+            double kV = 0.18976 * 0.67;
+            double kA = 0.52537;
         }
+
+        public interface Hood {
+            double kP = 300.0; //50.0; //110.0;
+            double kI = 0.0;
+            double kD = 0.0;
+
+            double kS = 0.0;
+            double kV = 0.0;
+            double kA = 0.0;
+        }
+        
     }
 
     public interface Intake {

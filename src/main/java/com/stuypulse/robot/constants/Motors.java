@@ -1,9 +1,12 @@
-/************************ PROJECT 2026 ************************/
-/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved.*/
-/* This work is licensed under the terms of the MIT license.  */
-/**************************************************************/
-
+/************************ PROJECT TRIBECBOT *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.constants;
+
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
@@ -82,7 +85,44 @@ public interface Motors {
     }
 
     public interface HoodedShooter {
+        public interface Shooter {
+            TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
+                    .withSupplyCurrentLimitAmps(100.0)
+                    .withCurrentLimitAmps(100.0)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Coast)
+                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI,
+                            Gains.HoodedShooter.Shooter.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
+                            Gains.HoodedShooter.Shooter.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO)
+                    .withLowerLimitSupplyCurrent(80.0);
+        }
 
+        public interface Hood {
+            TalonFXConfig HOOD_CONFIG = new TalonFXConfig()
+                    .withCurrentLimitAmps(80)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Brake)
+                    .withInvertedValue(InvertedValue.Clockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI,
+                            Gains.HoodedShooter.Hood.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Hood.kS, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+                    
+            SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitEnable(true)
+                .withForwardSoftLimitThreshold(Constants.HoodedShooter.Hood.MAX_ANGLE.getRotations())
+                .withReverseSoftLimitThreshold(Constants.HoodedShooter.Hood.MIN_ANGLE.getRotations());
+
+            CANcoderConfiguration HOOD_ENCODER = new CANcoderConfiguration()
+                .withMagnetSensor(new MagnetSensorConfigs()
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+                        .withAbsoluteSensorDiscontinuityPoint(1)
+                        .withMagnetOffset(Constants.HoodedShooter.Hood.ENCODER_OFFSET.getRotations()));
+        }
     }
     
     public interface Turret {
@@ -250,6 +290,15 @@ public interface Motors {
         public TalonFXConfig withSupplyCurrentLimitAmps(double currentLimitAmps) {
             currentLimitsConfigs.SupplyCurrentLimit = currentLimitAmps;
             currentLimitsConfigs.SupplyCurrentLimitEnable = true;
+
+            configuration.withCurrentLimits(currentLimitsConfigs);
+
+            return this;
+        }
+
+        public TalonFXConfig withLowerLimitSupplyCurrent(double currentLowerLimitAmps) {
+            currentLimitsConfigs.SupplyCurrentLowerLimit= currentLowerLimitAmps;
+            currentLimitsConfigs.StatorCurrentLimitEnable = true;
 
             configuration.withCurrentLimits(currentLimitsConfigs);
 

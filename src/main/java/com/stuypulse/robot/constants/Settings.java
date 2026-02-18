@@ -80,8 +80,45 @@ public interface Settings {
         double SECONDS_IN_A_MINUTE = 60; // RAHUL DEB
         double SPINDEXER_TOLERANCE = 150.0; //placeholder
     }
+    
     public interface HoodedShooter {
 
+        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3400.0);
+        SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
+
+        double SHOOTER_TOLERANCE_RPM = 25.0;
+        double HOOD_TOLERANCE_DEG = 5.0;
+
+        public interface AngleInterpolation {
+            double[][] distanceAngleInterpolationValues = {
+                // values calculated with kinematics and RPM = 3000. TODO: tuning
+                {1.0, Units.degreesToRadians(61.329899416056854)}, // meters, radians
+                {1.5, Units.degreesToRadians(50.64110128774519)},
+                {2.0, Units.degreesToRadians(42.43985862934761)}, 
+                {2.5, Units.degreesToRadians(36.18629462556821)},
+                {3.0, Units.degreesToRadians(31.36657857810849)},
+                {3.5, Units.degreesToRadians(27.587819826188184)},
+                {4.0, Units.degreesToRadians(24.570004144436282)},
+                {4.5, Units.degreesToRadians(22.116965225162573)},
+                {5.0, Units.degreesToRadians(20.090654257188444)}
+            };
+        }
+
+        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
+
+        public interface ShooterRPMS {
+            public final double REVERSE = -0.0;
+            public final double HUB_RPM = 0.0; 
+            public final double LEFT_CORNER_RPM = 0.0; // TBD
+            public final double RIGHT_CORNER_RPM = 0.0; // TBD
+            public final double STOW = 0.0; // TBD
+        }
+
+        public interface ShooterRPMDistances {
+            public final double RPM1Distance = 0.0;
+            public final double RPM2Distance = 0.0;
+            public final double RPM3Distance = 0.0;
+        }
     }
     
     public interface Turret {
@@ -177,6 +214,9 @@ public interface Settings {
     }
 
     public interface Driver {
+        double BUZZ_TIME = 1.0;
+        double BUZZ_INTENSITY = 1.0;
+
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
 

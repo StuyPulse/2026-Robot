@@ -48,6 +48,10 @@ public class FeederImpl extends Feeder {
                 getInstance());
     }
 
+    public double getFeederRPM(){
+        return getCurrentLeadMotorRPM();
+    }
+
     /**
      * @return lead motor RPM
      */

@@ -33,7 +33,6 @@ public class IntakeImpl extends Intake {
     private final Follower follower;
 
     private Optional<Double> pivotVoltageOverride;
-    private Optional<Double> rollerVoltageOverride;
 
     public IntakeImpl() {
         pivot = new TalonFX(Ports.Intake.PIVOT);
@@ -58,7 +57,6 @@ public class IntakeImpl extends Intake {
         pivotPositionVoltageController = new PositionVoltage(0.0);
 
         pivotVoltageOverride = Optional.empty();
-        rollerVoltageOverride = Optional.empty();
     }
 
     @Override
@@ -71,19 +69,6 @@ public class IntakeImpl extends Intake {
                 () -> getCurrentAngle().getRotations(),
                 () -> pivot.getVelocity().getValueAsDouble(),
                 () -> pivot.getMotorVoltage().getValueAsDouble(),
-                getInstance());
-    }
-
-    @Override
-    public SysIdRoutine getRollerSysIdRoutine() {
-        return SysId.getRoutine(
-                2, // rampRate
-                6, // stepRate
-                "Intake Roller",
-                voltage -> setPivotVoltageOverride(Optional.of(voltage)),
-                () -> getCurrentAngle().getRotations(),
-                () -> rollerLeader.getVelocity().getValueAsDouble(),
-                () -> rollerLeader.getMotorVoltage().getValueAsDouble(),
                 getInstance());
     }
 
@@ -126,28 +111,8 @@ public class IntakeImpl extends Intake {
      *                set to thhe passed in voltage
      */
     @Override
-    public void setRollerVoltageOverride(Optional<Double> voltage) {
-        this.rollerVoltageOverride = voltage;
-    }
-
-    /**
-     * @param voltage as an Optional<Double> to handle the case of null values;
-     *                in the case that voltage is not null, voltageOverride will be
-     *                set to thhe passed in voltage
-     */
-    @Override
     public void setPivotVoltageOverride(Optional<Double> voltage) {
         this.pivotVoltageOverride = voltage;
-    }
-
-    /**
-     * @return the voltage override if it is present; otherwise, return 0
-     */
-    public double getRollerVoltageOverride() {
-        if (rollerVoltageOverride.isPresent())
-            return rollerVoltageOverride.get();
-        else
-            return 0;
     }
 
     /**
@@ -176,12 +141,8 @@ public class IntakeImpl extends Intake {
 
         // ROLLER CONTROLS
         if (Settings.EnabledSubsystems.INTAKE.get()) {
-            if (rollerVoltageOverride.isPresent() || pivotVoltageOverride.isPresent()) {
-                if (rollerVoltageOverride.isPresent()) {
-                    rollerLeader.setVoltage(rollerVoltageOverride.get());
-                } else {
-                    pivot.setVoltage(pivotVoltageOverride.get());
-                }
+            if (pivotVoltageOverride.isPresent()) {
+                pivot.setVoltage(pivotVoltageOverride.get());
             } else {
                 pivot.setControl(pivotPositionVoltageController.withPosition(nextPivot.position));
                 rollerLeader.setControl(rollerDutyCycleController.withOutput(getIntakeState().getTargetDutyCycle()));
@@ -204,7 +165,6 @@ public class IntakeImpl extends Intake {
         if (Settings.DEBUG_MODE) {
 
             // PIVOT
-            SmartDashboard.putString("Intake/Pivot/Current State", getIntakeState().toString());
             SmartDashboard.putNumber("Intake/Pivot/Current Velocity", pivot.getVelocity().getValueAsDouble());
             SmartDashboard.putNumber("Intake/Pivot/Current Angle (Relative Encoder, deg)",
                     getRelativeAngle().getDegrees());

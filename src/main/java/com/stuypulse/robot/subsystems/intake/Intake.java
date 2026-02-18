@@ -2,11 +2,11 @@ package com.stuypulse.robot.subsystems.intake;
 
 import java.util.Optional;
 
-import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -17,11 +17,7 @@ public abstract class Intake extends SubsystemBase {
     protected TrapezoidProfile.State targetPivotState;
 
     static {
-        if (Robot.isReal()) {
-            instance = new IntakeImpl();
-        } else {
-            instance = new IntakeSim();
-        }
+        instance = new IntakeImpl();
     }
 
     public static Intake getInstance() {
@@ -94,15 +90,12 @@ public abstract class Intake extends SubsystemBase {
     public abstract boolean isAtTargetAngle();
     public abstract Rotation2d getCurrentAngle();
     public abstract SysIdRoutine getPivotSysIdRoutine();
-    public abstract SysIdRoutine getRollerSysIdRoutine();
-    public abstract void setRollerVoltageOverride(Optional<Double> voltage);
     public abstract void setPivotVoltageOverride(Optional<Double> voltage);
     
     @Override
     public void periodic() {
         if (Settings.DEBUG_MODE) {
-            IntakeVisualizer.getInstance().updateIntakeStuff(getCurrentAngle(), getIntakeState().getTargetDutyCycle(),
-                    isAtTargetAngle());
+            SmartDashboard.putString("Intake/Pivot/Current State", getIntakeState().toString());
         }
     }
 

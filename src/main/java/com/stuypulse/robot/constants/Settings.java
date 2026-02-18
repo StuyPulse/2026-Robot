@@ -49,6 +49,7 @@ public interface Settings {
         double REVERSE_RPM = -1.0;
         double STOW_RPM = 0.0;
         double SECONDS_IN_A_MINUTE = 60;
+        double RPM_TOLERANCE = 0;
 
     }
 

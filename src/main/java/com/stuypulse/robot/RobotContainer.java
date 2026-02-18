@@ -118,6 +118,198 @@ public class RobotContainer {
         driver.getLeftButton()
             .whileTrue(new HoodedShooterShoot())
             .onFalse(new HoodedShooterFerry());
+
+        // driver.getDPadRight()
+        //     .whileTrue(
+        //         new SwerveXMode().alongWith(
+        //             new HoodedShooterShoot().alongWith(
+        //                 new TurretShoot()).alongWith(
+        //                     new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+        //                     new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+        //                     new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+        //                         new SpindexerRun().alongWith(new FeederFeed()))))
+        //     .onFalse(
+        //         new HoodedShooterStow().alongWith(
+        //         new TurretHoodAlignToTarget().alongWith(
+        //         new SpindexerRun().alongWith(
+        //         new FeederStop())))
+        //     );
+
+        // driver.getDPadDown()
+        //     .onTrue(new HoodedShooterShoot())
+        //     .onFalse(new HoodedShooterStow());
+
+        // driver.getDPadUp()
+        //     .onTrue(new HoodedShooterFerry())
+        //     .onFalse(new HoodedShooterStow());
+
+        // driver.getDPadUp().whileTrue(new HoodedShooterShoot()
+        //     .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
+        //     .andThen(new FeederFeed())))
+        // .onFalse(new HoodedShooterStow()
+        //     .alongWith(new FeederStop()));
+
+//-------------------------------------------------------------------------------------------------------------------------\\
+//-------------------------------------------------------------------------------------------------------------------------\\
+//-------------------------------------------------------------------------------------------------------------------------\\
+//-------------------------------------------------------------------------------------------------------------------------\\
+//-------------------------------------------------------------------------------------------------------------------------\\
+
+        /**
+        // Climb Align
+        driver.getTopButton()
+            .whileTrue(SwerveClimbAlign());
+
+        // Left Corner Shoot
+        driver.getLeftButton()
+            .whileTrue(
+                new SwerveXMode().alongWith(
+                    new HoodedShooterLeftCorner().alongWith(
+                        new TurretLeftCorner()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new FeederFeed()))))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop())))
+            );
+
+        // Right Corner Shoot
+        driver.getRightButton()
+            .whileTrue(
+                new SwerveXMode().alongWith(
+                    new HoodedShooterRightCorner().alongWith(
+                        new TurretRightCorner()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new FeederFeed()))))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop())))
+            );
+
+        // Hub Shoot
+        driver.getBottomButton()
+            .whileTrue(
+                new SwerveXMode().alongWith(
+                    new HoodedShooterHub().alongWith(
+                        new TurretHub()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new FeederFeed()))))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop())))
+            );
+
+        // Intake On
+        driver.getLeftTriggerButton()
+            .onTrue(new IntakeIntake());
+
+        // Intake Off
+        driver.getRightTriggerButton()
+            .onTrue(new IntakeStop());
+
+        // Climb Down Placeholder
+        driver.getLeftBumper()
+            .onTrue(new BuzzController(driver));
+
+        // Climb Up Placeholder
+        driver.getRightBumper()
+            .onTrue(new BuzzController(driver));
+
+        // Reset Heading
+        driver.getDPadUp()
+            .onTrue(new SwerveResetHeading());
+
+        // Ferry In Place
+        driver.getDPadLeft()
+            .whileTrue(
+                new SwerveXMode().alongWith(
+                    new HoodedShooterFerry().alongWith(
+                        new TurretFerry()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new FeederFeed()))))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop())))
+            );
+
+        // Score In Place
+        driver.getDPadRight()
+            .whileTrue(
+                new SwerveXMode().alongWith(
+                    new HoodedShooterShoot().alongWith(
+                        new TurretShoot()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new FeederFeed()))))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop())))
+            );
+
+        // Unjam
+        driver.getDPadDown()
+            .whileTrue(
+                new HoodedShooterReverse().alongWith(
+                    new FeederReverse().alongWith(
+                        new IntakeOutake())))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop().alongWith(
+                new IntakeStop()))))
+            );
+
+        driver.getLeftMenuButton()
+            .onTrue(
+                new HoodedShooterFerry().alongWith(
+                        new TurretFerry()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new FeederFeed())))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop())))
+            );
+
+        driver.getRightMenuButton()
+            .onTrue(
+                new HoodedShooterFerry().alongWith(
+                        new TurretFerry()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new FeederFeed())))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+               new TurretHoodAlignToTarget().alongWith(
+                new SpindexerRun().alongWith(
+                new FeederStop())))
+            );
+
+        **/
     }
 
     /**************/

@@ -10,6 +10,7 @@ import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -27,8 +28,8 @@ public class SpindexerImpl extends Spindexer {
         leadMotor = new TalonFX(Ports.Spindexer.SPINDEXER_LEAD_MOTOR);
         followerMotor = new TalonFX(Ports.Spindexer.SPINDEXER_FOLLOW_MOTOR);
 
-        Motors.Spindexer.MOTOR_CONFIG.configure(leadMotor);
-        Motors.Spindexer.MOTOR_CONFIG.configure(followerMotor);
+        Motors.Spindexer.SPINDEXER.configure(leadMotor);
+        Motors.Spindexer.SPINDEXER.configure(followerMotor);
 
         follower = new Follower(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, MotorAlignmentValue.Opposed);
 
@@ -38,32 +39,27 @@ public class SpindexerImpl extends Spindexer {
     }
 
     public double getCurrentLeadMotorRPM() {
-        return leadMotor.getVelocity().getValueAsDouble() * Settings.Spindexer.SECONDS_IN_A_MINUTE;
+        return leadMotor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE;
     }
 
     public double getCurrentFollowerMotorRPM() {
-        return followerMotor.getVelocity().getValueAsDouble() * Settings.Spindexer.SECONDS_IN_A_MINUTE;
+        return followerMotor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE;
     }
 
     public boolean atTolerance() {
-        return Math.abs(getCurrentLeadMotorRPM() - getTargetRPM()) <= Settings.Spindexer.SPINDEXER_TOLERANCE;
+        return Math.abs(getCurrentLeadMotorRPM() - getTargetRPM()) <= Settings.Spindexer.RPM_TOLERANCE;
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        if (Settings.EnabledSubsystems.SPINDEXER.get()) {
+        if (EnabledSubsystems.SPINDEXER.get()) {
             if (voltageOverride.isPresent()){
                 leadMotor.setVoltage(voltageOverride.get());
                 followerMotor.setControl(follower);
             } else {
-                if (getState() == SpindexerState.STOP){
-                    leadMotor.stopMotor();
-                    followerMotor.stopMotor();
-                } else {
-                    leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.Spindexer.SECONDS_IN_A_MINUTE));
+                    leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
                     followerMotor.setControl(follower);
-                }
             }
         }
 

@@ -19,6 +19,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 
 import java.util.Optional;
 
@@ -107,7 +108,7 @@ public class TurretSim extends Turret {
         controller.correct(VecBuilder.fill(sim.getOutput(0), sim.getOutput(1)));
         controller.predict(Settings.DT);
 
-        if (Settings.EnabledSubsystems.TURRET.get()) {
+        if (EnabledSubsystems.TURRET.get()) {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
             } else {

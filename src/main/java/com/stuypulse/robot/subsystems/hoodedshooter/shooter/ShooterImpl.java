@@ -5,20 +5,18 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.hoodedshooter.shooter;
 
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
 
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.Optional;
 
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -34,16 +32,16 @@ public class ShooterImpl extends Shooter {
     private Optional<Double> voltageOverride;
 
     public ShooterImpl() {
+        shooterLeader = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_LEAD);
+        shooterFollower = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_FOLLOW);
 
         shooterController = new VelocityVoltage(getTargetRPM() / 60.0);
         follower = new Follower(Ports.HoodedShooter.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed);
 
-        shooterLeader = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_LEAD);
-        shooterFollower = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_FOLLOW);
-        shooterFollower.setControl(follower);
+        Motors.HoodedShooter.Shooter.SHOOTER.configure(shooterLeader);
+        Motors.HoodedShooter.Shooter.SHOOTER.configure(shooterFollower);
 
-        Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterLeader);
-        Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterFollower);
+        shooterFollower.setControl(follower);
 
         voltageOverride = Optional.empty();
     }

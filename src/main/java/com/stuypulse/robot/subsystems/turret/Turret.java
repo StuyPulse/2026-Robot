@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 
 public abstract class Turret extends SubsystemBase {
     private static final Turret instance;
@@ -119,7 +120,7 @@ public abstract class Turret extends SubsystemBase {
         turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 
         if (Settings.DEBUG_MODE) {
-            if (Settings.EnabledSubsystems.TURRET.get()) {
+            if (EnabledSubsystems.TURRET.get()) {
                 TurretVisualizer.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
             }
             else {

@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
@@ -253,7 +253,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void setControl(SwerveRequest request) {
-        if (Settings.EnabledSubsystems.SWERVE.get()) {
+        if (EnabledSubsystems.SWERVE.get()) {
             super.setControl(request);
         }
         else {

@@ -20,13 +20,13 @@ public interface Constants {
             public final Rotation2d LEFT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
             public final Rotation2d RIGHT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
 
-            public final Rotation2d ENCODER_OFFSET = Rotation2d.fromDegrees(20.0 * 10.0);//(0.332);//(0.325);
+            public final Rotation2d ENCODER_OFFSET = Rotation2d.fromDegrees(20.0 * 10.0);
         }
         public interface Shooter {
             public final double GEAR_RATIO = 1.0;
         }
     }
-    
+
     public interface Align {
         int MAX_ITERATIONS = 5;
         double TIME_TOLERANCE = 0.01;
@@ -37,9 +37,9 @@ public interface Constants {
     }
 
     public interface Turret {
-        double RANGE = 180.0; // 420.0;
+        double RANGE = 210.0;
         Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(-2.50), Units.inchesToMeters(11.19), Rotation2d.kZero);
-        double TURRET_HEIGHT = Units.inchesToMeters(10.984); // TODO: get value
+        double TURRET_HEIGHT = Units.inchesToMeters(10.984);
         public interface Encoder18t {
             public final int TEETH = 18;
             public final Rotation2d OFFSET = new Rotation2d();

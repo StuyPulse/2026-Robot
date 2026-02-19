@@ -35,8 +35,8 @@ public abstract class Spindexer extends SubsystemBase {
         return switch (getState()) {
             case STOP -> 0;
             case DYNAMIC -> getRPMBasedOnDistance(); 
-            case FORWARD -> Settings.Spindexer.FORWARD_RPM;
-            case REVERSE -> Settings.Spindexer.REVERSE_RPM;
+            case FORWARD -> Settings.Spindexer.FORWARD_SPEED;
+            case REVERSE -> Settings.Spindexer.REVERSE_SPEED;
         };
     }
 

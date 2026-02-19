@@ -7,7 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,15 +20,15 @@ public class HandoffImpl extends Handoff {
     private Optional<Double> voltageOverride;
 
     public HandoffImpl() {
-        motor = new TalonFX(Ports.Feeder.FEEDER_LEADER);
-        Motors.Feeder.motorConfig.configure(motor);
+        motor = new TalonFX(Ports.Handoff.HANDOFF);
+        Motors.Handoff.HANDOFF.configure(motor);
 
-        controller = new VelocityVoltage(getTargetRPM() / 60.0);
+        controller = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE);
         voltageOverride = Optional.empty();
     }
 
     public double getCurrentRPM() {
-        return motor.getVelocity().getValueAsDouble() * Settings.Feeder.SECONDS_IN_A_MINUTE;
+        return motor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class HandoffImpl extends Handoff {
     public void periodic() {
         super.periodic();
 
-        if (EnabledSubsystems.FEEDER.get()) {
+        if (EnabledSubsystems.HANDOFF.get()) {
             if (getState() == HandoffState.STOP) {
                 motor.stopMotor();
             } else if (voltageOverride.isPresent()) {
@@ -62,7 +62,7 @@ public class HandoffImpl extends Handoff {
         return SysId.getRoutine(
                 2,
                 8,
-                "Feeder",
+                "Handoff",
                 voltage -> setVoltageOverride(Optional.of(voltage)),
                 () -> motor.getPosition().getValueAsDouble(),
                 () -> motor.getVelocity().getValueAsDouble(),

@@ -25,20 +25,9 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Settings {
     double DT = 0.020;
+    double SECONDS_IN_A_MINUTE = 60.0;
     boolean DEBUG_MODE = true;
     CANBus CANIVORE = new CANBus("canivore", "./logs/example.hoot");
-
-    public interface EnabledSubsystems {
-        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
-        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
-        SmartBoolean CLIMBER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Superstructure Is Enabled", false);
-        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
-    }
 
     public interface ClimberHopper {
         // TODO: GET THESE
@@ -82,8 +71,8 @@ public interface Settings {
         double HANDOFF_STOP = 0.0;
         double HANDOFF_MAX = 4800.0;
         double HANDOFF_REVERSE = -500.0;
-        double RPM_TOLERANCE = 500.0;
-        public final SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/RPM override", HANDOFF_MAX);
+        double RPM_TOLERANCE = 200.0;
+        public final SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/RPM Override", HANDOFF_MAX);
     }
 
     public interface Intake { // TODO: Get all values for this
@@ -96,23 +85,22 @@ public interface Settings {
         Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(190);
         Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(80);
 
-        double ROLLER_MAX_VEL = 0.0;
-        double ROLLER_MAX_ACCEL = 0.0;
+        Rotation2d PIVOT_MAX_VEL = Rotation2d.fromDegrees(300.0);
+        Rotation2d PIVOT_MAX_ACCEL = Rotation2d.fromDegrees(300.0);
 
         double GEAR_RATIO = 48;
         double JKgMetersSquared = 0.001;
 
         double VOLTAGE_MAX = 12;
         double VOLTAGE_MIN = -12;
-
-        double dT = 0.02;
     }
+
     public interface Spindexer {
-        double STOP = 0.0;
-        double REVERSE_RPM = -10000; //placeholder
-        double FORWARD_RPM= 10000; //placeholder
-        double SECONDS_IN_A_MINUTE = 60; // RAHUL DEB
-        double SPINDEXER_TOLERANCE = 150.0; //placeholder
+        double FORWARD_SPEED = 6000.0;
+        double REVERSE_SPEED = -6000.0;
+        double STOP_SPEED = 0.0;
+
+        double RPM_TOLERANCE = 400.0;
     }
     
     public interface HoodedShooter {

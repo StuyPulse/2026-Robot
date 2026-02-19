@@ -7,7 +7,6 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-//import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
 import com.stuypulse.robot.constants.Motors;
 
 
@@ -19,7 +18,7 @@ public class ClimberHopperImpl extends ClimberHopper {
     public ClimberHopperImpl() {
         super();
         motor = new TalonFX(Ports.ClimberHopper.CLIMBER_HOPPER);
-        Motors.ClimberHopper.climberHopperMotor.configure(motor);
+        Motors.ClimberHopper.MOTOR.configure(motor);
         motor.setPosition(0); // hopper all the way down according to le henry
         stalling = BStream.create(() -> motor.getStatorCurrent().getValueAsDouble() > Settings.ClimberHopper.STALL)
             .filtered(new BDebounce.Both(Settings.ClimberHopper.DEBOUNCE));

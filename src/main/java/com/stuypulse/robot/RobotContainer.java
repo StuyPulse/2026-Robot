@@ -20,7 +20,6 @@ import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.intake.IntakeOutake;
 import com.stuypulse.robot.commands.intake.IntakeStop;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
-import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveClimbAlign;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
@@ -28,9 +27,7 @@ import com.stuypulse.robot.commands.swerve.SwerveXMode;
 import com.stuypulse.robot.commands.turret.TurretFerry;
 import com.stuypulse.robot.commands.turret.TurretLeftCorner;
 import com.stuypulse.robot.commands.turret.TurretRightCorner;
-import com.stuypulse.robot.commands.turret.TurretSeed;
 import com.stuypulse.robot.commands.turret.TurretShoot;
-import com.stuypulse.robot.commands.turret.TurretZero;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
@@ -43,6 +40,7 @@ import com.stuypulse.robot.subsystems.turret.Turret;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +51,17 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 
 public class RobotContainer {
+    public interface EnabledSubsystems {
+        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean HANDOFF = new SmartBoolean("Enabled Subsystems/Handoff Is Enabled", false);
+        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
+        SmartBoolean CLIMBER_HOPPER = new SmartBoolean("Enabled Subsystems/Climber-Hopper Is Enabled", false);
+        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
+        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", false);
+        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
+    }
 
     // Gamepads
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
@@ -86,7 +95,6 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        //hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
     }
 
     /***************/
@@ -94,21 +102,20 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        // driver.getDPadRight()
-        //     .whileTrue(
-        //         new SwerveXMode().alongWith(
-        //             new HoodedShooterShoot().alongWith(
-        //                 new TurretShoot()).alongWith(
-        //                     new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-        //                     new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-        //                     new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-        //                         new SpindexerRun().alongWith(new FeederFeed()))))
-        //     .onFalse(
-        //         new HoodedShooterStow().alongWith(
-        //         new TurretHoodAlignToTarget().alongWith(
-        //         new SpindexerRun().alongWith(
-        //         new FeederStop())))
-        //     );
+        driver.getDPadRight()
+            .whileTrue(
+                new SwerveXMode().alongWith(
+                    new HoodedShooterShoot().alongWith(
+                        new TurretShoot()).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+                                new SpindexerRun().alongWith(new HandoffRun()))))
+            .onFalse(
+                new HoodedShooterStow().alongWith(
+                new SpindexerRun().alongWith(
+                new HandoffStop()))
+            );
 
         // driver.getDPadDown()
         //     .onTrue(new HoodedShooterShoot())

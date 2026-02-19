@@ -10,6 +10,7 @@ import com.stuypulse.robot.util.SysId;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -31,9 +32,9 @@ public class TurretImpl extends Turret {
         encoder17t = new CANcoder(Ports.Turret.ENCODER17T, Ports.bus);
         encoder18t = new CANcoder(Ports.Turret.ENCODER18T, Ports.bus);
 
-        Motors.Turret.turretMotor.configure(motor);
-        encoder17t.getConfigurator().apply(Motors.Turret.turretEncoder17t);
-        encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
+        Motors.Turret.TURRET.configure(motor);
+        encoder17t.getConfigurator().apply(Motors.Turret.ENCODER_17T);
+        encoder18t.getConfigurator().apply(Motors.Turret.ENCODER_18T);
 
         // motor.getConfigurator().apply(Motors.Turret.turretSoftwareLimitSwitchConfigs);
 
@@ -120,7 +121,7 @@ public class TurretImpl extends Turret {
         SmartDashboard.putNumber("Turret/Delta (deg)", getDelta(getTargetAngle().getDegrees(), getAngle().getDegrees()));
         SmartDashboard.putNumber("Turret/Actual Target (deg)", actualTargetDeg);
 
-        if (Settings.EnabledSubsystems.TURRET.get() && getState() != TurretState.IDLE) {
+        if (EnabledSubsystems.TURRET.get() && getState() != TurretState.IDLE) {
             if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {

@@ -35,7 +35,8 @@ public abstract class Shooter extends SubsystemBase {
         FERRY,
         REVERSE,
         LEFT_CORNER,
-        RIGHT_CORNER;
+        RIGHT_CORNER,
+        CENTER; // KITBOT state
     }
 
     public Shooter() {
@@ -58,6 +59,7 @@ public abstract class Shooter extends SubsystemBase {
             case REVERSE -> Settings.HoodedShooter.ShooterRPMS.REVERSE;
             case LEFT_CORNER -> Settings.HoodedShooter.ShooterRPMS.LEFT_CORNER_RPM;
             case RIGHT_CORNER -> Settings.HoodedShooter.ShooterRPMS.RIGHT_CORNER_RPM;
+            case CENTER -> Settings.HoodedShooter.ShooterRPMS.CENTER_RPM;
         };
     }
 

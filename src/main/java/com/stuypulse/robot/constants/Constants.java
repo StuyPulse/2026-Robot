@@ -16,14 +16,20 @@ public interface Constants {
             public final double SENSOR_TO_HOOD_RATIO = 360.0 / 36.0;
             public final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(7);
             public final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(36.80);
+
+            // TODO: TBD 
             public final Rotation2d HUB_ANGLE = Rotation2d.fromDegrees(12); // TBD
             public final Rotation2d LEFT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
             public final Rotation2d RIGHT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
+            public final Rotation2d CENTER = Rotation2d.fromDegrees(10);
 
             public final Rotation2d ENCODER_OFFSET = Rotation2d.fromDegrees(20.0 * 10.0);
+
+
         }
         public interface Shooter {
             public final double GEAR_RATIO = 1.0;
+            public final double FLYWHEEL_RADIUS = Units.inchesToMeters(3.965 / 2);
         }
     }
 

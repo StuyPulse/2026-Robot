@@ -5,133 +5,137 @@
 /***************************************************************/
 package com.stuypulse.robot.util.hoodedshooter;
 
+import com.stuypulse.robot.constants.Constants;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public final class ShotCalculator {
-    public static final double g = 9.81; // gravity is not a number
+    public static final double g = 9.81;
 
-    public record ShotSolution(
+    public record StationarySolution(
         Rotation2d launchPitchAngle,
         double flightTimeSeconds) {
     }
 
-    public static ShotSolution solveBallisticWithSpeed(
+    // calculates the launch angle for a stationary robot to shoot into the goal
+    public static StationarySolution solveBallisticWithSpeed(
         Pose3d shooterPose,
-        Pose3d targetPose,
-        double launchSpeed) {
+        Pose3d targetGoal,
+        double targetRPM) {
 
         Translation3d s = shooterPose.getTranslation();
-        Translation3d t = targetPose.getTranslation();
+        Translation3d t = targetGoal.getTranslation();
 
         double dx = t.getX() - s.getX();
         double dy = t.getY() - s.getY();
         double dz = t.getZ() - s.getZ();
 
         double d = Math.hypot(dx, dy);
-        if (d < 1e-9) {
-            throw new IllegalArgumentException("Horizontal distance too small");
-        }
 
+        double launchSpeed = targetRPM * (Math.PI / 30) * Constants.HoodedShooter.Shooter.FLYWHEEL_RADIUS;
         double v2 = launchSpeed * launchSpeed;
 
         double discriminant = v2 * v2 - g * (g * d * d + 2.0 * dz * v2);
+
         if (discriminant < 0) {
-            return new ShotSolution(Rotation2d.kZero, 0);
+            return new StationarySolution(Rotation2d.kZero, 0);
         }
 
         // LOW-ARC solution (use + for high arc)
         double tanTheta = (v2 - Math.sqrt(discriminant)) / (g * d);
 
-        double launchPitch = Math.atan(tanTheta);
+        double launchAngle = Math.atan(tanTheta);
 
-        double vHoriz = launchSpeed * Math.cos(launchPitch);
-        double time = d / vHoriz;
+        double v_x = launchSpeed * Math.cos(launchAngle);
+        double time = d / v_x;
 
-        return new ShotSolution(Rotation2d.fromRadians(launchPitch), time);
+        return new StationarySolution(Rotation2d.fromRadians(launchAngle), time);
     }
 
 
-    public record AlignAngleSolution(
+    public record SOTMSolution(
         Rotation2d launchPitchAngle,
-        Rotation2d requiredYaw,
-        Pose3d estimateTargetPose) {
+        Rotation2d targetYaw,
+        Pose3d virtualGoal) {
     }
 
-    public static AlignAngleSolution solveShootOnTheFly(
+    public static SOTMSolution solveShootOnTheFly(
         Pose3d shooterPose,
-        Pose3d targetPose,
-        double axMetersPerSecondSquared,
-        double ayMetersPerSecondSquared,
-        ChassisSpeeds fieldRelSpeeds,
-        double targetSpeedRps,
+        Pose3d targetGoal,
+        ChassisSpeeds fieldRelativeSpeeds,
+        double targetRPM,
         int maxIterations,
         double timeTolerance) {
 
-        ShotSolution sol = solveBallisticWithSpeed(
+        // We know that v_ball = v_robot + v_shooter, so 
+        // (v_robot + v_shooter) * flightTime = distanceToTargetGoal
+        // rearranging, we can get (v_shooter) * flight_time = distanceToTargetGoal - v_robot * flightTime
+
+        // so we can instead shoot at a virtual goal and treat the robot as stationary:
+        // distance to virtualGoal = distanceToTargetGoal - v_robot * flightTime
+
+        // but to do this we need the flight time, but to get the flight time we need the
+        // target hood angle, but that's what we're trying to find in the first place.
+
+        // Thus, we can make an initial guess for the flight time: the flight time if the robot were stationary
+        // We want our guess to converge such that the left side equals the right side:
+        // (v_shooter) * t_guess = distance - v_robot * t_guess, which would make t_guess = flightTime
+
+        // We do the right side first using our inital guess, and then update t_guess with a new guess by 
+        // calculating the flightTime to that virtualPose.
+
+        // The goal is that the flightTime converges within maxIterations.
+
+        StationarySolution sol = solveBallisticWithSpeed(
             shooterPose,
-            targetPose,
-            targetSpeedRps
+            targetGoal,
+            targetRPM
         );
-
         
-        double t = sol.flightTimeSeconds();
+        double t_guess = sol.flightTimeSeconds();
         
-        Pose3d effectiveTarget = targetPose;
+        Pose3d virtualGoal = targetGoal;
 
-        Translation3d s = shooterPose.getTranslation();
-            
+        Translation3d shooterTranslation = shooterPose.getTranslation();
+             
         for (int i = 0; i < maxIterations; i++) {
 
-            double dx = fieldRelSpeeds.vxMetersPerSecond * t
-            + 0.5 * axMetersPerSecondSquared * t * t;
+            double dx = fieldRelativeSpeeds.vxMetersPerSecond * t_guess;
+            double dy = fieldRelativeSpeeds.vyMetersPerSecond * t_guess;
 
-            double dy = fieldRelSpeeds.vyMetersPerSecond * t
-            + 0.5 * ayMetersPerSecondSquared * t * t;
+            virtualGoal = new Pose3d(
+                targetGoal.getX() - dx,
+                targetGoal.getY() - dy,
+                targetGoal.getZ(),
+                targetGoal.getRotation());
 
-            effectiveTarget = new Pose3d(
-                targetPose.getX() - dx,
-                targetPose.getY() - dy,
-                targetPose.getZ(),
-                targetPose.getRotation());
-
-            
-            // SmartDashboard.putNumber("HoodedShooter/Target Pose X", targetPose.getX());
-            // SmartDashboard.putNumber("HoodedShooter/Target Pose Y", targetPose.getY());
-
-            // SmartDashboard.putNumber("HoodedShooter/Virtual Pose X", effectiveTarget.getX());
-            // SmartDashboard.putNumber("HoodedShooter/Virtual Pose Y", effectiveTarget.getY());
-
-            ShotSolution newSol = solveBallisticWithSpeed(
+            StationarySolution newSol = solveBallisticWithSpeed(
                 shooterPose,
-                effectiveTarget,
-                targetSpeedRps);
+                virtualGoal,
+                targetRPM);
 
             sol = newSol;
-            if (Math.abs(newSol.flightTimeSeconds() - t) < timeTolerance) {
+            if (Math.abs(newSol.flightTimeSeconds() - t_guess) < timeTolerance) {
                 break;
             }
 
-            t = newSol.flightTimeSeconds();
+            t_guess = newSol.flightTimeSeconds();
 
         }
-
         
-        Translation3d et = effectiveTarget.getTranslation();
+        Translation3d virtualTranslation = virtualGoal.getTranslation();
 
-        // all the poses we pass in are field relative, 
-        // so calculated yaw (turret angle) should be field relative as well... right
-
-        double yaw = Math.atan2( //atan2(dy, dx)
-            et.getY() - s.getY(),
-            et.getX() - s.getX() 
+        double yaw = Math.atan2(
+            virtualTranslation.getY() - shooterTranslation.getY(),
+            virtualTranslation.getX() - shooterTranslation.getX() 
         ); 
 
-        return new AlignAngleSolution(
+        return new SOTMSolution(
             sol.launchPitchAngle(),
             Rotation2d.fromRadians(yaw),
-            effectiveTarget);
+            virtualGoal);
     }
 }

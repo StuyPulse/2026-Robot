@@ -131,8 +131,11 @@ public interface Settings {
         public interface ShooterRPMS {
             public final double REVERSE = -0.0;
             public final double HUB_RPM = 0.0; 
+
+            //TODO: TBD
             public final double LEFT_CORNER_RPM = 0.0; // TBD
             public final double RIGHT_CORNER_RPM = 0.0; // TBD
+            public final double CENTER_RPM = 0.0; // TBD
             public final double STOW = 0.0; // TBD
         }
 

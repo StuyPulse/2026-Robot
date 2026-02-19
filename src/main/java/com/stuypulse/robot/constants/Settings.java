@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
+import com.stuypulse.robot.constants.Constants.LED;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.VecBuilder;
@@ -13,6 +14,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
+
+import java.util.concurrent.TimeUnit;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.path.PathConstraints;
@@ -233,6 +240,33 @@ public interface Settings {
     public interface Vision {
         Vector<N3> MT1_STDEVS = VecBuilder.fill(0.5, 0.5, 1.0);
         Vector<N3> MT2_STDEVS = VecBuilder.fill(0.7, 0.7, 694694);
+    }
+
+    public interface LEDS {
+        //buttons 
+
+        LEDPattern PRESSED_TOP_BUTTON = LEDPattern.solid(Color.kLightBlue);
+        LEDPattern PRESSED_LEFT_BUTTON = LEDPattern.solid(Color.kSkyBlue);
+        LEDPattern PRESSED_RIGHT_BUTTON = LEDPattern.solid(Color.kBlueViolet);
+        LEDPattern PRESSED_BOT_BUTTON = LEDPattern.solid(Color.kAliceBlue);
+        LEDPattern PRESSED_LEFT_TRIGGER = LEDPattern.solid(Color.kDarkBlue);
+        LEDPattern PRESSED_RIGHT_TRIGGER = LEDPattern.solid(Color.kCadetBlue);
+        LEDPattern PRESSED_LEFT_BUMPER = LEDPattern.solid(Color.kFirstBlue);
+        LEDPattern PRESSED_RIGHT_BUMPER = LEDPattern.solid(Color.kRoyalBlue);
+        LEDPattern PRESSED_LEFT_DPAD = LEDPattern.solid(Color.kSlateBlue);
+        LEDPattern PRESSED_RIGHT_DPAD = LEDPattern.solid(Color.kSteelBlue);
+        LEDPattern PRESSED_DOWN_DPAD = LEDPattern.solid(Color.kDodgerBlue);
+        LEDPattern PRESSED_TOP_DPAD = LEDPattern.solid(Color.kCornflowerBlue);
+
+        Time TRENCH_PASS_SECONDS = Seconds.of(0.4);
+        LEDPattern TRENCH_LOWERING = LEDPattern.solid(Color.kLightGoldenrodYellow);
+        LEDPattern TRENCH_E_STOP = LEDPattern.solid(Color.kRed);
+        LEDPattern TRENCH_PASS = LEDPattern.solid(Color.kGreen).breathe(TRENCH_PASS_SECONDS);
+
+        LEDPattern CLIMBING = LEDPattern.solid(Color.kLightSkyBlue); 
+        
+        double DESIRED_TAGS_WHEN_DISABLED = 2;
+        LEDPattern DISABLED_ALIGNED = LEDPattern.solid(Color.kPurple);
     }
 
     public interface Driver {

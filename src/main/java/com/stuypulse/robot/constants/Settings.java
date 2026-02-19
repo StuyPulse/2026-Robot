@@ -46,10 +46,9 @@ public interface Settings {
         double CLIMBER_DOWN = -3;
         double HOPPER_DOWN = -3;
         double HOPPER_UP = 2;
-        
+        double HOLDING = 0;
+
         double STALL = 10;
-        double EXTENDED = 0;
-        double RETRACTED = 0;
 
         double ROTATIONS_AT_BOTTOM = 0;
 
@@ -57,6 +56,8 @@ public interface Settings {
 
         double GYRO_TOLERANCE = 0;
         double HEIGHT_TOLERANCE = 1;
+
+        double HOPPER_EXTENDED_HEIGHT_METERS = 9;
 
         double RAMP_RATE = 50;
     }

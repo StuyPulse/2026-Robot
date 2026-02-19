@@ -52,16 +52,18 @@ public class ClimberHopperDefaultCommand extends Command {
 
         boolean isRetracted = Math.abs(climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
 
-        boolean isExtended = Math.abs(Constants.ClimberHopper.MAX_HEIGHT_METERS - climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
+        boolean isFullyExtended = Math.abs(Constants.ClimberHopper.MAX_HEIGHT_METERS - climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
+
+        boolean isHopperExtended = Settings.ClimberHopper.HOPPER_EXTENDED_HEIGHT_METERS < climberHopper.getPosition();
 
         boolean stalledByBalls = climberHopper.getStalling() && !isRetracted;
         // boolean stalledByBalls = true;
 
         if (isUp && climberHopper.getStalling()) {
-            climberHopper.setState(ClimberHopperState.HOLDING_UP);
+            climberHopper.setState(ClimberHopperState.HOLDING);
         }
         else if (isDown && climberHopper.getStalling()) {
-            climberHopper.setState(ClimberHopperState.HOLDING_DOWN);
+            climberHopper.setState(ClimberHopperState.HOLDING);
         }
 
         // If is stalling from the hardstop and not stalling from balls
@@ -77,21 +79,20 @@ public class ClimberHopperDefaultCommand extends Command {
                 if (climberHopper.getState() != ClimberHopperState.HOLDING_UP && climberHopper.getState() != ClimberHopperState.HOPPER_UP) {
                     climberHopper.setState(ClimberHopperState.HOPPER_UP);
                 }
+                // TODO: Flash LEDs or have Controller buzz when this happens. 
                 flag = true; // prevent hopper from going back down while still under trench with too many balls
             }
         } else { // If not under trench, set hopper up
             if (climberHopper.getState() == ClimberHopperState.CLIMBER_DOWN || climberHopper.getState() == ClimberHopperState.HOLDING_DOWN) {
                 // We're climbing, do nothing
-            } else if (!isExtended) {
+            } else if (!isHopperExtended) {
                 climberHopper.setState(ClimberHopperState.HOPPER_UP);
-            } else if (climberHopper.getStalling()) {
-                // This is assuming HOLDING_UP will not cause stalling
-                climberHopper.setState(ClimberHopperState.HOLDING_UP);
+            } else {
+                climberHopper.setState(ClimberHopperState.HOLDING);
             }
         }
 
         if (!isUnderTrench) {
-            // TODO: If we have LEDs, have them show the flag status.
             flag = false;
         }
 

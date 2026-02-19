@@ -46,27 +46,12 @@ public class ClimberHopperDefaultCommand extends Command {
         boolean isUnderTrench = (isBetweenRightTrenchesY || isBetweenLeftTrenchesY) && (isCloseToNearTrenchesX || isCloseToFarTrenchesX); // Far X tolerance
         
         // === Climber Position and State Logic ===
-        // boolean isRetracted = Math.abs(climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
-
-        // boolean isFullyExtended = Math.abs(Constants.ClimberHopper.MAX_HEIGHT_METERS - climberHopper.getPosition()) < Settings.ClimberHopper.HEIGHT_TOLERANCE;
-
-        // boolean isHopperExtended = Settings.ClimberHopper.HOPPER_EXTENDED_HEIGHT_METERS < climberHopper.getPosition();
-
-        // boolean isExtending = climberHopper.getState() == ClimberHopperState.CLIMBER_UP || climberHopper.getState() == ClimberHopperState.HOPPER_UP;
-
-        // boolean isRetracting = climberHopper.getState() == ClimberHopperState.CLIMBER_DOWN || climberHopper.getState() == ClimberHopperState.HOPPER_DOWN;
-
-        // boolean isHoldingDown = climberHopper.getState() == ClimberHopperState.HOLDING && isRetracted;
-
-        // // boolean isHoldingUp = climberHopper.getState() == ClimberHopperState.HOLDING && ;
-
         boolean inDownState = climberHopper.getState() == ClimberHopperState.CLIMBER_DOWN || climberHopper.getState() == ClimberHopperState.HOPPER_DOWN;
 
         boolean stalledByBalls = climberHopper.getStalling() && inDownState;
-        // // boolean stalledByBalls = true;
+        // boolean stalledByBalls = true;
 
-        // If is stalling from the hardstop and not stalling from balls
-        if (isUnderTrench) { // shouldn't be stalling in up state with 0 voltage
+        if (isUnderTrench) {
             if (!stalledByBalls && !flag) {
                 climberHopper.setState(ClimberHopperState.HOPPER_DOWN);
             } else {
@@ -74,16 +59,12 @@ public class ClimberHopperDefaultCommand extends Command {
                 // TODO: Flash LEDs or have Controller buzz when this happens. Also we need to somehow log this state!!!
                 flag = true; // prevent hopper from going back down while still under trench with too many balls
             }
-        } 
-        //  else { // If not under trench, set hopper up
-        //     if (climberHopper.getState() == ClimberHopperState.CLIMBER_DOWN || isHoldingDown) {
-        //         // We're climbing, do nothing
-        //     } else if (!isHopperExtended) {
-        //         climberHopper.setState(ClimberHopperState.HOPPER_UP);
-        //     } else {
-        //         climberHopper.setState(ClimberHopperState.HOLDING);
-        //     }
-        // }
+        } else { // If not under trench...
+            if (climberHopper.getState() != ClimberHopperState.CLIMBER_DOWN) {
+                // Set the hopper up
+                climberHopper.setState(ClimberHopperState.HOPPER_UP);
+            }
+        }
 
         if (!isUnderTrench) {
             flag = false;

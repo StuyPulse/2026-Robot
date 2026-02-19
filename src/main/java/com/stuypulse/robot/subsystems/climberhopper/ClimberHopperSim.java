@@ -27,8 +27,8 @@ public class ClimberHopperSim extends ClimberHopper {
             Constants.ClimberHopper.DRUM_RADIUS_METERS,
             Constants.ClimberHopper.MIN_HEIGHT_METERS,
             Constants.ClimberHopper.MAX_HEIGHT_METERS,
-            true,
-            0.0
+            false,
+            Constants.ClimberHopper.MIN_HEIGHT_METERS
         );
     }
 
@@ -72,12 +72,12 @@ public class ClimberHopperSim extends ClimberHopper {
         // TODO: Figure out some way to reset the encoder reading when stall
 
         sim.setInputVoltage(voltage);
-        
+
         SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);
         SmartDashboard.putNumber("ClimberHopper/Current", sim.getCurrentDrawAmps());
         SmartDashboard.putBoolean("ClimberHopper/Stalling", getStalling());
         SmartDashboard.putNumber("ClimberHopper/Height", getCurrentHeight());
-        visualizer.update(getCurrentHeight()); 
+        visualizer.update(getCurrentHeight());
         sim.update(0.02);
     }
 }

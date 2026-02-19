@@ -4,7 +4,7 @@ public interface Constants {
     public interface ClimberHopper {
         // TODO: get these limits
         double MIN_HEIGHT_METERS = 0;
-        double MAX_HEIGHT_METERS = 10;
+        double MAX_HEIGHT_METERS = 1;
 
         double DRUM_RADIUS_METERS = ((MAX_HEIGHT_METERS - MIN_HEIGHT_METERS) / (Encoders.NUM_ROTATIONS_TO_REACH_TOP / Encoders.GEARING)) / 2 / Math.PI;
 

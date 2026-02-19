@@ -3,6 +3,8 @@ package com.stuypulse.robot.subsystems.climberhopper;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.streams.booleans.BStream;
@@ -30,27 +32,52 @@ public class ClimberHopperSim extends ClimberHopper {
         );
     }
 
-    // wrote ts so it would compile (ろく なな)
     public boolean getStalling() {
         return sim.getCurrentDrawAmps() > Settings.ClimberHopper.STALL;
     }
 
-    public double getPosition() {
+    @Override
+    public double getCurrentHeight() {
         return sim.getPositionMeters();
     }
+
+    private boolean isWithinTolerance(double toleranceMeters) {
+        return Math.abs(getState().getTargetHeight() - getCurrentHeight()) < toleranceMeters;
+    }
+
+    @Override
+    public boolean atTargetHeight() {
+        return isWithinTolerance(Settings.ClimberHopper.HEIGHT_TOLERANCE_METERS);
+    }
+
+    // @Override
+    // public void setVoltageOverride(Optional<Double> voltage) {
+    //     this.voltageOverride = voltage;
+    // }
 
     @Override
     public void periodic() {
         super.periodic();
 
-        voltage = getState().getTargetVoltage();
+        if (!atTargetHeight()) {
+            if (getCurrentHeight() < getState().getTargetHeight()) {
+                voltage = Settings.ClimberHopper.MOTOR_VOLTAGE;
+            } else {
+                voltage = - Settings.ClimberHopper.MOTOR_VOLTAGE;
+            }
+        } else {
+            voltage = 0;
+        }
+
+        // TODO: Figure out some way to reset the encoder reading when stall
 
         sim.setInputVoltage(voltage);
+        
         SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);
         SmartDashboard.putNumber("ClimberHopper/Current", sim.getCurrentDrawAmps());
         SmartDashboard.putBoolean("ClimberHopper/Stalling", getStalling());
-        SmartDashboard.putNumber("ClimberHopper/Position", getPosition());
-        visualizer.update(getPosition()); 
+        SmartDashboard.putNumber("ClimberHopper/Height", getCurrentHeight());
+        visualizer.update(getCurrentHeight()); 
         sim.update(0.02);
     }
 }

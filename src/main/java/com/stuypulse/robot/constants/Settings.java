@@ -42,11 +42,10 @@ public interface Settings {
     public interface ClimberHopper {
         // TODO: GET THESE
         // Voltages
-        double CLIMBER_UP = 2;
-        double CLIMBER_DOWN = -3;
-        double HOPPER_DOWN = -3;
-        double HOPPER_UP = 2;
-        double HOLDING = 0;
+        double CLIMBER_UP_HEIGHT_METERS = Constants.ClimberHopper.MAX_HEIGHT_METERS;
+        double CLIMBER_DOWN_HEIGHT_METERS = 0.2;
+        double HOPPER_DOWN_HEIGHT_METERS = Constants.ClimberHopper.MIN_HEIGHT_METERS;
+        double HOPPER_UP_HEIGHT_METERS = 0.5;
 
         double STALL = 10;
 
@@ -55,11 +54,11 @@ public interface Settings {
         double DEBOUNCE = 0.25;
 
         double GYRO_TOLERANCE = 0;
-        double HEIGHT_TOLERANCE = 1;
-
-        double HOPPER_EXTENDED_HEIGHT_METERS = 9;
+        double HEIGHT_TOLERANCE_METERS = 0.02;
 
         double RAMP_RATE = 50;
+
+        double MOTOR_VOLTAGE = 3.5;
     }
 
     public interface Feeder {

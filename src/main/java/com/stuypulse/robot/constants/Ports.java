@@ -22,9 +22,8 @@ public interface Ports {
         int CLIMBER_HOPPER = 3;
     }
 
-    public interface Feeder {
-        int FEEDER_LEADER = 4;
-        int FEEDER_FOLLOWER= 5;
+    public interface Handoff {
+        int HANDOFF = 4;
     }
 
     public interface HoodedShooter {

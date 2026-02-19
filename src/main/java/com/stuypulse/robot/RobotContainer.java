@@ -7,9 +7,9 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.feeder.FeederReverse;
-import com.stuypulse.robot.commands.feeder.FeederRun;
-import com.stuypulse.robot.commands.feeder.FeederStop;
+import com.stuypulse.robot.commands.handoff.HandoffReverse;
+import com.stuypulse.robot.commands.handoff.HandoffRun;
+import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterLeftCorner;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterReverse;
@@ -34,7 +34,7 @@ import com.stuypulse.robot.commands.turret.TurretZero;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
-import com.stuypulse.robot.subsystems.feeder.Feeder;
+import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
@@ -61,7 +61,7 @@ public class RobotContainer {
     // Subsystem
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final ClimberHopper climberHopper = ClimberHopper.getInstance();
-    private final Feeder feeder = Feeder.getInstance();
+    private final Handoff handoff = Handoff.getInstance();
     private final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
     private final Intake intake = Intake.getInstance();
     private final Spindexer spindexer = Spindexer.getInstance();
@@ -142,12 +142,11 @@ public class RobotContainer {
                             new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederRun()))))
+                                new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
                 new SpindexerRun().alongWith(
-                new FeederStop())))
+                new HandoffStop()))
             );
 
         // Right Corner Shoot
@@ -159,12 +158,11 @@ public class RobotContainer {
                             new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederRun()))))
+                                new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
                 new SpindexerRun().alongWith(
-                new FeederStop())))
+                new HandoffStop()))
             );
 
         // Hub Shoot
@@ -176,12 +174,11 @@ public class RobotContainer {
                             new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederRun()))))
+                                new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
                 new SpindexerRun().alongWith(
-                new FeederStop())))
+                new HandoffStop()))
             );
 
         // Intake On
@@ -213,12 +210,11 @@ public class RobotContainer {
                             new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederRun()))))
+                                new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
                 new SpindexerRun().alongWith(
-                new FeederStop())))
+                new HandoffStop()))
             );
 
         // Score In Place
@@ -230,59 +226,45 @@ public class RobotContainer {
                             new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederRun()))))
+                                new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
                 new SpindexerRun().alongWith(
-                new FeederStop())))
+                new HandoffStop()))
             );
 
         // Unjam
         driver.getDPadDown()
             .whileTrue(
                 new HoodedShooterReverse().alongWith(
-                    new FeederReverse().alongWith(
+                    new HandoffReverse().alongWith(
                         new IntakeOutake())))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
                 new SpindexerRun().alongWith(
-                new FeederStop().alongWith(
-                new IntakeStop()))))
+                new HandoffStop().alongWith(
+                new IntakeStop())))
             );
 
-        // Ferry
-        driver.getLeftMenuButton()
-            .onTrue(
-                new HoodedShooterFerry().alongWith(
-                        new TurretFerry()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederRun())))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
+        // // Ferry in place
+        // driver.getLeftMenuButton()
+        //     .onTrue(
+        //         new FerryRoutine().alongWith(new SwerveXMode()))
+        //     .onFalse(
+        //         new HoodedShooterStow().alongWith(
+        //         new SpindexerRun().alongWith(
+        //         new HandoffStop()))
+        //     );
 
-        // Ferry
-        driver.getRightMenuButton()
-            .onTrue(
-                new HoodedShooterFerry().alongWith(
-                        new TurretFerry()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederRun())))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
+        // // Ferry
+        // driver.getRightMenuButton()
+        //     .onTrue(
+        //         new FerryRoutine())
+        //     .onFalse(
+        //         new HoodedShooterStow().alongWith(
+        //         new SpindexerRun().alongWith(
+        //         new HandoffStop()))
+        //     );
     }
 
     /**************/
@@ -331,11 +313,11 @@ public class RobotContainer {
         autonChooser.addOption("SysID Spindexer Quasi Forwards", spindexerSysId.quasistatic(Direction.kForward));
         autonChooser.addOption("SysID Spindexer Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
 
-        SysIdRoutine feederSysId = feeder.getSysIdRoutine();
-        autonChooser.addOption("SysID Feeder Forward", feederSysId.dynamic(Direction.kForward));
-        autonChooser.addOption("SysID Feeder Backwards", feederSysId.dynamic(Direction.kReverse));
-        autonChooser.addOption("SysID Feeder Forwards", feederSysId.quasistatic(Direction.kForward));
-        autonChooser.addOption("SysID Feeder Backwards", feederSysId.quasistatic(Direction.kReverse));
+        SysIdRoutine handoffSysId = handoff.getSysIdRoutine();
+        autonChooser.addOption("SysID Handoff Forward", handoffSysId.dynamic(Direction.kForward));
+        autonChooser.addOption("SysID Handoff Backwards", handoffSysId.dynamic(Direction.kReverse));
+        autonChooser.addOption("SysID Handoff Forwards", handoffSysId.quasistatic(Direction.kForward));
+        autonChooser.addOption("SysID Handoff Backwards", handoffSysId.quasistatic(Direction.kReverse));
 
     }
 

@@ -1,11 +1,9 @@
-package com.stuypulse.robot.subsystems.feeder;
+package com.stuypulse.robot.subsystems.handoff;
 
 import java.util.Optional;
 
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -15,13 +13,13 @@ import com.stuypulse.robot.util.SysId;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class FeederImpl extends Feeder {
+public class HandoffImpl extends Handoff {
     private final TalonFX motor;
     private final VelocityVoltage controller;
 
     private Optional<Double> voltageOverride;
 
-    public FeederImpl() {
+    public HandoffImpl() {
         motor = new TalonFX(Ports.Feeder.FEEDER_LEADER);
         Motors.Feeder.motorConfig.configure(motor);
 
@@ -37,13 +35,13 @@ public class FeederImpl extends Feeder {
     public void setVoltageOverride(Optional<Double> voltage) {
         this.voltageOverride = voltage;
     }
-    
+
     @Override
     public void periodic() {
         super.periodic();
 
         if (EnabledSubsystems.FEEDER.get()) {
-            if (getState() == FeederState.STOP) {
+            if (getState() == HandoffState.STOP) {
                 motor.stopMotor();
             } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
@@ -53,9 +51,9 @@ public class FeederImpl extends Feeder {
         }
 
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("Feeder/Current (amps)", motor.getStatorCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Feeder/Voltage", motor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Feeder/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Current (amps)", motor.getStatorCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
         }
     }
 

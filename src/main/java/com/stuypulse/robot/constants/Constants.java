@@ -26,7 +26,7 @@ public interface Constants {
             public final double GEAR_RATIO = 1.0;
         }
     }
-  
+    
     public interface Align {
         int MAX_ITERATIONS = 5;
         double TIME_TOLERANCE = 0.01;
@@ -62,7 +62,7 @@ public interface Constants {
         public final double GEAR_RATIO_MOTOR_TO_MECH = 1425.0 / 36.0;
     }
 
-    public interface Feeder {
+    public interface Handoff {
         public final double GEAR_RATIO = 1.0; 
     }
 }

@@ -78,13 +78,12 @@ public interface Settings {
         }
     }
 
-    public interface Feeder {
-        double FORWARD_RPM = 1.0;
-        double REVERSE_RPM = -1.0;
-        double STOW_RPM = 0.0;
-        double SECONDS_IN_A_MINUTE = 60;
-        double RPM_TOLERANCE = 0;
-
+    public interface Handoff {
+        double HANDOFF_STOP = 0.0;
+        double HANDOFF_MAX = 4800.0;
+        double HANDOFF_REVERSE = -500.0;
+        double RPM_TOLERANCE = 500.0;
+        public final SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/RPM override", HANDOFF_MAX);
     }
 
     public interface Intake { // TODO: Get all values for this

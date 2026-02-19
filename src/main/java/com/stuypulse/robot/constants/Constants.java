@@ -65,4 +65,8 @@ public interface Constants {
     public interface Handoff {
         public final double GEAR_RATIO = 1.0; 
     }
+
+    public interface LED {
+        int LED_LENGTH = 50;
+    }
 }

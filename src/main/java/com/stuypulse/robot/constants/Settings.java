@@ -19,7 +19,7 @@ import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.path.PathConstraints;
 
 /*-
- * File containing tunable settings for every subsystem on the robot.
+ * File containing constants and tunable settings for every subsystem on the robot.
  *
  * We use StuyLib's SmartNumber / SmartBoolean in order to have tunable
  * values that we can edit on Shuffleboard.
@@ -37,7 +37,7 @@ public interface Settings {
         double HANDOFF_MAX = 4800.0;
         double HANDOFF_REVERSE = -500.0;
         double RPM_TOLERANCE = 200.0;
-        public final SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/RPM Override", HANDOFF_MAX);
+        public final SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/Target RPM", HANDOFF_MAX);
     }
 
     public interface Intake {
@@ -132,8 +132,9 @@ public interface Settings {
 
         public interface Constants {
             double RANGE = 210.0;
-            Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(-2.50), Units.inchesToMeters(11.19), Rotation2d.kZero);
-            double TURRET_HEIGHT = Units.inchesToMeters(10.984);
+
+            Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), Rotation2d.kZero);
+            double TURRET_HEIGHT = Units.inchesToMeters(0.0);
             public interface Encoder18t {
                 public final int TEETH = 18;
                 public final Rotation2d OFFSET = new Rotation2d();
@@ -198,6 +199,11 @@ public interface Settings {
         Vector<N3> MT2_STDEVS = VecBuilder.fill(0.7, 0.7, 694694);
     }
 
+    public interface ShootOnTheFly {
+        int MAX_ITERATIONS = 5;
+        double TIME_TOLERANCE = 0.01;
+    }
+
     public interface Swerve {
         double MODULE_VELOCITY_DEADBAND_M_PER_S = 0.1;
         double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
@@ -226,7 +232,7 @@ public interface Settings {
             public interface Tolerances {
                 double X_TOLERANCE = Units.inchesToMeters(2.0); 
                 double Y_TOLERANCE = Units.inchesToMeters(2.0);
-                SmartNumber THETA_TOLERANCE = new SmartNumber("Angle Tolerance", 2);
+                double THETA_TOLERANCE_DEG = 2.0;
 
                 Pose2d POSE_TOLERANCE = new Pose2d(
                     Units.inchesToMeters(2.0), 

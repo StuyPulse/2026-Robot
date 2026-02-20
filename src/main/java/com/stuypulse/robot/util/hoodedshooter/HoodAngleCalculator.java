@@ -5,7 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.util.hoodedshooter;
 
-import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
@@ -102,14 +101,14 @@ public class HoodAngleCalculator {
             double shooterRPS = hdsr.getTargetRPM() / 60.0;
             
             AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
-                new Pose3d(currentPose.plus(Settings.Turret.Constants.TURRET_OFFSET)),
+                turretPose3d,
                 targetPose,
                 axMetersPerSecondSquared,
                 ayMetersPerSecondSquared,
                 fieldRelSpeeds, // current speeds
                 shooterRPS,
-                Constants.Align.MAX_ITERATIONS,
-                Constants.Align.TIME_TOLERANCE
+                Settings.ShootOnTheFly.MAX_ITERATIONS,
+                Settings.ShootOnTheFly.TIME_TOLERANCE
             );
             
             return sol.launchPitchAngle();

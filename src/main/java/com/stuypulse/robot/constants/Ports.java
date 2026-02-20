@@ -43,7 +43,6 @@ public interface Ports {
         int PIVOT = 8;
         int ROLLER_LEADER = 9;
         int ROLLER_FOLLOWER = 10;
-        int ABSOLUTE_ENCODER = 11;
     }
 
     public interface Spindexer {
@@ -52,7 +51,6 @@ public interface Ports {
     }
 
     public interface Turret {
-        // from alphabot
         int MOTOR = 50;
         int ENCODER17T = 38;
         int ENCODER18T = 21;

@@ -37,7 +37,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 public interface Motors {
 
     public interface ClimberHopper {
-        // TODO: Find current limit.
         TalonFXConfig MOTOR = new TalonFXConfig()
             .withInvertedValue(InvertedValue.Clockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake)
@@ -49,29 +48,28 @@ public interface Motors {
     public interface HoodedShooter {
         public interface Shooter {
             TalonFXConfig SHOOTER = new TalonFXConfig()
-                    // .withSupplyCurrentLimitAmps(100.0)
-                    // .withCurrentLimitAmps(100.0)
-                    // .withRampRate(0.25)
-                    .withCurrentLimitEnable(false)
-                    .withNeutralMode(NeutralModeValue.Coast)
-                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                    .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI,
-                            Gains.HoodedShooter.Shooter.kD, 0)
-                    .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
-                            Gains.HoodedShooter.Shooter.kA, 0)
-                    .withSensorToMechanismRatio(Settings.HoodedShooter.Shooter.GEAR_RATIO);
+                // .withSupplyCurrentLimitAmps(100.0)
+                // .withCurrentLimitAmps(100.0)
+                // .withRampRate(0.25)
+                .withCurrentLimitEnable(false)
+                .withNeutralMode(NeutralModeValue.Coast)
+                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI,
+                        Gains.HoodedShooter.Shooter.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
+                        Gains.HoodedShooter.Shooter.kA, 0)
+                .withSensorToMechanismRatio(Settings.HoodedShooter.Shooter.GEAR_RATIO);
         }
 
         public interface Hood {
             TalonFXConfig HOOD = new TalonFXConfig()
-                    .withCurrentLimitAmps(80)
-                    .withRampRate(0.25)
-                    .withNeutralMode(NeutralModeValue.Brake)
-                    .withInvertedValue(InvertedValue.Clockwise_Positive)
-                    .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI,
-                            Gains.HoodedShooter.Hood.kD, 0)
-                    .withFFConstants(Gains.HoodedShooter.Hood.kS, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
-                    .withSensorToMechanismRatio(Settings.HoodedShooter.Hood.GEAR_RATIO);
+                .withCurrentLimitAmps(80)
+                .withRampRate(0.25)
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
+                .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI, Gains.HoodedShooter.Hood.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Hood.kS, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
+                .withSensorToMechanismRatio(Settings.HoodedShooter.Hood.GEAR_RATIO);
                     
             SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)

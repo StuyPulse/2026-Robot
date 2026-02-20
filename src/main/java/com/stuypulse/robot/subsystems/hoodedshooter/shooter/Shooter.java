@@ -7,7 +7,6 @@ package com.stuypulse.robot.subsystems.hoodedshooter.shooter;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

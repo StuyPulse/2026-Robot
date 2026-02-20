@@ -5,7 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.climberhopper;
 
-import java.util.Optional;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 

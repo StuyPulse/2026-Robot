@@ -14,7 +14,7 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.constants.DriverConstants;
 //import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
 import com.stuypulse.robot.constants.Motors;
 

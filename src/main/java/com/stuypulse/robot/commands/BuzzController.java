@@ -8,7 +8,7 @@ package com.stuypulse.robot.commands;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.util.StopWatch;
 
-import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.constants.DriverConstants;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -23,13 +23,13 @@ public class BuzzController extends Command {
 
     @Override
     public void initialize() {
-        driver.setRumble(Constants.Driver.BUZZ_INTENSITY);
+        driver.setRumble(DriverConstants.Driver.BUZZ_INTENSITY);
         timer.reset();
     }
 
     @Override
     public boolean isFinished() {
-        return timer.getTime() >= Constants.Driver.BUZZ_TIME;
+        return timer.getTime() >= DriverConstants.Driver.BUZZ_TIME;
     }
 
     @Override

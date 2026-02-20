@@ -86,10 +86,10 @@ public class RobotContainer {
     private final Handoff handoff = Handoff.getInstance();
     private final Intake intake = Intake.getInstance();
     private final Spindexer spindexer = Spindexer.getInstance();
-    private final Turret turret = Turret.getInstance();
     
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final LimelightVision vision = LimelightVision.getInstance();
+    private final Turret turret = Turret.getInstance();
 
     private final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
     private final Shooter shooter = Shooter.getInstance();

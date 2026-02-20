@@ -6,7 +6,6 @@
 package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
-import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -28,6 +27,8 @@ public class HoodImpl extends Hood {
     
     private Optional<Double> voltageOverride;
 
+    private boolean hasUsedAbsoluteEncoder;
+
     public HoodImpl() {
         hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.MOTOR);
         hoodEncoder = new CANcoder(Ports.HoodedShooter.Hood.THROUGHBORE_ENCODER);
@@ -36,8 +37,6 @@ public class HoodImpl extends Hood {
 
         hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
         hoodEncoder.getConfigurator().apply(Motors.HoodedShooter.Hood.HOOD_ENCODER);
-
-        hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Settings.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
 
         controller = new PositionVoltage(getTargetAngle().getRotations());
 
@@ -52,6 +51,10 @@ public class HoodImpl extends Hood {
     @Override 
     public void periodic() {
         super.periodic();
+
+        if (!hasUsedAbsoluteEncoder) {
+            hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Settings.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
+        }
 
         if (EnabledSubsystems.HOOD.get()) {
             if (voltageOverride.isPresent()) {

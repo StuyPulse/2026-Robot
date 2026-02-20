@@ -77,32 +77,34 @@ public class Gains {
     }
 
     public interface Turret {
-        double kS = 0.179;
-        double kV = 0.0;
-        double kA = 0.0;
-
         double kP = 1300.0;
         double kI = 0.0;
         double kD = 140.0;
+
+        double kS = 0.179;
+        double kV = 0.0;
+        double kA = 0.0;
     }
 
     public interface Swerve {
         public interface Drive {
-            double kS = 0.0;
-            double kV = 0.124;
-            double kA = 0.0;
             double kP = 0.1;
             double kI = 0.0;
             double kD = 0.0;
+
+            double kS = 0.0;
+            double kV = 0.124;
+            double kA = 0.0;
         }
 
         public interface Turn {
-            double kS = 0.1;
-            double kV = 2.66;
-            double kA = 0.0;
             double kP = 100.0;
             double kI = 0.0;
             double kD = 0.5;
+
+            double kS = 0.1;
+            double kV = 2.66;
+            double kA = 0.0;
         }
 
         public interface Alignment {

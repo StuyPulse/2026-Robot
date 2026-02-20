@@ -5,16 +5,13 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.climberhopper;
 
+
+import com.stuypulse.robot.constants.Settings;
+
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.util.Optional;
-
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-
-import edu.wpi.first.math.system.plant.DCMotor;
 
 public class ClimberHopperSim extends ClimberHopper {
     

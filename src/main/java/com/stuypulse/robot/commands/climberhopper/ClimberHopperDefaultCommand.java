@@ -1,15 +1,19 @@
+/************************ PROJECT TRIBECBOT *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.commands.climberhopper;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
-import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper.ClimberHopperState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+
 
 public class ClimberHopperDefaultCommand extends Command {
     private final ClimberHopper climberHopper;

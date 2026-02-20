@@ -4,19 +4,17 @@
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
 package com.stuypulse.robot.subsystems.climberhopper;
-import java.util.Optional;
-
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
+import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.stuypulse.robot.constants.DriverConstants;
-//import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
-import com.stuypulse.robot.constants.Motors;
+import com.ctre.phoenix6.hardware.TalonFX;
+import java.util.Optional;
 
 
 public class ClimberHopperImpl extends ClimberHopper {

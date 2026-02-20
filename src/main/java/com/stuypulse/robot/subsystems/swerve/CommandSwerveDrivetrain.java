@@ -27,6 +27,7 @@ import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -416,6 +417,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             twistVel.dy / Settings.DT,
             twistVel.dtheta / Settings.DT
         ));
+    }
+
+    public Pose3d getDrivetrainPose3d() {
+        return new Pose3d(getPose());
     }
 
     @Override

@@ -7,6 +7,7 @@
 package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.config.PIDConstants;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 public class Gains {
 
@@ -45,15 +46,15 @@ public class Gains {
     public interface Intake {
         public interface Pivot {
             // TODO: tune ts :wilt: 🥀
-            double kP = 1.0;
-            double kI = 0.0;
-            double kD = 0.0;
+            SmartNumber kP = new SmartNumber("PID Controller KP", 0.5);
+            SmartNumber kI = new SmartNumber("PID Controller KI", 0.0);
+            SmartNumber kD = new SmartNumber("PID Controller KD", 0.0);
 
-            double kS = 0.0;
-            double kV = 0.0;
-            double kA = 0.0;
+            SmartNumber kS = new SmartNumber("PID Controller KS", 0.0);
+            SmartNumber kV = new SmartNumber("PID Controller KV", 0.0);
+            SmartNumber kA = new SmartNumber("PID Controller KA", 0.0);
 
-            double kG = 0.0; 
+            SmartNumber kG = new SmartNumber("PID Controller KG", 0.0);
         }
     }
 

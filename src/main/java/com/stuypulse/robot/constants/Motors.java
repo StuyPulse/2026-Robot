@@ -57,8 +57,8 @@ public interface Motors {
             .withRampRate(0.25)
             .withNeutralMode(NeutralModeValue.Coast)
             .withInvertedValue(InvertedValue.Clockwise_Positive)    // TODO: change later
-            .withPIDConstants(Gains.Intake.Pivot.kP, Gains.Intake.Pivot.kI, Gains.Intake.Pivot.kD, 0)
-            .withFFConstants(Gains.Intake.Pivot.kS, Gains.Intake.Pivot.kV, Gains.Intake.Pivot.kA, Gains.Intake.Pivot.kG, 0)
+            .withPIDConstants(Gains.Intake.Pivot.kP.doubleValue(), Gains.Intake.Pivot.kI.doubleValue(), Gains.Intake.Pivot.kD.doubleValue(), 0)
+            .withFFConstants(Gains.Intake.Pivot.kS.doubleValue(), Gains.Intake.Pivot.kV.doubleValue(), Gains.Intake.Pivot.kA.doubleValue(), Gains.Intake.Pivot.kG.doubleValue(), 0)
             .withRemoteSensor(Ports.Intake.ABSOLUTE_ENCODER, FeedbackSensorSourceValue.RemoteCANcoder, 1.0); // TODO: Add gear ratio
     }
 

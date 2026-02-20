@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.intake;
 
+
 import java.util.Optional;
 
 import com.stuypulse.robot.Robot;
@@ -93,17 +94,22 @@ public abstract class Intake extends SubsystemBase {
 
     public abstract boolean isAtTargetAngle();
     public abstract Rotation2d getCurrentAngle();
+
     public abstract SysIdRoutine getPivotSysIdRoutine();
     public abstract SysIdRoutine getRollerSysIdRoutine();
     public abstract void setRollerVoltageOverride(Optional<Double> voltage);
     public abstract void setPivotVoltageOverride(Optional<Double> voltage);
     
+    // public abstract Pose3d getMechanismIntakePose3d();
+    // public abstract Pose3d getActualIntakePose3d();
+    
+
     @Override
     public void periodic() {
-        if (Settings.DEBUG_MODE) {
-            IntakeVisualizer.getInstance().updateIntakeStuff(getCurrentAngle(), getIntakeState().getTargetDutyCycle(),
-                    isAtTargetAngle());
-        }
+        // if (Settings.DEBUG_MODE) {
+        //     IntakeVisualizer.getInstance().updateIntakeStuff(getCurrentAngle(), getIntakeState().getTargetDutyCycle(),
+        //             isAtTargetAngle());
+        // }
     }
 
 }

@@ -125,6 +125,7 @@ public class IntakeImpl extends Intake {
      *                in the case that voltage is not null, voltageOverride will be
      *                set to thhe passed in voltage
      */
+    
     @Override
     public void setRollerVoltageOverride(Optional<Double> voltage) {
         this.rollerVoltageOverride = voltage;
@@ -135,6 +136,7 @@ public class IntakeImpl extends Intake {
      *                in the case that voltage is not null, voltageOverride will be
      *                set to thhe passed in voltage
      */
+
     @Override
     public void setPivotVoltageOverride(Optional<Double> voltage) {
         this.pivotVoltageOverride = voltage;
@@ -159,6 +161,18 @@ public class IntakeImpl extends Intake {
         else
             return 0;
     }
+    // @Override
+    // public Pose3d getMechanismIntakePose3d() { 
+    //     //TODO: fill in this method. Need it for polymorphism in Robot.java
+    //     return null;
+    // }
+
+    // @Override
+    // public Pose3d getActualIntakePose3d() {
+    //     //XYZ from drivetrain, angle from the Mechanism pose as pitch
+    //     return null;
+    // }
+
 
     @Override
     public void periodic() {

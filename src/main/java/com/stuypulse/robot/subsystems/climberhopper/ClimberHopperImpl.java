@@ -13,6 +13,7 @@ import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import java.util.Optional;
 
@@ -79,7 +80,7 @@ public class ClimberHopperImpl extends ClimberHopper {
         //     }
         // }
 
-        motor.setVoltage(voltage);
+        motor.setControl(new VoltageOut(voltage).withEnableFOC(true));
 
         SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);
         SmartDashboard.putNumber("ClimberHopper/Current", motor.getSupplyCurrent().getValueAsDouble());

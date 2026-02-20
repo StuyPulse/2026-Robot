@@ -130,7 +130,7 @@ public class TurretImpl extends Turret {
             if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-                motor.setControl(controller.withPosition(actualTargetDeg / 360.0));
+                motor.setControl(controller.withPosition(actualTargetDeg / 360.0).withEnableFOC(true));
             }
         } else {
             motor.stopMotor();

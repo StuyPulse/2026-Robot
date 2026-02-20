@@ -63,8 +63,8 @@ public class SpindexerImpl extends Spindexer {
                 leadMotor.setVoltage(voltageOverride.get());
                 followerMotor.setControl(follower);
             } else {
-                    leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
-                    followerMotor.setControl(follower);
+                leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true));
+                followerMotor.setControl(follower);
             }
         }
 

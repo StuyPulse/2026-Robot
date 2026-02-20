@@ -68,8 +68,8 @@ public class IntakeImpl extends Intake {
             if (pivotVoltageOverride.isPresent()) {
                 pivot.setVoltage(pivotVoltageOverride.get());
             } else {
-                pivot.setControl(pivotController.withPosition(getState().getTargetAngle().getRotations()));
-                rollerLeader.setControl(rollerController.withOutput(getState().getTargetDutyCycle()));
+                pivot.setControl(pivotController.withPosition(getState().getTargetAngle().getRotations()).withEnableFOC(true));
+                rollerLeader.setControl(rollerController.withOutput(getState().getTargetDutyCycle()).withEnableFOC(true));
                 rollerFollower.setControl(follower);
             }
         } else {

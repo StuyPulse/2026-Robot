@@ -60,7 +60,7 @@ public class HoodImpl extends Hood {
             if (voltageOverride.isPresent()) {
                 hoodMotor.setVoltage(voltageOverride.get());
             } else {
-                hoodMotor.setControl(controller.withPosition(getTargetAngle().getRotations()));
+                hoodMotor.setControl(controller.withPosition(getTargetAngle().getRotations()).withEnableFOC(true));
             }
         } else {
             hoodMotor.stopMotor();

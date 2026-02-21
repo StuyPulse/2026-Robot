@@ -63,6 +63,11 @@ public abstract class ClimberHopper extends SubsystemBase {
     public abstract boolean getStalling();
     public abstract double getCurrentHeight();
     public abstract boolean atTargetHeight();
+    
+    /**
+     * Resets the encoder postition to the upper hardstop
+     */
+    public abstract void resetPostionUpper();
 
     public abstract void setVoltageOverride(Optional<Double> voltage);
 

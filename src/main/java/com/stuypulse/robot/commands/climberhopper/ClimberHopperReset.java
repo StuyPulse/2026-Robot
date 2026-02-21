@@ -7,6 +7,8 @@ package com.stuypulse.robot.commands.climberhopper;
 
 import java.util.Optional;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,13 +22,13 @@ public class ClimberHopperReset extends Command {
 
     @Override
     public void initialize() {
-        climberHopper.setVoltageOverride(Optional.of(2.0));
+        climberHopper.setVoltageOverride(Optional.of(Settings.ClimberHopper.MOTOR_VOLTAGE));
     }
 
     @Override
     public boolean isFinished() {
         if (climberHopper.getStalling()) {
-            // TODO: Reset encoder here
+            climberHopper.resetPostionUpper();
             return true;
         }
         return false;

@@ -59,6 +59,13 @@ public class ClimberHopperImpl extends ClimberHopper {
         this.voltageOverride = voltage;
     }
 
+    /**
+     * Resets the encoder postition to the upper hardstop
+     */
+    public void resetPostionUpper() {
+        motor.setPosition(Settings.ClimberHopper.Constants.MAX_HEIGHT_METERS);
+    }
+
     @Override
     public void periodic() {
         super.periodic();

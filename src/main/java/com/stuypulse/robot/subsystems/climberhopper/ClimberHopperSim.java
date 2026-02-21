@@ -62,6 +62,12 @@ public class ClimberHopperSim extends ClimberHopper {
     }
 
     @Override
+    public void resetPostionUpper() {
+        // No encoder reset for sim
+    }
+
+
+    @Override
     public void periodic() {
         super.periodic();
 

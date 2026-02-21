@@ -30,7 +30,7 @@ public class ClimberHopperImpl extends ClimberHopper {
         motor = new TalonFX(Ports.ClimberHopper.CLIMBER_HOPPER);
         Motors.ClimberHopper.MOTOR.configure(motor);
         
-        motor.setPosition(0);
+        motor.setPosition(Settings.ClimberHopper.Constants.MIN_HEIGHT_METERS);
         stalling = BStream.create(() -> motor.getStatorCurrent().getValueAsDouble() > Settings.ClimberHopper.STALL)
             .filtered(new BDebounce.Both(Settings.ClimberHopper.DEBOUNCE));
     }
@@ -76,13 +76,6 @@ public class ClimberHopperImpl extends ClimberHopper {
                 voltage = 0;
             }
         }
-
-        // TODO: Figure out some way to reset the encoder reading when stall
-        // if (atTargetHeight() && getState() == ClimberHopperState.HOPPER_DOWN) {
-        //     if (voltageOverride.isPresent()) {
-
-        //     }
-        // }
 
         motor.setControl(new VoltageOut(voltage).withEnableFOC(true));
 

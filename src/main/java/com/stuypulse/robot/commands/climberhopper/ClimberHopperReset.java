@@ -5,6 +5,8 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.climberhopper;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +16,25 @@ public class ClimberHopperReset extends Command {
     
     public ClimberHopperReset() {
         climberHopper = ClimberHopper.getInstance();
+    }
+
+    @Override
+    public void initialize() {
+        climberHopper.setVoltageOverride(Optional.of(2.0));
+    }
+
+    @Override
+    public boolean isFinished() {
+        if (climberHopper.getStalling()) {
+            // TODO: Reset encoder here
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        climberHopper.setVoltageOverride(Optional.empty());
     }
 
     @Override

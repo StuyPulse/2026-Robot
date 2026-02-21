@@ -276,9 +276,6 @@ public class RobotContainer {
             .onTrue(new BuzzController(driver)
             )
             .whileTrue(new LEDApplyState(Settings.LEDS.LEDState.PRESSED_LEFT_BUMPER).alongWith(new ClimberDown())
-            )
-            .onFalse(
-                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
             );
 
         // Climb Up Placeholder
@@ -287,9 +284,6 @@ public class RobotContainer {
             )
             .whileTrue(
                 new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_BUMPER).alongWith(new ClimberUp())
-            )
-            .onFalse(
-                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
             );
 
         // Reset Heading

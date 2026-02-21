@@ -11,7 +11,9 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 
 import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.climberhopper.ClimberDown;
 import com.stuypulse.robot.commands.climberhopper.ClimberHopperDefaultCommand;
+import com.stuypulse.robot.commands.climberhopper.ClimberUp;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
@@ -228,11 +230,11 @@ public class RobotContainer {
 
         // Climb Down Placeholder
         driver.getLeftBumper()
-            .onTrue(new BuzzController(driver));
+            .onTrue(new BuzzController(driver).alongWith(new ClimberDown()));
 
         // Climb Up Placeholder
         driver.getRightBumper()
-            .onTrue(new BuzzController(driver));
+            .onTrue(new BuzzController(driver).alongWith(new ClimberUp()));
 
         // Reset Heading
         driver.getDPadUp()

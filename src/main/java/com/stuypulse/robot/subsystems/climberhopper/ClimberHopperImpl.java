@@ -33,6 +33,8 @@ public class ClimberHopperImpl extends ClimberHopper {
         motor.setPosition(Settings.ClimberHopper.Constants.MIN_HEIGHT_METERS);
         stalling = BStream.create(() -> motor.getStatorCurrent().getValueAsDouble() > Settings.ClimberHopper.STALL)
             .filtered(new BDebounce.Both(Settings.ClimberHopper.DEBOUNCE));
+
+        voltageOverride = Optional.empty();
     }
 
     @Override 

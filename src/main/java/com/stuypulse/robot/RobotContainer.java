@@ -126,7 +126,9 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
+
     private void configureButtonBindings() {
+
         driver.getDPadRight()
             .whileTrue(
                 new SwerveXMode().alongWith(
@@ -144,36 +146,40 @@ public class RobotContainer {
                 new HandoffStop()))
             );
 
+        driver.getRightMenuButton()
+            .whileTrue(
+                new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_MENU)
+            );
 
-        driver.getDPadUp()
-            .onTrue(new SwerveResetHeading());
+        driver.getLeftMenuButton()
+            .whileTrue(
+                new LEDApplyState(Settings.LEDS.LEDState.PRESSED_LEFT_MENU)
+            );
 
         driver.getDPadDown()
             .onTrue(new TurretIdle())
-            .onTrue(new TurretSeed());
+            .onTrue(new TurretSeed())
+            .whileTrue(new LEDApplyState(Settings.LEDS.LEDState.PRESSED_DOWN_DPAD))
+            .onFalse(new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING));
+
+        driver.getDPadUp()
+            .onTrue(new SwerveResetHeading())
+            .whileTrue(new LEDApplyState(Settings.LEDS.LEDState.PRESSED_TOP_DPAD))
+            .onFalse(new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING));
+
         
         // SCORING ROUTINE
         driver.getTopButton()
                 .whileTrue(new TurretShoot()
-                        .alongWith(new HoodedShooterInterpolation())
+                        .alongWith(new HoodedShooterShoot())
                         .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
+                        .alongWith(new LEDApplyState(Settings.LEDS.LEDState.PRESSED_TOP_BUTTON))
                         .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
                                 .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
                                 .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance()))))
                 .onFalse(new SpindexerStop()
                         .alongWith(new HoodedShooterStow())
-                        .alongWith(new HandoffStop()));
-
-        driver.getBottomButton()
-                .onTrue(new HoodedShooterFerry()
-                        .alongWith(new TurretFerry())
-                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
-                        .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
-                                .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
-                                .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance())))      
-                )
-                .onFalse(new SpindexerStop()
-                        .alongWith(new HoodedShooterStow())
+                        .alongWith(new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING))
                         .alongWith(new HandoffStop()));
 
         // driver.getDPadDown()
@@ -195,14 +201,6 @@ public class RobotContainer {
 //-------------------------------------------------------------------------------------------------------------------------\\
 //-------------------------------------------------------------------------------------------------------------------------\\
 //-------------------------------------------------------------------------------------------------------------------------\\
-        // Climb Align TODO: uncomment
-        driver.getTopButton()
-            .whileTrue(
-                new SwerveClimbAlign().alongWith(
-                    new LEDApplyState(Settings.LEDS.LEDState.PRESSED_TOP_BUTTON))
-                )
-            .onFalse(new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING));
-
         // Left Corner Shoot
         driver.getLeftButton()
             .whileTrue(
@@ -270,7 +268,11 @@ public class RobotContainer {
         // Intake Off
         driver.getRightTriggerButton()
             .whileTrue(
-                new IntakeStop());
+                new IntakeStop().alongWith
+                (new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_TRIGGER)))
+            .onFalse(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
+            );
 
         // Climb Down Placeholder
         driver.getLeftBumper()

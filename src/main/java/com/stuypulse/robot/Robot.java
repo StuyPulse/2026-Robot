@@ -23,25 +23,14 @@ import com.ctre.phoenix6.SignalLogger;
 
 public class Robot extends TimedRobot {
 
-    public enum RobotMode {
-        DISABLED,
-        AUTON,
-        TELEOP,
-        TEST
-    }
-
     private RobotContainer robot;
     private Command auto;
     private static Alliance alliance;
-    private static RobotMode mode;
+    // private static RobotMode mode;
 
     StructPublisher<Pose3d> publisher;
     
     private PowerDistribution powerDistribution;
-
-    public static RobotMode getMode() {
-        return mode;
-    }
 
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
@@ -55,7 +44,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robot = new RobotContainer();
-        mode = RobotMode.DISABLED;
+     =
 
         DataLogManager.start();
         SignalLogger.start();
@@ -79,7 +68,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        mode = RobotMode.DISABLED;
+ 
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG1));
     }
 
@@ -92,7 +81,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        mode = RobotMode.AUTON;
 
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
 
@@ -115,7 +103,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        mode = RobotMode.TELEOP;
 
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
         
@@ -136,7 +123,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        mode = RobotMode.TEST;
         CommandScheduler.getInstance().cancelAll();
     }
 

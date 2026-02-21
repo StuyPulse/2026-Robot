@@ -5,7 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.robot.constants.Constants.LED;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.VecBuilder;
@@ -257,6 +256,7 @@ public interface Settings {
 
     public interface LEDS {
         double DESIRED_TAGS_WHEN_DISABLED = 2;
+        int LED_LENGTH = 40;
 
         public enum LEDState {
             PRESSED_TOP_BUTTON(LEDPattern.solid(Color.kLightBlue)),

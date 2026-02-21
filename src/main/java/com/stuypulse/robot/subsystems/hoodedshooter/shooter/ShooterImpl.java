@@ -69,7 +69,7 @@ public class ShooterImpl extends Shooter {
                 shooterLeader.setVoltage(voltageOverride.get());
                 shooterFollower.setControl(follower);
             } else {
-                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
+                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withEnableFOC(true));
                 shooterFollower.setControl(follower);
             }
         } else {

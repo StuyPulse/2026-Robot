@@ -51,7 +51,7 @@ public class HandoffImpl extends Handoff {
             } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-                motor.setControl(controller.withVelocity(getTargetRPM() / 60.0));
+                motor.setControl(controller.withVelocity(getTargetRPM() / 60.0).withEnableFOC(true));
             }
         }
 

@@ -5,14 +5,17 @@
 /***************************************************************/
 package com.stuypulse.robot;
 
-import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.commands.vision.SetMegaTagMode;
+import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -33,6 +36,8 @@ public class Robot extends TimedRobot {
     private static RobotMode mode;
 
     StructPublisher<Pose3d> publisher;
+    
+    private PowerDistribution powerDistribution;
 
     public static RobotMode getMode() {
         return mode;
@@ -55,17 +60,17 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         SignalLogger.start();
 
-        publisher = NetworkTableInstance.getDefault()
-            .getStructTopic("DriveTrainPose", Pose3d.struct).publish();
+        powerDistribution = new PowerDistribution();
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        SmartDashboard.putNumber("Robot/Voltage of Robot", powerDistribution.getVoltage());
 
-        Pose3d drivetrainPose = new Pose3d(CommandSwerveDrivetrain.getInstance().getPose());
-        publisher.set(drivetrainPose);
-
+        if (DriverStation.getAlliance().isPresent()) {
+            alliance = DriverStation.getAlliance().get();
+        }
     }
 
     /*********************/
@@ -75,6 +80,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         mode = RobotMode.DISABLED;
+        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG1));
     }
 
     @Override
@@ -87,6 +93,8 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         mode = RobotMode.AUTON;
+
+        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
 
         auto = robot.getAutonomousCommand();
 
@@ -109,6 +117,8 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         mode = RobotMode.TELEOP;
 
+        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        
         if (auto != null) {
             auto.cancel();
         }

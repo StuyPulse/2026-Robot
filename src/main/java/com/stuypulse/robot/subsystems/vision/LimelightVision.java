@@ -35,7 +35,15 @@ public class LimelightVision extends SubsystemBase{
     private String[] names;
     private SmartBoolean enabled;
     private SmartBoolean[] camerasEnabled;
+
     private int maxTagCount;
+
+    private MegaTagMode megaTagMode;
+
+    public enum MegaTagMode {
+        MEGATAG1,
+        MEGATAG2 
+    }
 
     public LimelightVision() {
         names = new String[Cameras.LimelightCameras.length];
@@ -54,6 +62,7 @@ public class LimelightVision extends SubsystemBase{
         }
 
         camerasEnabled = new SmartBoolean[Cameras.LimelightCameras.length];
+        
         for (int i = 0; i < camerasEnabled.length; i++) {
             camerasEnabled[i] = new SmartBoolean("Vision/" + names[i] + " Is Enabled", true);
             LimelightHelpers.SetIMUMode(names[i], 0);
@@ -63,6 +72,8 @@ public class LimelightVision extends SubsystemBase{
         enabled = new SmartBoolean("Vision/Is Enabled", true);
 
         maxTagCount = 0;
+
+        megaTagMode = MegaTagMode.MEGATAG1;
     }
 
     public void setTagWhitelist(int... ids) {
@@ -87,6 +98,10 @@ public class LimelightVision extends SubsystemBase{
         }
     }
 
+    public void setMegaTagMode(MegaTagMode mode) {
+        this.megaTagMode = mode;
+    }
+
     public void setIMUMode(int mode) {
         for (String name : names) {
             LimelightHelpers.SetIMUMode(name, mode);
@@ -106,6 +121,7 @@ public class LimelightVision extends SubsystemBase{
                 if (camerasEnabled[i].get()) {
                     String limelightName = names[i];
 
+                    // Seed robot heading (used by MT2)
                     LimelightHelpers.SetRobotOrientation(
                         limelightName, 
                         (CommandSwerveDrivetrain.getInstance().getPose().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360, 
@@ -116,27 +132,39 @@ public class LimelightVision extends SubsystemBase{
                         0
                     );
 
-                    PoseEstimate poseEstimate = Robot.isBlue() 
-                        ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
-                        : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
+
+                    PoseEstimate poseEstimate;
+
+                    // MegaTag switching
+                    if (megaTagMode == MegaTagMode.MEGATAG1) {
+                        poseEstimate = Robot.isBlue() 
+                            ? LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName)
+                            : LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
+                    } else {
+                        poseEstimate = Robot.isBlue() 
+                            ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
+                            : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
+                    }
                     
+                    // Adding to pose estimator
                     if (poseEstimate != null && poseEstimate.tagCount > 0) {
                         Pose2d robotPose = poseEstimate.pose;
                         double timestamp = poseEstimate.timestampSeconds;
-                    
-                        //CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MIN_STDDEVS.times(1 + poseEstimate.avgTagDist));
-                        CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT2_STDEVS);
+
+                        CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT1_STDEVS);
+
                         SmartDashboard.putNumber("Vision/Pose X Component", robotPose.getX());
                         SmartDashboard.putNumber("Vision/Pose Y Component", robotPose.getY());
                         SmartDashboard.putNumber("Vision/Pose Theta (Degrees)", robotPose.getRotation().getDegrees());
 
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", true);
-
+                        
                         maxTagCount = Math.max(maxTagCount, poseEstimate.tagCount);
-                    }
-                    else {
+                    } else {
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
                     }
+
+                    SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
                 }
             }
         }

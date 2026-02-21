@@ -23,7 +23,7 @@ import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
 import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.intake.IntakeOutake;
 import com.stuypulse.robot.commands.intake.IntakeStop;
-import com.stuypulse.robot.commands.leds.LEDApplyPattern;
+import com.stuypulse.robot.commands.leds.LEDApplyState;
 import com.stuypulse.robot.commands.leds.LEDDefaultCommand;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.swerve.SwerveClimbAlign;
@@ -116,14 +116,15 @@ public class RobotContainer {
                 new SwerveXMode().alongWith(
                     new HoodedShooterShoot().alongWith(
                         new TurretShoot()).alongWith(
-                            new LEDApplyPattern(Settings.LEDS.PRESSED_RIGHT_DPAD).alongWith(
+                            new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_DPAD).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance()))).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
                                 new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
                                     new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new SpindexerRun().alongWith(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING).alongWith(
+                new SpindexerRun()).alongWith(
                 new HandoffStop()))
             );
 
@@ -150,7 +151,7 @@ public class RobotContainer {
         driver.getTopButton()
             .whileTrue(
                 new SwerveClimbAlign().alongWith(
-                    new LEDApplyPattern(Settings.LEDS.PRESSED_TOP_BUTTON))
+                    new LEDApplyState(Settings.LEDS.LEDState.PRESSED_TOP_BUTTON))
                 );
 
         // Left Corner Shoot
@@ -158,7 +159,7 @@ public class RobotContainer {
             .whileTrue(
                 new SwerveXMode().alongWith(
                     new HoodedShooterLeftCorner().alongWith(
-                        new LEDApplyPattern(Settings.LEDS.PRESSED_LEFT_BUTTON).alongWith(
+                        new LEDApplyState(Settings.LEDS.LEDState.PRESSED_LEFT_BUTTON).alongWith(
                             new TurretLeftCorner())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
@@ -166,7 +167,8 @@ public class RobotContainer {
                                     new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new SpindexerRun().alongWith(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING).alongWith(
+                new SpindexerRun()).alongWith(
                 new HandoffStop()))
             );
 
@@ -175,7 +177,7 @@ public class RobotContainer {
             .whileTrue(
                 new SwerveXMode().alongWith(
                     new HoodedShooterRightCorner().alongWith(
-                        new LEDApplyPattern(Settings.LEDS.PRESSED_RIGHT_BUTTON).alongWith(
+                        new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_BUTTON).alongWith(
                             new TurretRightCorner())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
@@ -183,7 +185,8 @@ public class RobotContainer {
                                     new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new SpindexerRun().alongWith(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING).alongWith(
+                new SpindexerRun()).alongWith(
                 new HandoffStop()))
             );
 
@@ -192,7 +195,7 @@ public class RobotContainer {
             .whileTrue(
                 new SwerveXMode().alongWith(
                     new HoodedShooterShoot().alongWith(
-                        new LEDApplyPattern(Settings.LEDS.PRESSED_BOT_BUTTON).alongWith(
+                        new LEDApplyState(Settings.LEDS.LEDState.PRESSED_BOT_BUTTON).alongWith(
                             new TurretShoot())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
@@ -200,7 +203,8 @@ public class RobotContainer {
                                     new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new SpindexerRun().alongWith(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING).alongWith(
+                new SpindexerRun()).alongWith(
                 new HandoffStop()))
             );
 
@@ -208,39 +212,53 @@ public class RobotContainer {
         driver.getLeftTriggerButton()
             .onTrue(
                 new IntakeIntake().alongWith(
-                    new LEDApplyPattern(Settings.LEDS.PRESSED_LEFT_TRIGGER))
+                    new LEDApplyState(Settings.LEDS.LEDState.PRESSED_LEFT_TRIGGER)))
+            .onFalse(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
             );
 
         // Intake Off
         driver.getRightTriggerButton()
             .onTrue(new IntakeStop().alongWith(
-                new LEDApplyPattern(Settings.LEDS.PRESSED_RIGHT_TRIGGER)
-            ));
+                new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_TRIGGER)
+            ))
+            .onFalse(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
+            );
 
         // Climb Down Placeholder
         driver.getLeftBumper()
             .onTrue(new BuzzController(driver).alongWith(
-                new LEDApplyPattern(Settings.LEDS.PRESSED_LEFT_BUMPER)
-            ));
+                new LEDApplyState(Settings.LEDS.LEDState.PRESSED_LEFT_BUMPER)
+            ))
+            .onFalse(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
+            );
 
         // Climb Up Placeholder
         driver.getRightBumper()
             .onTrue(new BuzzController(driver).alongWith(
-                new LEDApplyPattern(Settings.LEDS.PRESSED_RIGHT_BUMPER)
-            ));
+                new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_BUMPER)
+            ))
+            .onFalse(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
+            );
 
         // Reset Heading
         driver.getDPadUp()
             .onTrue(new SwerveResetHeading().alongWith(
-                new LEDApplyPattern(Settings.LEDS.PRESSED_TOP_DPAD)
-            ));
+                new LEDApplyState(Settings.LEDS.LEDState.PRESSED_TOP_DPAD)
+            ))
+            .onFalse(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)
+            );
 
         // Ferry In Place
         driver.getDPadLeft()
             .whileTrue(
                 new SwerveXMode().alongWith(
                     new HoodedShooterFerry().alongWith(
-                        new LEDApplyPattern(Settings.LEDS.PRESSED_LEFT_DPAD).alongWith(
+                        new LEDApplyState(Settings.LEDS.LEDState.PRESSED_LEFT_DPAD).alongWith(
                             new TurretFerry())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                                 new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
@@ -248,16 +266,16 @@ public class RobotContainer {
                                     new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new SpindexerRun().alongWith(
-                new HandoffStop()))
-            );
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)).alongWith(
+                new SpindexerRun()).alongWith(
+                new HandoffStop()));
 
         // Score In Place
         driver.getDPadRight()
             .whileTrue(
                 new SwerveXMode().alongWith(
                     new HoodedShooterShoot().alongWith(
-                        new LEDApplyPattern(Settings.LEDS.PRESSED_RIGHT_DPAD).alongWith(
+                        new LEDApplyState(Settings.LEDS.LEDState.PRESSED_RIGHT_DPAD).alongWith(
                         new TurretShoot()).alongWith(
                             new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
@@ -265,9 +283,9 @@ public class RobotContainer {
                                 new SpindexerRun().alongWith(new HandoffRun())))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new SpindexerRun().alongWith(
-                new HandoffStop()))
-            );
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)).alongWith(
+                new SpindexerRun()).alongWith(
+                new HandoffStop()));
 
         // Unjam
         driver.getDPadDown()
@@ -275,13 +293,13 @@ public class RobotContainer {
                 new HoodedShooterReverse().alongWith(
                     new HandoffReverse().alongWith(
                         new IntakeOutake().alongWith(
-                        new LEDApplyPattern(Settings.LEDS.PRESSED_DOWN_DPAD)))))
+                        new LEDApplyState(Settings.LEDS.LEDState.PRESSED_DOWN_DPAD)))))
             .onFalse(
                 new HoodedShooterStow().alongWith(
-                new SpindexerRun().alongWith(
+                new LEDApplyState(Settings.LEDS.LEDState.DEFAULT_SETTING)).alongWith(
+                new SpindexerRun()).alongWith(
                 new HandoffStop().alongWith(
-                new IntakeStop())))
-            );
+                new IntakeStop())));
 
         // // Ferry in place
         // driver.getLeftMenuButton()

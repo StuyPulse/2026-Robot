@@ -5,13 +5,9 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.climberhopper;
 
-import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper.ClimberHopperState;
-import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 

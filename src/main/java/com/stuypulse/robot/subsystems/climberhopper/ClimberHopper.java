@@ -5,13 +5,13 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.climberhopper;
 
-import java.util.Optional;
-
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import java.util.Optional;
 
 public abstract class ClimberHopper extends SubsystemBase {
     private static final ClimberHopper instance;

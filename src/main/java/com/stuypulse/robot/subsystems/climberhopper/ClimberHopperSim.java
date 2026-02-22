@@ -87,8 +87,6 @@ public class ClimberHopperSim extends ClimberHopper {
             }
         }
 
-        // TODO: Figure out some way to reset the encoder reading when stall
-
         sim.setInputVoltage(voltage);
 
         SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);

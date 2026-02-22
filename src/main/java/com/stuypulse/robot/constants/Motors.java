@@ -44,6 +44,13 @@ public interface Motors {
             .withCurrentLimitAmps(50)
             .withSupplyCurrentLimitAmps(50)
             .withRampRate(Settings.ClimberHopper.RAMP_RATE);
+        
+        // TODO: This is currently assuming reverse is retracting. Swap when necessary!!
+            SoftwareLimitSwitchConfigs SOFT_LIMITS = new SoftwareLimitSwitchConfigs()
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitEnable(true)
+                .withForwardSoftLimitThreshold(Settings.ClimberHopper.ROTATIONS_AT_BOTTOM + Settings.ClimberHopper.Constants.NUM_ROTATIONS_TO_REACH_TOP)
+                .withReverseSoftLimitThreshold(Settings.ClimberHopper.ROTATIONS_AT_BOTTOM);
     }
 
     public interface HoodedShooter {

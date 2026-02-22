@@ -170,7 +170,7 @@ public class RobotContainer {
 //-------------------------------------------------------------------------------------------------------------------------\\
         // Climb Align
         driver.getTopButton()
-            .whileTrue(new SwerveClimbAlign());
+            .whileTrue(new SwerveClimbAlign().alongWith(new ClimberUp()));
 
         // Left Corner Shoot
         driver.getLeftButton()
@@ -234,7 +234,8 @@ public class RobotContainer {
 
         // Climb Up Placeholder
         driver.getRightBumper()
-            .onTrue(new BuzzController(driver).alongWith(new ClimberUp()));
+            .onTrue(new BuzzController(driver))
+            .whileTrue(new ClimberUp());
 
         // Reset Heading
         driver.getDPadUp()

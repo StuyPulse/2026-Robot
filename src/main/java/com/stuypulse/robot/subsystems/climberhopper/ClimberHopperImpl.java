@@ -6,7 +6,7 @@
 package com.stuypulse.robot.subsystems.climberhopper;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -27,10 +27,12 @@ public class ClimberHopperImpl extends ClimberHopper {
 
     public ClimberHopperImpl() {
         super();
+        
         motor = new TalonFX(Ports.ClimberHopper.CLIMBER_HOPPER);
         Motors.ClimberHopper.MOTOR.configure(motor);
-        
-        motor.setPosition(Settings.ClimberHopper.Constants.MIN_HEIGHT_METERS);
+        motor.getConfigurator().apply(Motors.ClimberHopper.SOFT_LIMITS);
+
+        motor.setPosition(Settings.ClimberHopper.ROTATIONS_AT_BOTTOM);
         stalling = BStream.create(() -> motor.getStatorCurrent().getValueAsDouble() > Settings.ClimberHopper.STALL)
             .filtered(new BDebounce.Both(Settings.ClimberHopper.DEBOUNCE));
 
@@ -43,7 +45,7 @@ public class ClimberHopperImpl extends ClimberHopper {
     }
 
     @Override
-    public double getCurrentHeight() { // TODO: convert motor encoder position to meters somehow
+    public double getCurrentHeight() {
         return this.motor.getPosition().getValueAsDouble() * Settings.ClimberHopper.Constants.POSITION_CONVERSION_FACTOR;
     }
 
@@ -61,11 +63,8 @@ public class ClimberHopperImpl extends ClimberHopper {
         this.voltageOverride = voltage;
     }
 
-    /**
-     * Resets the encoder postition to the upper hardstop
-     */
     public void resetPostionUpper() {
-        motor.setPosition(Settings.ClimberHopper.Constants.MAX_HEIGHT_METERS);
+        motor.setPosition(Settings.ClimberHopper.ROTATIONS_AT_BOTTOM + Settings.ClimberHopper.Constants.NUM_ROTATIONS_TO_REACH_TOP);
     }
 
     @Override
@@ -85,11 +84,20 @@ public class ClimberHopperImpl extends ClimberHopper {
                 voltage = 0;
             }
         }
+        
+        if (EnabledSubsystems.CLIMBER_HOPPER.get()) {
+            motor.setControl(new VoltageOut(voltage).withEnableFOC(true));
+        } else {
+            motor.stopMotor();
+        }
 
-        motor.setControl(new VoltageOut(voltage).withEnableFOC(true));
-
-        SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);
-        SmartDashboard.putNumber("ClimberHopper/Current", motor.getSupplyCurrent().getValueAsDouble());
         SmartDashboard.putBoolean("ClimberHopper/Stalling", getStalling());
+
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("ClimberHopper/Current Height", getCurrentHeight());
+            SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);
+            SmartDashboard.putNumber("ClimberHopper/Applied Voltage", motor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("ClimberHopper/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+        }
     }
 }

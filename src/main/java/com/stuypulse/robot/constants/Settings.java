@@ -227,6 +227,10 @@ public interface Settings {
         public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);
         public final Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(0.0);
 
+        double RESOLUTION_OF_ABSOLUTE_ENCODER = 0.1;
+        Rotation2d MAX_THEORETICAL_ROTATION = Rotation2d.fromDegrees(612);
+        Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
+
         public interface Constants {
             public final double RANGE = 210.0;
 
@@ -236,7 +240,7 @@ public interface Settings {
             public final double GEAR_RATIO_MOTOR_TO_MECH = 1425.0 / 36.0;
 
             public interface BigGear {
-                public final int TEETH = 95;
+                public final int TEETH = 90;
             }
 
             public interface Encoder17t {

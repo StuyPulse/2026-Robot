@@ -5,6 +5,8 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.climberhopper;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
@@ -29,7 +31,7 @@ public abstract class ClimberHopper extends SubsystemBase {
     public enum ClimberHopperState {
         CLIMBER_UP(Settings.ClimberHopper.CLIMBER_UP_HEIGHT_METERS),
         CLIMBER_DOWN(Settings.ClimberHopper.CLIMBER_DOWN_HEIGHT_METERS),
-        HOPPER_UP(Settings.ClimberHopper.HOPPER_UP_HEIGHT_METERS),
+        // HOPPER_UP(Settings.ClimberHopper.HOPPER_UP_HEIGHT_METERS),
         HOPPER_DOWN(Settings.ClimberHopper.HOPPER_DOWN_HEIGHT_METERS);
     
         private double targetHeight;
@@ -44,7 +46,7 @@ public abstract class ClimberHopper extends SubsystemBase {
 
     }
     
-    protected ClimberHopperState state;
+    private ClimberHopperState state;
 
     protected ClimberHopper() {
         this.state = ClimberHopperState.CLIMBER_UP;
@@ -61,8 +63,13 @@ public abstract class ClimberHopper extends SubsystemBase {
     public abstract boolean getStalling();
     public abstract double getCurrentHeight();
     public abstract boolean atTargetHeight();
+    
+    /**
+     * Resets the encoder postition to the upper hardstop
+     */
+    public abstract void resetPostionUpper();
 
-    // public abstract void setVoltageOverride(Optional<Double> voltage);
+    public abstract void setVoltageOverride(Optional<Double> voltage);
 
     @Override
     public void periodic() {

@@ -6,6 +6,8 @@
 package com.stuypulse.robot.subsystems.climberhopper;
 
 
+import java.util.Optional;
+
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -18,6 +20,8 @@ public class ClimberHopperSim extends ClimberHopper {
     private final ElevatorSim sim;
     private final ClimberHopperVisualizer visualizer;
     private double voltage;
+
+    private Optional<Double> voltageOverride;
 
     public ClimberHopperSim() {
         visualizer = ClimberHopperVisualizer.getInstance();
@@ -32,6 +36,8 @@ public class ClimberHopperSim extends ClimberHopper {
             false,
             Settings.ClimberHopper.Constants.MIN_HEIGHT_METERS
         );
+
+        voltageOverride = Optional.empty();
     }
 
     public boolean getStalling() {
@@ -52,26 +58,34 @@ public class ClimberHopperSim extends ClimberHopper {
         return isWithinTolerance(Settings.ClimberHopper.HEIGHT_TOLERANCE_METERS);
     }
 
-    // @Override
-    // public void setVoltageOverride(Optional<Double> voltage) {
-    //     this.voltageOverride = voltage;
-    // }
+    @Override
+    public void setVoltageOverride(Optional<Double> voltage) {
+        this.voltageOverride = voltage;
+    }
+
+    @Override
+    public void resetPostionUpper() {
+        // No encoder reset for sim
+    }
+
 
     @Override
     public void periodic() {
         super.periodic();
 
-        if (!atTargetHeight()) {
-            if (getCurrentHeight() < getState().getTargetHeight()) {
-                voltage = Settings.ClimberHopper.MOTOR_VOLTAGE;
+        if (voltageOverride.isPresent()) {
+                voltage = voltageOverride.get();
+        } else { 
+            if (!atTargetHeight()) {
+                if (getCurrentHeight() < getState().getTargetHeight()) {
+                    voltage = Settings.ClimberHopper.MOTOR_VOLTAGE;
+                } else {
+                    voltage = - Settings.ClimberHopper.MOTOR_VOLTAGE;
+                }
             } else {
-                voltage = - Settings.ClimberHopper.MOTOR_VOLTAGE;
+                voltage = 0;
             }
-        } else {
-            voltage = 0;
         }
-
-        // TODO: Figure out some way to reset the encoder reading when stall
 
         sim.setInputVoltage(voltage);
 

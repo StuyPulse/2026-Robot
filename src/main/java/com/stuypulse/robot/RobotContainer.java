@@ -49,6 +49,7 @@ import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveClimbAlign;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
+import com.stuypulse.robot.commands.swerve.SwerveWheelRadiusCharacterization;
 import com.stuypulse.robot.commands.swerve.SwerveXMode;
 import com.stuypulse.robot.commands.turret.TurretDefaultCommand;
 import com.stuypulse.robot.commands.turret.TurretAnalog;
@@ -417,7 +418,7 @@ public class RobotContainer {
         autonChooser.addOption("SysID Spindexer Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
 
         // Wheel Radius Characterization
-        // autonChooser.addOption("Wheel Characterization", new SwerveWheelCharacterization());
+        autonChooser.addOption("Wheel Characterization", new SwerveWheelRadiusCharacterization());
 
         SysIdRoutine handoffSysId = handoff.getSysIdRoutine();
         autonChooser.addOption("SysID Handoff Dynamic Forward", handoffSysId.dynamic(Direction.kForward));

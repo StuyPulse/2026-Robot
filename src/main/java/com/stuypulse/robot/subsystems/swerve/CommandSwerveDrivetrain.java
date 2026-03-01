@@ -428,7 +428,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return turretPose;
     }
 
-    public double[] getRadiusCharacterizationModulePositions(){
+    public double[] getWheelDrivePositionsRadians(){
         double[] positions = new double[4];
         double kDriveGearRatio = 6.48;
         for(int i = 0; i < 4; i++){

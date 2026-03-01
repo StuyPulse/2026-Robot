@@ -14,16 +14,14 @@ public interface DriverConstants {
         double BUZZ_INTENSITY = 1.0;
 
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
-
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+            double DEADBAND = 0.05;
+            double RC = 0.05;
+            int POWER = 2;
         }
         public interface Turn {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
-
-            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
+            double DEADBAND = 0.05;
+            double RC = 0.05;
+            int POWER = 2;
         }
     }
 }

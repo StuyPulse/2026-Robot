@@ -115,6 +115,9 @@ public abstract class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putString("States/Intake Pivot", getPivotState().toString());
+        SmartDashboard.putString("States/Intake Roller", getRollerState().toString());
+
         SmartDashboard.putString("Intake/Pivot State", getPivotState().toString());
         SmartDashboard.putString("Intake/Roller State", getRollerState().toString());
 

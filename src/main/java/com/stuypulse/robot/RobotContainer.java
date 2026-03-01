@@ -111,7 +111,7 @@ public class RobotContainer {
     private final Turret turret = Turret.getInstance();
 
     private final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
-    // private final Shooter shooter = Shooter.getInstance();
+    private final Shooter shooter = Shooter.getInstance();
     private final Hood hood = Hood.getInstance();
 
     // Autons
@@ -126,12 +126,12 @@ public class RobotContainer {
         configureSysids();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
-        SmartDashboard.putData("Intake/Reset Pivot", new SeedPivot());
-        SmartDashboard.putData("Zero Encoders", new TurretZero());
+        SmartDashboard.putData("Robot/Reset Pivot", new SeedPivot());
+        SmartDashboard.putData("Robot/Zero Encoders", new TurretZero());
 
-        SmartDashboard.putData("ClimberHopper/Override Up", new ClimberOverrideUp());
-        SmartDashboard.putData("ClimberHopper/Override Down", new ClimberOverrideDown());
-        SmartDashboard.putData("ClimberHopper/Override Stop", new  ClimberOverrideStop());
+        SmartDashboard.putData("Robot/Override Up", new ClimberOverrideUp());
+        SmartDashboard.putData("Robot/Override Down", new ClimberOverrideDown());
+        SmartDashboard.putData("Robot/Override Stop", new  ClimberOverrideStop());
     }
 
     /****************/

@@ -7,7 +7,7 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
-import com.stuypulse.robot.util.FMSutil;
+import com.stuypulse.robot.util.FMSUtil;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
     private static Alliance alliance;
     private PowerDistribution powerDistribution;
 
-    private FMSutil FMSUtil;
+    private FMSUtil FMSUtil;
 
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
@@ -52,13 +52,11 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         SmartDashboard.putNumber("Robot/Voltage of Robot", powerDistribution.getVoltage());
 
-        SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+        SmartDashboard.putNumber("Robot/Match Time", DriverStation.getMatchTime());
 
         if (DriverStation.getAlliance().isPresent()) {
             alliance = DriverStation.getAlliance().get();
         }
-
-        SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     }
 
     /*********************/
@@ -79,7 +77,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        FMSUtil = new FMSutil(true);
+        FMSUtil = new FMSUtil(true);
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
 
         auto = robot.getAutonomousCommand();
@@ -105,7 +103,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        if (FMSUtil == null) FMSUtil = new FMSutil();
+        if (FMSUtil == null) FMSUtil = new FMSUtil();
             FMSUtil.resetTimer(false);
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
         if (auto != null) {

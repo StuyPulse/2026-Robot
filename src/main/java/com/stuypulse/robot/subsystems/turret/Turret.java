@@ -105,6 +105,7 @@ public abstract class Turret extends SubsystemBase {
         SmartDashboard.putString("Turret/State", state.name());
         SmartDashboard.putString("States/Turret", state.name());
         SmartDashboard.putNumber("Turret/Target Angle", getTargetAngle().getDegrees());
+        SmartDashboard.putBoolean("Turret/At Target Angle?", atTargetAngle());
 
         if (Settings.DEBUG_MODE) {
             if (EnabledSubsystems.TURRET.get()) {
@@ -129,14 +130,6 @@ public abstract class Turret extends SubsystemBase {
         // https://www.youtube.com/watch?v=_VuZZ9_58Wg
         double crossProduct = zeroVector.x * turretToTarget.y - zeroVector.y * turretToTarget.x;
         double dotProduct = zeroVector.dot(turretToTarget);
-
-        SmartDashboard.putNumber("Turret/Turret to Target Vector X", turretToTarget.x);
-        SmartDashboard.putNumber("Turret/Turret to Target Vector Y", turretToTarget.y);
-
-        SmartDashboard.putNumber("Turret/Target Pose X", targetPose.getX());
-        SmartDashboard.putNumber("Turret/Target Pose Y", targetPose.getY());
-        SmartDashboard.putNumber("Turret/Zero Vector X", zeroVector.x);
-        SmartDashboard.putNumber("Turret/Zero Vector Y", zeroVector.y);
 
         Rotation2d targetAngle = (Robot.isReal() ?
             Rotation2d.fromRadians(-Math.atan2(crossProduct, dotProduct)) :

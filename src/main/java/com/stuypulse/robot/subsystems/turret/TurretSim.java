@@ -107,9 +107,7 @@ public class TurretSim extends Turret {
         SmartDashboard.putNumber("Turret/Constraints/Max Vel (deg per s)", Units.radiansToDegrees(maxAngularVelRadiansPerSecond));
         SmartDashboard.putNumber("Turret/Constraints/Max Accel (deg per s per s)", Units.radiansToDegrees(maxAngularAccelRadiansPerSecondSquared));
 
-        SmartDashboard.putNumber("Turret/Setpoint (deg)", Units.radiansToDegrees(setpoint.position));
-        SmartDashboard.putNumber("Turret/Target (deg)", Units.radiansToDegrees(getTargetAngle().getRadians()));
-        SmartDashboard.putBoolean("Turret/At Target", atTargetAngle());
+        SmartDashboard.putNumber("Turret/Motion Profile Setpoint (deg)", Units.radiansToDegrees(setpoint.position));
         SmartDashboard.putNumber("Turret/Error: abs(turret - target) (deg)", Math.abs(getAngle().minus(getTargetAngle()).getDegrees()));
 
         SmartDashboard.putNumber("Turret/Current Angle (deg)", sim.getOutput(0));

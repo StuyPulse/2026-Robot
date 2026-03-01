@@ -13,18 +13,13 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Turret.Constants;
 import com.stuypulse.robot.util.SysId;
 import com.stuypulse.robot.util.turret.TurretAngleCalculator;
-import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GainSchedBehaviorValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -44,9 +39,6 @@ public class TurretImpl extends Turret {
     private Optional<Double> voltageOverride;
     private final PositionVoltage controller;
 
-    // private boolean wrapping;
-    // private BStream isWrapping;
-
     public TurretImpl() {
         turretConfig = new Motors.TalonFXConfig()
             .withRampRate(0.25)
@@ -62,12 +54,11 @@ public class TurretImpl extends Turret {
             .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign, 1)
             
             .withSensorToMechanismRatio(Settings.Turret.Constants.GEAR_RATIO_MOTOR_TO_MECH)
-            // .withGainSchedBehavior(GainSchedBehaviorValue.UseSlot0, Settings.Turret.Constants.SLOT_SWITCHING_THRESHOLD_ROT, 1)
+
             .withSoftLimits(
                 false, false,
                 Settings.Turret.Constants.SoftwareLimit.FORWARD_MAX_ROTATIONS,
                 Settings.Turret.Constants.SoftwareLimit.BACKWARDS_MAX_ROTATIONS)
-                
             .withMaxVoltage(6, -6);
 
         encoder17tConfig = new Motors.CANCoderConfig()
@@ -90,10 +81,6 @@ public class TurretImpl extends Turret {
         voltageOverride = Optional.empty();
         controller = new PositionVoltage(getTargetAngle().getRotations())
         .withEnableFOC(true);
-
-        // isWrapping = BStream
-        //     .create(() -> checkForWrapping())
-        //     .filtered(new BDebounce.Both(Settings.Turret.WRAP_DEBOUNCE));
     }
     
     private Rotation2d getEncoderPos17t() {
@@ -145,10 +132,6 @@ public class TurretImpl extends Turret {
     
     private double getDelta(double target, double current) {
         double delta = (target - current) % 360;
-
-        SmartDashboard.putNumber("Turret/Debugging: Delta", delta);
-        SmartDashboard.putNumber("Turret/Debugging: Target", target);
-        SmartDashboard.putNumber("Turret/Debugging: Current", current);
         
         if (delta > 180.0) delta -= 360;
         else if (delta < -180) delta += 360;
@@ -157,19 +140,6 @@ public class TurretImpl extends Turret {
 
         return delta < 0 ? delta + 360 : delta - 360;
     }
-
-    // private boolean checkForWrapping() {
-    //     double currentAngle = getAngle().getDegrees();
-    //     double actualTargetDeg = currentAngle + getDelta(getTargetAngle().getDegrees(), currentAngle);
-        
-    //     if(!isWrapping.get()) { 
-    //         return (Math.abs(currentAngle - actualTargetDeg) > 180.0);
-    //     } else if(atTargetAngle()) { 
-    //         return false;
-    //     }
-
-    //     return isWrapping.get();
-    // }
 
     @Override
     public void periodic() {
@@ -184,22 +154,11 @@ public class TurretImpl extends Turret {
         double currentAngle = getAngle().getDegrees();
         double actualTargetDeg = currentAngle + getDelta(getTargetAngle().getDegrees(), currentAngle);
 
-        SmartDashboard.putNumber("Turret/Delta (deg)", getDelta(getTargetAngle().getDegrees(), getAngle().getDegrees()));
-        SmartDashboard.putNumber("Turret/Actual Target (deg)", actualTargetDeg);
-        SmartDashboard.putNumber("Turret/Closed Loop Slot" , motor.getClosedLoopSlot().getValue());
-
         if (EnabledSubsystems.TURRET.get()) {
             if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-                // if(getState() == TurretState.TESTING) {
-                //     motor.setControl(controller.withPosition(currentAngle + 1.0).withSlot(1));
-                // } else
-                // if (isWrapping.getAsBoolean()) {
-                //     motor.setControl(controller.withPosition(actualTargetDeg / 360.0).withSlot(1));
-                // } else {
-                    motor.setControl(controller.withPosition(actualTargetDeg / 360.0).withSlot(0));
-                // }
+                motor.setControl(controller.withPosition(actualTargetDeg / 360.0).withSlot(0));
             }
         } else {
             motor.stopMotor();
@@ -207,17 +166,15 @@ public class TurretImpl extends Turret {
 
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("Turret/Closed Loop Error (deg)", motor.getClosedLoopError().getValueAsDouble() * 360.0);
-            SmartDashboard.putNumber("Turret/Wrap Point +210", Settings.Turret.Constants.RANGE);
-            SmartDashboard.putNumber("Turret/Wrap Point -210", -Settings.Turret.Constants.RANGE);
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
-            SmartDashboard.putNumber("Turret/Vector Space Position (Rot)", getVectorSpaceAngle().getRotations());
             SmartDashboard.putNumber("Turret/Vector Space Position (Deg)", getVectorSpaceAngle().getDegrees());
             SmartDashboard.putNumber("Turret/Relative Encoder Position (Rot)", motor.getPosition().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Stator Current", motor.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+
+            SmartDashboard.putNumber("Current Draws/Turret (amps)", motor.getSupplyCurrent().getValueAsDouble());
         }
     }
 

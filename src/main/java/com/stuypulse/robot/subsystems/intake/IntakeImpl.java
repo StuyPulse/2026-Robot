@@ -195,6 +195,10 @@ public class IntakeImpl extends Intake {
             SmartDashboard.putNumber("Intake/Pivot Temperature (C)", pivot.getDeviceTemp().getValueAsDouble());
             SmartDashboard.putNumber("Intake/Leader Temperature (C)", rollerLeader.getDeviceTemp().getValueAsDouble());
             SmartDashboard.putNumber("Intake/Follower Temperature (C)", rollerFollower.getDeviceTemp().getValueAsDouble());
+
+            SmartDashboard.putNumber("Current Draws/Intake Pivot (amps)", pivot.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Current Draws/Intake Roller Leader (amps)", rollerLeader.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Current Draws/Intake Roller Follower (amps)", rollerFollower.getSupplyCurrent().getValueAsDouble());
         }
     }
 

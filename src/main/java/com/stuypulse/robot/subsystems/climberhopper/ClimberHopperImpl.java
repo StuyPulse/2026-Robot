@@ -105,14 +105,16 @@ public class ClimberHopperImpl extends ClimberHopper {
             motor.stopMotor();
         }
 
-        SmartDashboard.putBoolean("ClimberHopper/Stalling", getStalling());
-
         if (Settings.DEBUG_MODE) {
+            SmartDashboard.putBoolean("ClimberHopper/Stalling", getStalling());
+
             SmartDashboard.putNumber("ClimberHopper/Current Height", getCurrentHeight());
             SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);
             SmartDashboard.putNumber("ClimberHopper/Applied Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("ClimberHopper/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
             SmartDashboard.putNumber("ClimberHopper/Stator Current", motor.getStatorCurrent().getValueAsDouble());
+
+            SmartDashboard.putNumber("Current Draws/ClimberHopper (amps)", motor.getSupplyCurrent().getValueAsDouble());
         }
     }
 }

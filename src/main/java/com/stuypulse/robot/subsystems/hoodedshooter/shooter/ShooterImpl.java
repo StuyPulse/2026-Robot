@@ -105,6 +105,9 @@ public class ShooterImpl extends Shooter {
 
             SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error", shooterLeader.getClosedLoopError().getValueAsDouble() * 60.0);
             SmartDashboard.putNumber("InterpolationTesting/Shooter Applied Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
+
+            SmartDashboard.putNumber("Current Draws/Shooter Leader (amps)", shooterLeader.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Current Draws/Shooter Follower (amps)", shooterFollower.getSupplyCurrent().getValueAsDouble());
         }
     }
 

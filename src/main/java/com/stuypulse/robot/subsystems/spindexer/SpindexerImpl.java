@@ -129,6 +129,9 @@ public class SpindexerImpl extends Spindexer {
             SmartDashboard.putNumber("Spindexer/Follower Voltage", followerMotor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Supply Current", followerMotor.getSupplyCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Stator Current", followerMotor.getStatorCurrent().getValueAsDouble());
+
+            SmartDashboard.putNumber("Current Draws/Spindexer Leader (amps)", leadMotor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Current Draws/Spindexer Follower (amps)", followerMotor.getSupplyCurrent().getValueAsDouble());
         }
     }
 

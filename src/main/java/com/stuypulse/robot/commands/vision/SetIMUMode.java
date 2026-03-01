@@ -3,25 +3,24 @@
 /* Use of this source code is governed by an MIT-style license */
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
-package com.stuypulse.robot.commands.turret;
+package com.stuypulse.robot.commands.vision;
 
-import com.stuypulse.robot.subsystems.turret.Turret;
+import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class TurretZero extends InstantCommand {
+public class SetIMUMode extends InstantCommand {
+    private final LimelightVision vision;
+    private final int index;
 
-    private final Turret turret;
-
-    public TurretZero() {
-        this.turret = Turret.getInstance();
-
-        addRequirements(turret);
+    public SetIMUMode(int IMUIndex) {
+        vision = LimelightVision.getInstance();
+        index = IMUIndex;
     }
 
     @Override
     public void initialize() {
-        turret.zeroEncoders();
-        turret.seedTurret();
+        super.initialize();
+        vision.setIMUMode(index);
     }
 }

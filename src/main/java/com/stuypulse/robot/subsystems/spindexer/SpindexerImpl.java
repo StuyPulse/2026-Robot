@@ -6,6 +6,7 @@
 package com.stuypulse.robot.subsystems.spindexer;
 
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
+import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -17,10 +18,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import java.util.Optional;
 
 public class SpindexerImpl extends Spindexer {
+    private final Motors.TalonFXConfig spindexerLeadConfig;
+    private final Motors.TalonFXConfig spindexerFollowerConfig;
+
     private final TalonFX leadMotor;
     private final TalonFX followerMotor;
 
@@ -30,11 +36,29 @@ public class SpindexerImpl extends Spindexer {
     private Optional<Double> voltageOverride;
 
     public SpindexerImpl() {
+        spindexerLeadConfig = new Motors.TalonFXConfig()
+            .withCurrentLimitEnable(false)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+            .withFFConstants(Gains.Spindexer.kS.get(), Gains.Spindexer.kV.get(), Gains.Spindexer.kA.get(), 0)
+            .withPIDConstants(Gains.Spindexer.kP.get(), Gains.Spindexer.kI.get(), Gains.Spindexer.kD.get(), 0)
+            .withSensorToMechanismRatio(Settings.Spindexer.Constants.GEAR_RATIO);
+
+        spindexerFollowerConfig = new Motors.TalonFXConfig()
+            .withCurrentLimitEnable(false)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+            .withFFConstants(Gains.Spindexer.kS.get(), Gains.Spindexer.kV.get(), Gains.Spindexer.kA.get(), 0)
+            .withPIDConstants(Gains.Spindexer.kP.get(), Gains.Spindexer.kI.get(), Gains.Spindexer.kD.get(), 0)
+            .withSensorToMechanismRatio(Settings.Spindexer.Constants.GEAR_RATIO);
+
         leadMotor = new TalonFX(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, Ports.CANIVORE);
         followerMotor = new TalonFX(Ports.Spindexer.SPINDEXER_FOLLOW_MOTOR, Ports.CANIVORE);
 
-        Motors.Spindexer.SPINDEXER.configure(leadMotor);
-        Motors.Spindexer.SPINDEXER.configure(followerMotor);
+        spindexerLeadConfig.configure(leadMotor);
+        spindexerFollowerConfig.configure(followerMotor);
 
         controller = new VelocityVoltage(getTargetRPM())
             .withEnableFOC(true);
@@ -59,14 +83,36 @@ public class SpindexerImpl extends Spindexer {
     @Override
     public void periodic() {
         super.periodic();
+
+        spindexerLeadConfig.updateGainsConfig(
+            leadMotor,
+            0,
+            Gains.Spindexer.kP,
+            Gains.Spindexer.kI,
+            Gains.Spindexer.kD,
+            Gains.Spindexer.kS,
+            Gains.Spindexer.kV,
+            Gains.Spindexer.kA
+        );
+
+        spindexerFollowerConfig.updateGainsConfig(
+            followerMotor,
+            0,
+            Gains.Spindexer.kP,
+            Gains.Spindexer.kI,
+            Gains.Spindexer.kD,
+            Gains.Spindexer.kS,
+            Gains.Spindexer.kV,
+            Gains.Spindexer.kA
+        );
+
         if (EnabledSubsystems.SPINDEXER.get()) {
-            if (voltageOverride.isPresent()){
+            if (voltageOverride.isPresent()) {
                 leadMotor.setVoltage(voltageOverride.get());
-                followerMotor.setControl(follower);
             } else {
                 leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
-                followerMotor.setControl(follower);
             }
+            followerMotor.setControl(follower);
         }
 
         if (Settings.DEBUG_MODE) {
@@ -82,6 +128,7 @@ public class SpindexerImpl extends Spindexer {
             SmartDashboard.putNumber("Spindexer/Follower Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Voltage", followerMotor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Supply Current", followerMotor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Follower Stator Current", followerMotor.getStatorCurrent().getValueAsDouble());
         }
     }
 

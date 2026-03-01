@@ -22,7 +22,11 @@ import com.stuypulse.robot.commands.auton.RegularAutons.TopTwoCycle;
 import com.stuypulse.robot.commands.auton.Test.BoxTest;
 import com.stuypulse.robot.commands.climberhopper.ClimberDown;
 import com.stuypulse.robot.commands.climberhopper.ClimberHopperDefaultCommand;
+import com.stuypulse.robot.commands.climberhopper.ClimberOverrideDown;
+import com.stuypulse.robot.commands.climberhopper.ClimberOverrideStop;
+import com.stuypulse.robot.commands.climberhopper.ClimberOverrideUp;
 import com.stuypulse.robot.commands.climberhopper.ClimberUp;
+import com.stuypulse.robot.commands.climberhopper.HopperDown;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
@@ -33,9 +37,13 @@ import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterReverse;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterRightCorner;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
+import com.stuypulse.robot.commands.intake.IntakeAnalog;
+import com.stuypulse.robot.commands.intake.IntakeBangBang;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
+import com.stuypulse.robot.commands.intake.IntakeRunRollers;
 import com.stuypulse.robot.commands.intake.IntakeStopRollers;
 import com.stuypulse.robot.commands.intake.IntakeStow;
+import com.stuypulse.robot.commands.intake.SeedPivot;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveClimbAlign;
@@ -43,12 +51,17 @@ import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
 import com.stuypulse.robot.commands.swerve.SwerveXMode;
 import com.stuypulse.robot.commands.turret.TurretDefaultCommand;
+import com.stuypulse.robot.commands.turret.TurretAnalog;
 import com.stuypulse.robot.commands.turret.TurretFerry;
+import com.stuypulse.robot.commands.turret.TurretHub;
 import com.stuypulse.robot.commands.turret.TurretIdle;
 import com.stuypulse.robot.commands.turret.TurretLeftCorner;
 import com.stuypulse.robot.commands.turret.TurretRightCorner;
 import com.stuypulse.robot.commands.turret.TurretSeed;
 import com.stuypulse.robot.commands.turret.TurretShoot;
+import com.stuypulse.robot.commands.turret.TurretZero;
+import com.stuypulse.robot.commands.vision.ResetLimelightIMU;
+import com.stuypulse.robot.commands.vision.SetIMUMode;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
@@ -66,7 +79,6 @@ import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
@@ -74,21 +86,21 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 public class RobotContainer {
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
         SmartBoolean HANDOFF = new SmartBoolean("Enabled Subsystems/Handoff Is Enabled", false);
         SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
         SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
         SmartBoolean CLIMBER_HOPPER = new SmartBoolean("Enabled Subsystems/Climber-Hopper Is Enabled", false);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", false);
-        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
+        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
     }
 
     // Gamepads
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
 
     // Subsystem
-    private final ClimberHopper climberHopper = ClimberHopper.getInstance();
+    // private final ClimberHopper climberHopper = ClimberHopper.getInstance();
     private final Handoff handoff = Handoff.getInstance();
     private final Intake intake = Intake.getInstance();
     private final Spindexer spindexer = Spindexer.getInstance();
@@ -98,7 +110,7 @@ public class RobotContainer {
     private final Turret turret = Turret.getInstance();
 
     private final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
-    private final Shooter shooter = Shooter.getInstance();
+    // private final Shooter shooter = Shooter.getInstance();
     private final Hood hood = Hood.getInstance();
 
     // Autons
@@ -110,8 +122,15 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
+        configureSysids();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
+        SmartDashboard.putData("Intake/Reset Pivot", new SeedPivot());
+        SmartDashboard.putData("Zero Encoders", new TurretZero());
+
+        SmartDashboard.putData("ClimberHopper/Override Up", new ClimberOverrideUp());
+        SmartDashboard.putData("ClimberHopper/Override Down", new ClimberOverrideDown());
+        SmartDashboard.putData("ClimberHopper/Override Stop", new  ClimberOverrideStop());
     }
 
     /****************/
@@ -120,8 +139,8 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        climberHopper.setDefaultCommand(new ClimberHopperDefaultCommand());
         turret.setDefaultCommand(new TurretDefaultCommand());
+        // climberHopper.setDefaultCommand(new ClimberHopperDefaultCommand());
     }
 
     /***************/
@@ -129,42 +148,64 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        // Intake Up and Off
-        driver.getLeftTriggerButton()
-            .onTrue(new IntakeStow());
+        // Intake Run Rollers
+        // driver.getLeftTriggerButton()
+        //     .onTrue(new IntakeRunRollers())
+        //     .onFalse(new IntakeStopRollers());
 
         // Intake Down and On
+        // driver.getRightTriggerButton()
+        //     .onTrue(new IntakeDeploy());
+
+        //TODO: COMMENT OUT AFTER (POTENTIAL) TESTING
+
+        // driver.getBottomButton()
+        //     .onTrue(new IntakeBangBang());
+
         driver.getRightTriggerButton()
             .onTrue(new IntakeDeploy());
 
+        driver.getLeftTriggerButton()
+            .onTrue(new IntakeStow());
+
         // Reset Heading
         driver.getDPadUp()
-            .onTrue(new SwerveResetHeading());
+            .onTrue(new SwerveResetHeading())
+            .onTrue(new ResetLimelightIMU())
+            .onFalse(new SetIMUMode(0));
         
-        // Scoring Routine using Interpolation Settings
         driver.getTopButton()
-                .whileTrue(new HoodedShooterInterpolation()
-                        .alongWith(new TurretShoot())
-                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
-                        .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
-                                .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
-                                .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance()))))
-                .onFalse(new SpindexerStop()
-                        .alongWith(new HoodedShooterStow())
-                        .alongWith(new HandoffStop()));
+            .onTrue(new TurretShoot())
+            .onFalse(new TurretIdle());
 
-        // Ferry Routine using Interpolation Settings
         driver.getBottomButton()
-                .onTrue(new HoodedShooterFerry()
-                        .alongWith(new TurretFerry())
-                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
-                        .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
-                                .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
-                                .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance())))      
-                )
-                .onFalse(new SpindexerStop()
-                        .alongWith(new HoodedShooterStow())
-                        .alongWith(new HandoffStop()));
+            .onTrue(new TurretAnalog(driver))
+            .onFalse(new TurretIdle());
+
+        // Scoring Routine using Interpolation Settings
+        // driver.getTopButton()
+        //         .whileTrue(new HoodedShooterInterpolation()
+        //                 .alongWith(new TurretShoot())
+        //                 .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
+        //                 .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
+        //                         .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
+        //                         .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance()))))
+        //         .onFalse(new SpindexerStop()
+        //                 .alongWith(new HoodedShooterStow())
+        //                 .alongWith(new HandoffStop()));
+
+        // // Ferry Routine using Interpolation Settings
+        // driver.getBottomButton()
+        //         .onTrue(new HoodedShooterFerry()
+        //                 .alongWith(new TurretFerry())
+        //                 .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
+        //                 .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
+        //                         .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
+        //                         .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance())))      
+        //         )
+        //         .onFalse(new SpindexerStop()
+        //                 .alongWith(new HoodedShooterStow())
+        //                 .alongWith(new HandoffStop()));
 
 //-------------------------------------------------------------------------------------------------------------------------\\
 //-------------------------------------------------------------------------------------------------------------------------\\
@@ -234,12 +275,14 @@ public class RobotContainer {
 
         // Climb Down Placeholder
         driver.getLeftBumper()
-            .onTrue(new BuzzController(driver).alongWith(new ClimberDown()));
+            .onTrue(new BuzzController(driver).alongWith(new ClimberDown()))
+            .onFalse(new HopperDown());
 
         // Climb Up Placeholder
         driver.getRightBumper()
             .onTrue(new BuzzController(driver))
-            .whileTrue(new ClimberUp());
+            .whileTrue(new ClimberUp())
+            .onFalse(new HopperDown());
 
         // Reset Heading
         driver.getDPadUp()
@@ -334,10 +377,15 @@ public class RobotContainer {
 
     public void configureSysids() {
 
-        // autonChooser.addOption("SysID Module Translation Dynamic Forward", swerve.sysIdDynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse));
+        autonChooser.addOption("SysID Module Translation Dynamic Forwards", swerve.sysIdDynamic(Direction.kForward));
+        autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
+        autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
+        autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse));
+
+        // autonChooser.addOption("SysID Turret Dynamic Forwards", turret.getSysIdRoutine().dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Turret Dynamic Reverse", turret.getSysIdRoutine().dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Turret Quasistatic Forwards", turret.getSysIdRoutine().quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Turret Quasistatic Reverse", turret.getSysIdRoutine().quasistatic(Direction.kReverse));
 
         // autonChooser.addOption("SysID Module Rotation Dynamic Forwards", swerve.sysIdRotDynamic(Direction.kForward));
         // autonChooser.addOption("SysID Module Rotation Dynamic Backwards", swerve.sysIdRotDynamic(Direction.kReverse));
@@ -345,38 +393,37 @@ public class RobotContainer {
         // autonChooser.addOption("SysID Module Rotation Quasi Backwards", swerve.sysIdRotQuasi(Direction.kReverse));
 
         // SysIdRoutine shooterSysId = shooter.getShooterSysIdRoutine();
-        // autonChooser.addOption("SysID Shooter Dynamic Forward", shooterSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Shooter Dynamic Forwards", shooterSysId.dynamic(Direction.kForward));
         // autonChooser.addOption("SysID Shooter Dynamic Backwards", shooterSysId.dynamic(Direction.kReverse));
         // autonChooser.addOption("SysID Shooter Quasi Forwards", shooterSysId.quasistatic(Direction.kForward));
         // autonChooser.addOption("SysID Shooter Quasi Backwards", shooterSysId.quasistatic(Direction.kReverse));
 
         // SysIdRoutine hoodSysId = hood.getHoodSysIdRoutine();
-        // autonChooser.addOption("SysID Hood Dynamic Forward", hoodSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Hood Dynamic Forwards", hoodSysId.dynamic(Direction.kForward));
         // autonChooser.addOption("SysID Hood Dynamic Backwards", hoodSysId.dynamic(Direction.kReverse));
         // autonChooser.addOption("SysID Hood Quasi Forwards", hoodSysId.quasistatic(Direction.kForward));
         // autonChooser.addOption("SysID Hood Quasi Backwards", hoodSysId.quasistatic(Direction.kReverse));
 
         // SysIdRoutine intakePivotSysId = intake.getPivotSysIdRoutine();
-        // autonChooser.addOption("SysID Intake Pivot Dynamic Forward", intakePivotSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Intake Pivot Dynamic Forwards", intakePivotSysId.dynamic(Direction.kForward));
         // autonChooser.addOption("SysID Intake Pivot Dynamic Backwards", intakePivotSysId.dynamic(Direction.kReverse));
         // autonChooser.addOption("SysID Intake Pivot Quasi Forwards", intakePivotSysId.quasistatic(Direction.kForward));
         // autonChooser.addOption("SysID Intake Pivot Quasi Backwards", intakePivotSysId.quasistatic(Direction.kReverse));
 
-        // SysIdRoutine spindexerSysId = spindexer.getSysIdRoutine();
-        // autonChooser.addOption("SysID Spindexer Dynamic Forward", spindexerSysId.dynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Spindexer Dynamic Backwards", spindexerSysId.dynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Spindexer Quasi Forwards", spindexerSysId.quasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Spindexer Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
-
-        // SysIdRoutine handoffSysId = handoff.getSysIdRoutine();
-        // autonChooser.addOption("SysID Handoff Forward", handoffSysId.dynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Handoff Backwards", handoffSysId.dynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Handoff Forwards", handoffSysId.quasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Handoff Backwards", handoffSysId.quasistatic(Direction.kReverse));
+        SysIdRoutine spindexerSysId = spindexer.getSysIdRoutine();
+        autonChooser.addOption("SysID Spindexer Dynamic Forwards", spindexerSysId.dynamic(Direction.kForward));
+        autonChooser.addOption("SysID Spindexer Dynamic Backwards", spindexerSysId.dynamic(Direction.kReverse));
+        autonChooser.addOption("SysID Spindexer Quasi Forwards", spindexerSysId.quasistatic(Direction.kForward));
+        autonChooser.addOption("SysID Spindexer Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
 
         // Wheel Radius Characterization
         // autonChooser.addOption("Wheel Characterization", new SwerveWheelCharacterization());
 
+        SysIdRoutine handoffSysId = handoff.getSysIdRoutine();
+        autonChooser.addOption("SysID Handoff Dynamic Forward", handoffSysId.dynamic(Direction.kForward));
+        autonChooser.addOption("SysID Handoff Dynamic Backwards", handoffSysId.dynamic(Direction.kReverse));
+        autonChooser.addOption("SysID Handoff Quasi Forwards", handoffSysId.quasistatic(Direction.kForward));
+        autonChooser.addOption("SysID Handoff Quasi Backwards", handoffSysId.quasistatic(Direction.kReverse));
     }
 
     public Command getAutonomousCommand() {

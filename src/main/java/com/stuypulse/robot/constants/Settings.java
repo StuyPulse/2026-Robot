@@ -23,8 +23,6 @@ import edu.wpi.first.math.util.Units;
  * We use StuyLib's SmartNumber / SmartBoolean in order to have tunable
  * values that we can edit on Shuffleboard.
  */
-import com.ctre.phoenix6.CANBus;
-import com.pathplanner.lib.path.PathConstraints;
 
 public interface Settings {
     public final double DT = 0.020;
@@ -71,7 +69,7 @@ public interface Settings {
 
         public final double RAMP_RATE = 50.0;
 
-        public final double MOTOR_VOLTAGE = 3.5;
+        public final double MOTOR_VOLTAGE = 12;
     }
 
     public interface Handoff {
@@ -86,20 +84,26 @@ public interface Settings {
 
     public interface Intake {
         Rotation2d PIVOT_STOW_ANGLE = Rotation2d.fromDegrees(90.0); 
-        Rotation2d PIVOT_INTAKE_OUTAKE_ANGLE = Rotation2d.fromDegrees(0.0);
+        Rotation2d PIVOT_DEPLOY_ANGLE = Rotation2d.fromDegrees(0.0);
 
         Rotation2d PIVOT_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3.0); 
-        double FORWARD_MAX_ROTATIONS = -30.0 / 360.0;
-        double BACKWARDS_MAX_ROTATIONS = 90.0 / 360.0;
 
-        Rotation2d PIVOT_ANGLE_OFFSET = new Rotation2d();
-        Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(190);
-        Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(80);
+        Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(90.0); //Rotation2d.fromRotations(-0.0)
+        Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(0.0); // Rotation2d.fromRotations(-0.2)
 
-        Rotation2d PIVOT_MAX_VEL = Rotation2d.fromDegrees(300.0);
-        Rotation2d PIVOT_MAX_ACCEL = Rotation2d.fromDegrees(300.0);
+        Rotation2d PIVOT_MAX_VEL_DEPLOY = Rotation2d.fromDegrees(720.0);
+        Rotation2d PIVOT_MAX_ACCEL_DEPLOY = Rotation2d.fromDegrees(1440.0);
 
-        double GEAR_RATIO = 48.0;
+        Rotation2d PIVOT_MAX_VEL_STOW = Rotation2d.fromDegrees(360.0);
+        Rotation2d PIVOT_MAX_ACCEL_STOW = Rotation2d.fromDegrees(600.0);
+
+        Rotation2d THRESHHOLD_TO_START_ROLLERS = Rotation2d.fromDegrees(60.0);
+
+        Rotation2d ARBITRARY_VOLTAGE_THRESHOLD = Rotation2d.fromDegrees(15.0);
+        
+        double PUSHDOWN_VOLTAGE = 3.0;
+
+        double GEAR_RATIO = 37.93;
     }
 
     public interface Spindexer {
@@ -204,7 +208,7 @@ public interface Settings {
 
         public interface Alignment {
             public interface Constraints {
-                public final double DEFAULT_MAX_VELOCITY = 4.3;
+                public final double DEFAULT_MAX_VELOCITY = 4.93;
                 public final double DEFAULT_MAX_ACCELERATION = 15.0;
                 public final double DEFAULT_MAX_ANGULAR_VELOCITY = Units.degreesToRadians(400.0);
                 public final double DEFAULT_MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(900.0);
@@ -253,16 +257,19 @@ public interface Settings {
         public final Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(0.0);
 
         double RESOLUTION_OF_ABSOLUTE_ENCODER = 0.1;
+        double WRAP_DEBOUNCE = 0.5;
         Rotation2d MAX_THEORETICAL_ROTATION = Rotation2d.fromDegrees(612);
         Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
 
         public interface Constants {
             public final double RANGE = 210.0;
 
-            public final Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), Rotation2d.kZero);
+            public final double SLOT_SWITCHING_THRESHOLD_ROT = .5;
+
+            public final Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(-4.0), Units.inchesToMeters(8.0), Rotation2d.kZero);
             public final double TURRET_HEIGHT = Units.inchesToMeters(0.0);
 
-            public final double GEAR_RATIO_MOTOR_TO_MECH = 1425.0 / 36.0;
+            public final double GEAR_RATIO_MOTOR_TO_MECH = (60.0 / 9.0) * (95.0 / 12.0); //1425.0 / 36.0;
 
             public interface BigGear {
                 public final int TEETH = 95;
@@ -288,5 +295,6 @@ public interface Settings {
     public interface Vision {
         public final Vector<N3> MT1_STDEVS = VecBuilder.fill(0.5, 0.5, 1.0);
         public final Vector<N3> MT2_STDEVS = VecBuilder.fill(0.7, 0.7, 694694.0);
+        public final int RESET_IMU_INDEX = 2;
     }
 }

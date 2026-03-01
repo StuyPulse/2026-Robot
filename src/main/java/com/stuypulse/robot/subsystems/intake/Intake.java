@@ -6,6 +6,8 @@
 package com.stuypulse.robot.subsystems.intake;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +19,11 @@ import java.util.Optional;
 public abstract class Intake extends SubsystemBase {
     private static final Intake instance;
 
+    private PivotState pivotState;
+    private RollerState rollerState;
+
+    private Vector2D driverInput;
+
     static {
         instance = new IntakeImpl();
     }
@@ -25,9 +32,18 @@ public abstract class Intake extends SubsystemBase {
         return instance;
     }
 
+    protected Intake() {
+        this.pivotState = PivotState.STOW;
+        this.rollerState = RollerState.STOP;
+
+        driverInput = new Vector2D(0, 0);
+    }
+
     public enum PivotState {
-        DEPLOYED(Settings.Intake.PIVOT_INTAKE_OUTAKE_ANGLE),
-        STOWED(Settings.Intake.PIVOT_STOW_ANGLE);
+        DEPLOY(Settings.Intake.PIVOT_DEPLOY_ANGLE),
+        STOW(Settings.Intake.PIVOT_STOW_ANGLE),
+        BANGBANG(Settings.Intake.PIVOT_DEPLOY_ANGLE),
+        ANALOG(Settings.Intake.PIVOT_STOW_ANGLE);
 
         private final Rotation2d targetAngle;
 
@@ -56,14 +72,6 @@ public abstract class Intake extends SubsystemBase {
         }
     }
 
-    private PivotState pivotState;
-    private RollerState rollerState;
-
-    protected Intake() {
-        this.pivotState = PivotState.STOWED;
-        this.rollerState = RollerState.STOP;
-    }
-
     public PivotState getPivotState() {
         return pivotState;
     }
@@ -81,10 +89,29 @@ public abstract class Intake extends SubsystemBase {
         this.rollerState = state;
     }
 
+    public void setDriverInput(Gamepad gamepad) {
+        this.driverInput = gamepad.getLeftStick();
+    }
+
+    public Rotation2d driverInputToAngle() {
+        SmartDashboard.putNumber("Intake/Driver Input", driverInput.x);
+
+        double minAngle = Settings.Intake.PIVOT_MIN_ANGLE.getDegrees();
+        double maxAngle = Settings.Intake.PIVOT_MAX_ANGLE.getDegrees();
+
+        // Maps driver input [-1, 1] to pivot angle [MIN, MAX]. 
+        // A driver input of 0 (i.e. centered joystick) will drive the pivot to the midpoint of the range of motion.
+        double scaledAngle = minAngle + (driverInput.x + 1.0) * (maxAngle - minAngle) / 2.0;
+
+        return Rotation2d.fromDegrees(scaledAngle); 
+    }
+
     public abstract boolean pivotAtTolerance();
     public abstract Rotation2d getPivotAngle();
     public abstract void setPivotVoltageOverride(Optional<Double> voltage);
     public abstract SysIdRoutine getPivotSysIdRoutine();
+
+    public abstract void seedPivot();
 
     @Override
     public void periodic() {

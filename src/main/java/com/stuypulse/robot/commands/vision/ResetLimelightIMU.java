@@ -3,13 +3,10 @@
 /* Use of this source code is governed by an MIT-style license */
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
-package com.stuypulse.robot.commands.intake;
+package com.stuypulse.robot.commands.vision;
 
-import com.stuypulse.robot.subsystems.intake.Intake.PivotState;
-import com.stuypulse.robot.subsystems.intake.Intake.RollerState;
-
-public class IntakeStow extends IntakeSetState {
-    public IntakeStow() {
-        super(PivotState.STOW, RollerState.STOP);
+public class ResetLimelightIMU extends SetIMUMode {
+    public ResetLimelightIMU() {
+        super(1);
     }
 }

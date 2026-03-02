@@ -24,6 +24,16 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import java.util.Optional;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
+import com.stuypulse.robot.constants.Gains;
+import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.SysId;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class HoodImpl extends Hood {
     private final Motors.TalonFXConfig hoodConfig;
@@ -73,6 +83,25 @@ public class HoodImpl extends Hood {
     @Override
     public Rotation2d getHoodAngle() {
         return Rotation2d.fromRotations(hoodMotor.getPosition().getValueAsDouble());
+    }
+
+    @Override
+    public void zeroHoodEncoder() {
+        double currentPos = hoodEncoder.getAbsolutePosition().getValueAsDouble();
+
+        hoodEncoder.getConfigurator().refresh(hoodEncoderConfig.getConfiguration().MagnetSensor);
+
+        double currentOffset = hoodEncoderConfig.getConfiguration().MagnetSensor.MagnetOffset;
+        double newOffset = currentOffset - currentPos;
+
+        hoodEncoderConfig.withMagnetOffset(newOffset);
+        
+        hoodEncoderConfig.configure(hoodEncoder);
+    }
+    
+    @Override
+    public void seedHood() {
+        hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
     @Override 

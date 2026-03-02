@@ -5,11 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot;
 
-import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
-import com.stuypulse.stuylib.network.SmartBoolean;
-
-import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.auton.poaching.BottomOneCyclePoach;
 import com.stuypulse.robot.commands.auton.poaching.BottomTwoCyclePoach;
@@ -20,53 +15,24 @@ import com.stuypulse.robot.commands.auton.regular.DepotAuton;
 import com.stuypulse.robot.commands.auton.regular.EightFuel;
 import com.stuypulse.robot.commands.auton.regular.TopTwoCycle;
 import com.stuypulse.robot.commands.auton.test.BoxTest;
-import com.stuypulse.robot.commands.climberhopper.ClimberDown;
-import com.stuypulse.robot.commands.climberhopper.ClimberHopperDefaultCommand;
 import com.stuypulse.robot.commands.climberhopper.ClimberOverrideDown;
 import com.stuypulse.robot.commands.climberhopper.ClimberOverrideStop;
 import com.stuypulse.robot.commands.climberhopper.ClimberOverrideUp;
-import com.stuypulse.robot.commands.climberhopper.ClimberUp;
-import com.stuypulse.robot.commands.climberhopper.HopperDown;
-import com.stuypulse.robot.commands.handoff.HandoffReverse;
-import com.stuypulse.robot.commands.handoff.HandoffRun;
-import com.stuypulse.robot.commands.handoff.HandoffStop;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterInterpolation;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterLeftCorner;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterReverse;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterRightCorner;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
-import com.stuypulse.robot.commands.intake.IntakeAnalog;
-import com.stuypulse.robot.commands.intake.IntakeBangBang;
+import com.stuypulse.robot.commands.hoodedshooter.HoodAnalog;
+import com.stuypulse.robot.commands.hoodedshooter.ZeroHood;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
-import com.stuypulse.robot.commands.intake.IntakeRunRollers;
-import com.stuypulse.robot.commands.intake.IntakeStopRollers;
 import com.stuypulse.robot.commands.intake.IntakeStow;
 import com.stuypulse.robot.commands.intake.SeedPivot;
-import com.stuypulse.robot.commands.spindexer.SpindexerRun;
-import com.stuypulse.robot.commands.spindexer.SpindexerStop;
-import com.stuypulse.robot.commands.swerve.SwerveDriveAlignTurretToHub;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
 import com.stuypulse.robot.commands.swerve.SwerveWheelRadiusCharacterization;
-import com.stuypulse.robot.commands.swerve.SwerveXMode;
-import com.stuypulse.robot.commands.swerve.climbAlign.SwerveClimbAlign;
 import com.stuypulse.robot.commands.turret.TurretDefaultCommand;
-import com.stuypulse.robot.commands.turret.TurretAnalog;
-import com.stuypulse.robot.commands.turret.TurretFerry;
-import com.stuypulse.robot.commands.turret.TurretHub;
-import com.stuypulse.robot.commands.turret.TurretIdle;
-import com.stuypulse.robot.commands.turret.TurretLeftCorner;
-import com.stuypulse.robot.commands.turret.TurretRightCorner;
-import com.stuypulse.robot.commands.turret.TurretSeed;
 import com.stuypulse.robot.commands.turret.TurretShoot;
 import com.stuypulse.robot.commands.turret.TurretZero;
 import com.stuypulse.robot.commands.vision.ResetLimelightIMU;
 import com.stuypulse.robot.commands.vision.SetIMUMode;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.subsystems.climberhopper.ClimberHopper;
 import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
@@ -77,6 +43,9 @@ import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.turret.Turret;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.util.PathUtil.AutonConfig;
+import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -128,11 +97,15 @@ public class RobotContainer {
 
         SmartDashboard.putData("Field", Field.FIELD2D);
         SmartDashboard.putData("Robot/Reset Pivot", new SeedPivot());
-        SmartDashboard.putData("Robot/Zero Encoders", new TurretZero());
+        SmartDashboard.putData("Robot/Zero Turret Encoders", new TurretZero());
 
         SmartDashboard.putData("Robot/Override Up", new ClimberOverrideUp());
         SmartDashboard.putData("Robot/Override Down", new ClimberOverrideDown());
         SmartDashboard.putData("Robot/Override Stop", new  ClimberOverrideStop());
+
+        
+        SmartDashboard.putData("Robot/Zero Hood Encoder", new ZeroHood());
+       
     }
 
     /****************/
@@ -150,6 +123,11 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
+        //hood analog
+        driver.getBottomButton()
+            .whileTrue(new HoodAnalog(driver));
+
+
         // Intake Run Rollers
         // driver.getLeftTriggerButton()
         //     .onTrue(new IntakeRunRollers())
@@ -179,8 +157,8 @@ public class RobotContainer {
         driver.getTopButton()
             .whileTrue(new TurretShoot());
 
-        driver.getBottomButton()
-            .whileTrue(new SwerveDriveAlignTurretToHub());
+        // driver.getBottomButton()
+        //     .whileTrue(new SwerveDriveAlignTurretToHub());
 
         // driver.getBottomButton()
         //     .onTrue(new TurretAnalog(driver))

@@ -5,18 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.intake;
 
-import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
-import com.stuypulse.robot.constants.Gains;
-import com.stuypulse.robot.constants.Motors;
-import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.util.SettableNumber;
-import com.stuypulse.robot.util.SysId;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.Optional;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -29,7 +18,19 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import java.util.Optional;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
+import com.stuypulse.robot.constants.Gains;
+import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.SettableNumber;
+import com.stuypulse.robot.util.SysId;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class IntakeImpl extends Intake {
     private final Motors.TalonFXConfig pivotConfig;
@@ -48,6 +49,8 @@ public class IntakeImpl extends Intake {
     private SettableNumber accelLimit;
 
     private Optional<Double> pivotVoltageOverride;
+
+    private BStream pivotStalling;
 
     public IntakeImpl() {
         //TODO: refactor
@@ -91,6 +94,17 @@ public class IntakeImpl extends Intake {
         pivotVoltageOverride = Optional.empty();
 
         pivot.setPosition(Settings.Intake.PIVOT_MAX_ANGLE.getRotations());
+
+        pivotStalling = BStream.create(
+            () -> Math.abs(pivot.getSupplyCurrent().getValueAsDouble()) > Settings.Intake.STALL_CURRENT_LIMIT)
+            .filtered(new BDebounce.Both(1.0));
+
+    }
+
+    @Override 
+    public boolean pivotStalling() { 
+        // return Math.abs(pivot.getSupplyCurrent().getValueAsDouble()) > Settings.Intake.debugCurrentLimit;
+        return pivotStalling.get();
     }
 
     @Override
@@ -148,6 +162,12 @@ public class IntakeImpl extends Intake {
 
             if (getPivotState() == PivotState.ANALOG) { // comment out the setControl line if it breaks
                 pivot.setControl(pivotController.withPosition(driverInputToAngle().getRotations()));
+            }
+            else if (getPivotState() == PivotState.DEBUG) { 
+                pivot.setControl(new VoltageOut(Settings.Intake.debugVoltage)); //TODO: check if we want DEBUG enum/state
+                if (pivotStalling.get()) { //TODO: update what we want the intake to do if 
+                    pivot.setPosition(0);
+                }
             }
             
             else if (pivotVoltageOverride.isPresent()) {

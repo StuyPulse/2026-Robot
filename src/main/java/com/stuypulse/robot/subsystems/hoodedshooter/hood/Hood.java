@@ -7,6 +7,7 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
+import com.stuypulse.stuylib.input.Gamepad;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +18,8 @@ public abstract class Hood extends SubsystemBase{
     private static final Hood instance;
     
     private HoodState state;
+
+    private Rotation2d driverInput;
 
     static {
         instance = new HoodImpl();
@@ -34,6 +37,7 @@ public abstract class Hood extends SubsystemBase{
         LEFT_CORNER,
         RIGHT_CORNER,
         INTERPOLATION,
+        ANALOG,
         IDLE;
     }
 
@@ -58,6 +62,7 @@ public abstract class Hood extends SubsystemBase{
             case LEFT_CORNER -> Settings.HoodedShooter.Angles.LEFT_CORNER_ANGLE;
             case RIGHT_CORNER -> Settings.HoodedShooter.Angles.RIGHT_CORNER_ANGLE;
             case INTERPOLATION -> HoodAngleCalculator.interpolateHoodAngle().get();
+            case ANALOG -> hoodAnalogToOutput();
             case IDLE -> getHoodAngle();
         };
     }
@@ -68,7 +73,20 @@ public abstract class Hood extends SubsystemBase{
 
     public abstract Rotation2d getHoodAngle();
 
+    public void hoodAnalogToInput(Gamepad gamepad) {
+        double hoodMin = Settings.HoodedShooter.Angles.MIN_ANGLE.getDegrees();
+        double hoodMax = Settings.HoodedShooter.Angles.MAX_ANGLE.getDegrees();
+
+        this.driverInput = Rotation2d.fromDegrees(hoodMin + (gamepad.getLeftX() + 1.0) * ((hoodMax - hoodMin) / 2)); 
+    }
+
+    public Rotation2d hoodAnalogToOutput() {
+        return this.driverInput;
+    }
+
     public abstract SysIdRoutine getHoodSysIdRoutine();
+    public abstract void zeroHoodEncoder();
+    public abstract void seedHood();
 
     @Override
     public void periodic() {
@@ -77,5 +95,7 @@ public abstract class Hood extends SubsystemBase{
 
         SmartDashboard.putNumber("HoodedShooter/Hood/Target Angle", getTargetAngle().getDegrees());
         SmartDashboard.putNumber("HoodedShooter/Hood/Current Angle", getHoodAngle().getDegrees());
+
+        //SmartDashboard.putNumber("HoodedShooter/Hood/Analog Target Angle", hoodAnalogToOutput().getDegrees());
     }
 }

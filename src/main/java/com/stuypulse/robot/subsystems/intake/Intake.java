@@ -43,7 +43,8 @@ public abstract class Intake extends SubsystemBase {
         DEPLOY(Settings.Intake.PIVOT_DEPLOY_ANGLE),
         STOW(Settings.Intake.PIVOT_STOW_ANGLE),
         BANGBANG(Settings.Intake.PIVOT_DEPLOY_ANGLE),
-        ANALOG(Settings.Intake.PIVOT_STOW_ANGLE);
+        ANALOG(Settings.Intake.PIVOT_STOW_ANGLE),
+        DEBUG(Settings.Intake.PIVOT_STOW_ANGLE); //filler argument
 
         private final Rotation2d targetAngle;
 
@@ -110,6 +111,7 @@ public abstract class Intake extends SubsystemBase {
     public abstract Rotation2d getPivotAngle();
     public abstract void setPivotVoltageOverride(Optional<Double> voltage);
     public abstract SysIdRoutine getPivotSysIdRoutine();
+    public abstract boolean pivotStalling();
 
     public abstract void seedPivot();
 

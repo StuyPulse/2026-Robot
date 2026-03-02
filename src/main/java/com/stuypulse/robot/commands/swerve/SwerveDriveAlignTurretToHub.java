@@ -6,16 +6,15 @@
 
 package com.stuypulse.robot.commands.swerve;
 
-import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
-
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains.Swerve.Alignment;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.turret.Turret;
+import com.stuypulse.stuylib.control.angle.AngleController;
+import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -51,7 +50,7 @@ public class SwerveDriveAlignTurretToHub extends Command {
     }
 
     public Rotation2d getTargetAngle() {
-        Translation2d robot = CommandSwerveDrivetrain.getInstance().getPose().getTranslation();
+        Translation2d robot = swerve.getPose().getTranslation();
         Translation2d hub = Field.getHubPose().getTranslation();
         return robot.minus(hub).getAngle().plus(Rotation2d.k180deg);
     }

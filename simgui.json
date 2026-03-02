@@ -17,6 +17,8 @@
       "/SmartDashboard/Robot/Override Up": "Command",
       "/SmartDashboard/Robot/Reset Pivot": "Command",
       "/SmartDashboard/Robot/Zero Encoders": "Command",
+      "/SmartDashboard/Robot/Zero Hood Encoder": "Command",
+      "/SmartDashboard/Robot/Zero Turret Encoders": "Command",
       "/SmartDashboard/Visualizers/ClimberHopper": "Mechanism2d",
       "/SmartDashboard/Visualizers/Turret": "Mechanism2d"
     },
@@ -37,11 +39,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Visualizers/ClimberHopper": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Visualizers/Turret": {
         "window": {
           "visible": true
@@ -58,13 +55,13 @@
     },
     "transitory": {
       "SmartDashboard": {
-        "ClimberHopper": {
-          "open": true
-        },
         "Enabled Subsystems": {
           "open": true
         },
         "HoodedShooter": {
+          "Hood": {
+            "open": true
+          },
           "open": true
         },
         "States": {

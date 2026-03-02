@@ -104,6 +104,9 @@ public interface Settings {
         double PUSHDOWN_VOLTAGE = 3.0;
 
         double GEAR_RATIO = 37.93;
+        
+        double debugVoltage = 0; //TODO: set value
+        double STALL_CURRENT_LIMIT = 0; //TODO: set value
     }
 
     public interface Spindexer {

@@ -11,8 +11,6 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
-import java.util.function.Supplier;
-
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains.Swerve.Alignment;
 import com.stuypulse.robot.constants.Settings;
@@ -52,6 +50,12 @@ public class SwerveDriveAlignTurretToHub extends Command {
         return angleController.isDoneDegrees(Settings.Swerve.Alignment.Tolerances.THETA_TOLERANCE_DEG);
     }
 
+    public Rotation2d getTargetAngle() {
+        Translation2d robot = CommandSwerveDrivetrain.getInstance().getPose().getTranslation();
+        Translation2d hub = Field.getHubPose().getTranslation();
+        return robot.minus(hub).getAngle().plus(Rotation2d.k180deg);
+    }
+
     @Override
     public void execute() {
         robot = swerve.getPose();
@@ -60,7 +64,7 @@ public class SwerveDriveAlignTurretToHub extends Command {
             .withVelocityX(0)
             .withVelocityY(0)
             .withRotationalRate(angleController.update(
-                Angle.fromRotation2d(turret.getPointAtTargetAngle(Field.getHubPose())),
+                Angle.fromRotation2d(getTargetAngle()),
                 Angle.fromRotation2d(robot.getRotation()))));
 
         SmartDashboard.putNumber("Swerve/Target angle hub deg", turret.getPointAtTargetAngle(Field.getHubPose()).getDegrees());

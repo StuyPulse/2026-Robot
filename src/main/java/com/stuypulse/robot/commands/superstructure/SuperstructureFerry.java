@@ -5,10 +5,11 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.superstructure;
 
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterState;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
-public class HoodedShooterRightCorner extends HoodedShooterSetState {
-    public HoodedShooterRightCorner() {
-        super(SuperstructureState.RIGHT_CORNER);
+public class SuperstructureFerry extends SuperstructureSetState {
+    public SuperstructureFerry(){
+        super(SuperstructureState.FERRY);
     }
 }

@@ -8,9 +8,9 @@ import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeStow;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
-import com.stuypulse.robot.commands.superstructure.HoodedShooterInterpolation;
+import com.stuypulse.robot.commands.superstructure.SuperstructureInterpolation;
 import com.stuypulse.robot.commands.swerve.climbAlign.SwerveClimbAlign;
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
@@ -34,7 +34,7 @@ public class BottomTwoCyclePoach extends SequentialCommandGroup {
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
                 new IntakeStow()
             ),
-            new WaitUntilCommand(() -> HoodedShooter.getInstance().bothAtTolerance()),
+            new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new SpindexerRun().alongWith(
                 new HandoffRun()
             ).withTimeout(5.0),
@@ -53,7 +53,7 @@ public class BottomTwoCyclePoach extends SequentialCommandGroup {
                 new IntakeStow()
             ),
             new ParallelCommandGroup(
-                new WaitUntilCommand(() -> HoodedShooter.getInstance().bothAtTolerance()),
+                new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
                 new SwerveClimbAlign()
             ),
             new SpindexerRun().alongWith(

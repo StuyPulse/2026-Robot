@@ -5,7 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.superstructure;
 
-import com.stuypulse.robot.subsystems.superstructure.SuperstructureState;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
 public class SuperstructureLeftCorner extends SuperstructureSetState {
     public SuperstructureLeftCorner() {

@@ -20,6 +20,7 @@ import com.stuypulse.robot.commands.climberhopper.ClimberOverrideStop;
 import com.stuypulse.robot.commands.climberhopper.ClimberOverrideUp;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
+import com.stuypulse.robot.commands.hood.ZeroHoodAtLowerHardstop;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeRunRollers;
 import com.stuypulse.robot.commands.intake.IntakeStopRollers;
@@ -28,12 +29,11 @@ import com.stuypulse.robot.commands.intake.ZeroPivotDeployed;
 import com.stuypulse.robot.commands.intake.ZeroPivotStowed;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
-import com.stuypulse.robot.commands.superstructure.HoodedShooterFerry;
-import com.stuypulse.robot.commands.superstructure.HoodedShooterInterpolation;
-import com.stuypulse.robot.commands.superstructure.HoodedShooterKB;
-import com.stuypulse.robot.commands.superstructure.HoodedShooterShoot;
-import com.stuypulse.robot.commands.superstructure.HoodedShooterStow;
-import com.stuypulse.robot.commands.superstructure.ZeroHoodAtLowerHardstop;
+import com.stuypulse.robot.commands.superstructure.SuperstructureFerry;
+import com.stuypulse.robot.commands.superstructure.SuperstructureInterpolation;
+import com.stuypulse.robot.commands.superstructure.SuperstructureKB;
+import com.stuypulse.robot.commands.superstructure.SuperstructureShoot;
+import com.stuypulse.robot.commands.superstructure.SuperstructureStow;
 import com.stuypulse.robot.commands.swerve.SwerveDriveAlignTurretToHub;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
@@ -137,7 +137,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // Scoring Routine
         driver.getTopButton()
-                .whileTrue(new HoodedShooterShoot().onlyIf(() -> !superstructure.isHoodUnderTrench())
+                .whileTrue(new SuperstructureShoot().onlyIf(() -> !superstructure.isHoodUnderTrench())
                 .alongWith(new SwerveDriveAlignTurretToHub())
                         // .alongWith(new TurretShoot())
                         .andThen(new WaitUntilCommand(superstructure::atTolerance))
@@ -145,7 +145,7 @@ public class RobotContainer {
                                 .alongWith(new WaitUntilCommand(handoff::atTolerance))
                                 .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && superstructure.atTolerance()))))
                 .onFalse(new SpindexerStop()
-                        .alongWith(new HoodedShooterStow())
+                        .alongWith(new SuperstructureStow())
                         .alongWith(new HandoffStop()));
 
         // Intake Deploy
@@ -157,14 +157,14 @@ public class RobotContainer {
             .onTrue(new IntakeStow());
 
         driver.getLeftButton()
-            .whileTrue(new HoodedShooterShoot().onlyIf(() -> !superstructure.isHoodUnderTrench()))
-            .onFalse(new HoodedShooterStow());
+            .whileTrue(new SuperstructureShoot().onlyIf(() -> !superstructure.isHoodUnderTrench()))
+            .onFalse(new SuperstructureStow());
 
 
         driver.getRightButton()
-            .whileTrue(new HoodedShooterFerry().onlyIf(
+            .whileTrue(new SuperstructureFerry().onlyIf(
                 () -> CommandSwerveDrivetrain.getInstance().getPose().getX() > Field.getHubPose().getX()))
-            .onFalse(new HoodedShooterStow());
+            .onFalse(new SuperstructureStow());
 
         // Reset Heading
         driver.getDPadUp()
@@ -174,7 +174,7 @@ public class RobotContainer {
 
         // // Ferry Routine using Interpolation Settings
         // driver.getBottomButton()
-        //         .onTrue(new HoodedShooterFerry()
+        //         .onTrue(new SuperstructureFerry()
         //                 .alongWith(new TurretFerry())
         //                 .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
         //                 .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
@@ -182,7 +182,7 @@ public class RobotContainer {
         //                         .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance())))      
         //         )
         //         .onFalse(new SpindexerStop()
-        //                 .alongWith(new HoodedShooterStow())
+        //                 .alongWith(new SuperstructureStow())
         //                 .alongWith(new HandoffStop()));
 
 //-------------------------------------------------------------------------------------------------------------------------\\

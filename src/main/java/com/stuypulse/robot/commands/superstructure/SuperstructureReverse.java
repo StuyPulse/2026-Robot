@@ -5,10 +5,10 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.superstructure;
 
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterState;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
-public class HoodedShooterReverse extends HoodedShooterSetState {
-    public HoodedShooterReverse() {
+public class SuperstructureReverse extends SuperstructureSetState {
+    public SuperstructureReverse() {
         super(SuperstructureState.REVERSE);
     }
 }

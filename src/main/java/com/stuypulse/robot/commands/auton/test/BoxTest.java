@@ -1,7 +1,7 @@
 package com.stuypulse.robot.commands.auton.test;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.stuypulse.robot.commands.superstructure.HoodedShooterKB;
+import com.stuypulse.robot.commands.superstructure.SuperstructureKB;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,7 +15,7 @@ public class BoxTest extends SequentialCommandGroup {
 
         addCommands(
 
-            new HoodedShooterKB().until(() -> DriverStation.getMatchTime() < 18).andThen(
+            new SuperstructureKB().until(() -> DriverStation.getMatchTime() < 18).andThen(
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0])),
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]),
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]),

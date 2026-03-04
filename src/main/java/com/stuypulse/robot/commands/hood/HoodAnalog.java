@@ -1,6 +1,6 @@
-package com.stuypulse.robot.commands.superstructure;
+package com.stuypulse.robot.commands.hood;
 
-import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
+import com.stuypulse.robot.subsystems.hood.Hood;
 import com.stuypulse.stuylib.input.Gamepad;
 
 import edu.wpi.first.wpilibj2.command.Command;

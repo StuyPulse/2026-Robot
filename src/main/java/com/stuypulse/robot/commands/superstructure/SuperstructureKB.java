@@ -5,10 +5,10 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.superstructure;
 
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterState;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
-public class HoodedShooterInterpolation extends HoodedShooterSetState {
-    public HoodedShooterInterpolation() {
-        super(SuperstructureState.INTERPOLATION);
+public class SuperstructureKB extends SuperstructureSetState {
+    public SuperstructureKB() {
+        super(SuperstructureState.KB);
     }
 }

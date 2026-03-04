@@ -44,19 +44,18 @@ public class HoodImpl extends Hood {
     public HoodImpl() {
         hoodConfig = new Motors.TalonFXConfig()
             .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake)
             
             .withSupplyCurrentLimitAmps(80.0)
             .withStatorCurrentLimitEnabled(false)
+            .withRampRate(0.25)
             
             .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI, Gains.HoodedShooter.Hood.kD, 0)
             .withFFConstants(Gains.HoodedShooter.Hood.kS, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
             .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign, 0)
             
-            .withRampRate(0.25)
-            .withNeutralMode(NeutralModeValue.Brake)
-            
             .withSensorToMechanismRatio(Settings.HoodedShooter.Hood.GEAR_RATIO)
-            
+
             .withSoftLimits(
                 true, true, 
                 Settings.HoodedShooter.Hood.FORWARD_SOFT_LIMIT.getRotations(),
@@ -78,11 +77,8 @@ public class HoodImpl extends Hood {
 
         voltageOverride = Optional.empty();
 
-        isStalling = BStream.create(() -> hoodMotor.getSupplyCurrent().getValueAsDouble() > Settings.HoodedShooter.Hood.HOOD_STALL_CURRENT_LIMIT) //TODO: update value in Settings after testing
-            .filtered(new BDebounce.Both(0.5));
-
-        seedHood();
-
+        isStalling = BStream.create(() -> hoodMotor.getSupplyCurrent().getValueAsDouble() > Settings.HoodedShooter.Hood.STALL_CURRENT_LIMIT) //TODO: update value in Settings after testing
+            .filtered(new BDebounce.Both(Settings.HoodedShooter.Hood.STALL_DEBOUNCE));
     }
 
     @Override
@@ -118,10 +114,10 @@ public class HoodImpl extends Hood {
     */
     @Override
     public void seedHood() {
-        hoodMotor.setPosition(getAbsoluteHoodAngle());
+        hoodMotor.setPosition(getAbsoluteHoodAngleDeg() / 360.0);
     }
 
-    private double getAbsoluteHoodAngle() {
+    private double getAbsoluteHoodAngleDeg() {
         return Settings.HoodedShooter.Angles.MIN_ANGLE.getDegrees() + hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Settings.HoodedShooter.Hood.ENCODER_TO_MECH;
     }
 
@@ -145,7 +141,7 @@ public class HoodImpl extends Hood {
         }
 
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("HoodedShooter/Hood/Correct Hood Angle (deg)", getAbsoluteHoodAngle());
+            SmartDashboard.putNumber("HoodedShooter/Hood/Correct Hood Angle (deg)", getAbsoluteHoodAngleDeg());
 
             SmartDashboard.putNumber("HoodedShooter/Hood/Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Hood/Supply Current", hoodMotor.getSupplyCurrent().getValueAsDouble());
@@ -154,14 +150,15 @@ public class HoodImpl extends Hood {
             SmartDashboard.putNumber("HoodedShooter/Hood/Closed Loop Error (deg)", hoodMotor.getClosedLoopError().getValueAsDouble() * 360.0);
             SmartDashboard.putBoolean("HoodedShooter/Hood/Has Used Absolute Encoder", hasUsedAbsoluteEncoder);
 
-            SmartDashboard.putNumber("InterpolationTesting/Hood Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Hood/Raw Motor Encoder Value", hoodMotor.getPosition().getValueAsDouble());
+            
+            SmartDashboard.putNumber("InterpolationTesting/Hood Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
 
             SmartDashboard.putNumber("Current Draws/Hood (amps)", hoodMotor.getSupplyCurrent().getValueAsDouble());
         }
     }
 
-    public void setVoltageOverride(Optional<Double> voltageOverride) {
+    private void setVoltageOverride(Optional<Double> voltageOverride) {
         this.voltageOverride = voltageOverride;
     }
 

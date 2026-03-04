@@ -35,7 +35,7 @@ public abstract class Turret extends SubsystemBase {
     }
 
     public Turret() {
-        driverInput = new Vector2D(0, 0);
+        driverInput = Vector2D.kOrigin;
         state = TurretState.IDLE;
     }
 
@@ -73,7 +73,7 @@ public abstract class Turret extends SubsystemBase {
     }
  
     public boolean atTargetAngle() {
-        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees()) < Settings.Turret.TOLERANCE_DEG;
+        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees()) < Settings.Turret.TOLERANCE;
     }
 
     public Rotation2d getScoringAngle() {

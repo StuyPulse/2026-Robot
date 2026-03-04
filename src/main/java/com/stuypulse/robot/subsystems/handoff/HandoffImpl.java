@@ -32,69 +32,66 @@ public class HandoffImpl extends Handoff {
     public HandoffImpl() {
         handoffConfig = new Motors.TalonFXConfig()
             .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake)
             
             .withSupplyCurrentLimitAmps(80.0)
             .withStatorCurrentLimitEnabled(false)
+            .withRampRate(0.25)
             
             .withPIDConstants(Gains.Handoff.kP, Gains.Handoff.kI, Gains.Handoff.kD, 0)
             .withFFConstants(Gains.Handoff.kS, Gains.Handoff.kV, Gains.Handoff.kA, 0)
-            
-            .withRampRate(0.25)
-            .withNeutralMode(NeutralModeValue.Brake)
             
             .withSensorToMechanismRatio(Settings.Handoff.GEAR_RATIO);
 
         motor = new TalonFX(Ports.Handoff.HANDOFF, Ports.RIO);
         handoffConfig.configure(motor);
 
-        controller = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE)
-            .withEnableFOC(true);
+        controller = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
         voltageOverride = Optional.empty();
     }
 
     public double getCurrentRPM() {
         return motor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO;
     }
-
+    
+    @Override
+    public void periodic() {
+        super.periodic();
+        
+        if (EnabledSubsystems.HANDOFF.get() && getState() != HandoffState.STOP) {
+            if (voltageOverride.isPresent()) {
+                motor.setVoltage(voltageOverride.get());
+            }  else {
+                motor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
+            }
+        } else {
+            motor.stopMotor();
+        }
+        
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Stator Current", motor.getStatorCurrent().getValueAsDouble());
+            
+            SmartDashboard.putNumber("Current Draws/Handoff (amps)", motor.getSupplyCurrent().getValueAsDouble());
+        }
+    }
+    
     @Override
     public void setVoltageOverride(Optional<Double> voltage) {
         this.voltageOverride = voltage;
     }
-
-    @Override
-    public void periodic() {
-        super.periodic();
-
-        if (EnabledSubsystems.HANDOFF.get()) {
-            if (voltageOverride.isPresent()) {
-                motor.setVoltage(voltageOverride.get());
-            } else if (getState() == HandoffState.STOP) {
-                motor.stopMotor();
-            } else {
-                motor.setControl(controller.withVelocity(getTargetRPM() / 60.0));
-            }
-        }
-
-        if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("Handoff/Current (amps)", motor.getStatorCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Handoff/Stator Current", motor.getStatorCurrent().getValueAsDouble());
-
-            SmartDashboard.putNumber("Current Draws/Handoff (amps)", motor.getSupplyCurrent().getValueAsDouble());
-        }
-    }
-
+    
     @Override
     public SysIdRoutine getSysIdRoutine() {
         return SysId.getRoutine(
-                2,
-                8,
-                "Handoff",
-                voltage -> setVoltageOverride(Optional.of(voltage)),
-                () -> motor.getPosition().getValueAsDouble(),
-                () -> motor.getVelocity().getValueAsDouble(),
-                () -> motor.getMotorVoltage().getValueAsDouble(),
-                getInstance());
+            2,
+            8,
+            "Handoff",
+            voltage -> setVoltageOverride(Optional.of(voltage)),
+            () -> motor.getPosition().getValueAsDouble(),
+            () -> motor.getVelocity().getValueAsDouble(),
+            () -> motor.getMotorVoltage().getValueAsDouble(),
+            getInstance());
     }
 }

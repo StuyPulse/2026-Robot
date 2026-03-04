@@ -69,5 +69,6 @@ public abstract class Handoff extends SubsystemBase {
 
         SmartDashboard.putNumber("Handoff/Target RPM", getTargetRPM());
         SmartDashboard.putNumber("Handoff/Current RPM", getCurrentRPM());
+        SmartDashboard.putBoolean("Handoff/At Tolerance?", atTolerance());
     }
 }

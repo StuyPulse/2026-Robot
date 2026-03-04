@@ -68,7 +68,8 @@ public abstract class Hood extends SubsystemBase{
     }
 
     public boolean atTolerance() {
-        return Math.abs(getHoodAngle().getDegrees() - getTargetAngle().getDegrees()) < Settings.HoodedShooter.HOOD_TOLERANCE_DEG;
+        double error = getHoodAngle().minus(getTargetAngle()).getRotations();
+        return Math.abs(error) < Settings.HoodedShooter.HOOD_TOLERANCE.getRotations();
     }
 
     public abstract Rotation2d getHoodAngle();

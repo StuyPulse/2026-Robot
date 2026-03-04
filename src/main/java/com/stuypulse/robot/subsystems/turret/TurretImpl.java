@@ -42,9 +42,12 @@ public class TurretImpl extends Turret {
     public TurretImpl() {
         turretConfig = new Motors.TalonFXConfig()
             .withInvertedValue(InvertedValue.Clockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake)
             
             .withSupplyCurrentLimitAmps(80)
             .withStatorCurrentLimitEnabled(false)
+            .withRampRate(0.25)
+            .withVoltageLimits(6, -6) //TODO: VERIFY MAX VOLTAGE
             
             .withPIDConstants(Gains.Turret.slot0.kP, Gains.Turret.slot0.kI, Gains.Turret.slot0.kD, 0)
             .withFFConstants(Gains.Turret.slot0.kS, Gains.Turret.slot0.kV, Gains.Turret.slot0.kA, 0)
@@ -54,17 +57,12 @@ public class TurretImpl extends Turret {
             .withFFConstants(Gains.Turret.slot1.kS, Gains.Turret.slot1.kV, Gains.Turret.slot1.kA, 1)
             .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign, 1)
             
-            .withNeutralMode(NeutralModeValue.Brake)
-            .withRampRate(0.25)
-            
             .withSensorToMechanismRatio(Settings.Turret.Constants.GEAR_RATIO_MOTOR_TO_MECH)
 
             .withSoftLimits(
                 false, false,
                 Settings.Turret.Constants.SoftwareLimit.FORWARD_MAX_ROTATIONS,
-                Settings.Turret.Constants.SoftwareLimit.BACKWARDS_MAX_ROTATIONS)
-            
-            .withVoltageLimits(6, -6); //TODO: VERIFY MAX VOLTAGE
+                Settings.Turret.Constants.SoftwareLimit.BACKWARDS_MAX_ROTATIONS);
 
         encoder17tConfig = new Motors.CANCoderConfig()
             .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
@@ -131,7 +129,8 @@ public class TurretImpl extends Turret {
     
     @Override
     public boolean atTargetAngle() {
-        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees() + 180.0) < Settings.Turret.TOLERANCE_DEG;
+        double error = getAngle().minus(getTargetAngle()).getRotations() + 0.5;
+        return Math.abs(error) < Settings.Turret.TOLERANCE.getRotations();
     }
     
     private double getDelta(double target, double current) {
@@ -169,17 +168,23 @@ public class TurretImpl extends Turret {
         }
 
         if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Turret/Relative Encoder Position (Rot)", motor.getPosition().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Closed Loop Error (deg)", motor.getClosedLoopError().getValueAsDouble() * 360.0);
+
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Vector Space Position (Deg)", getVectorSpaceAngle().getDegrees());
-            SmartDashboard.putNumber("Turret/Relative Encoder Position (Rot)", motor.getPosition().getValueAsDouble() * 360.0);
+
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Stator Current", motor.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
 
             SmartDashboard.putNumber("Current Draws/Turret (amps)", motor.getSupplyCurrent().getValueAsDouble());
         }
+    }
+    
+    private void setVoltageOverride(Optional<Double> volts) {
+        this.voltageOverride = volts;
     }
 
     @Override
@@ -193,9 +198,5 @@ public class TurretImpl extends Turret {
                 () -> this.motor.getVelocity().getValueAsDouble(),
                 () -> this.motor.getMotorVoltage().getValueAsDouble(),
                 getInstance());
-    }
-
-    private void setVoltageOverride(Optional<Double> volts) {
-        this.voltageOverride = volts;
     }
 }

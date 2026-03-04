@@ -107,6 +107,7 @@ public interface Settings {
         
         double debugVoltage = 0; //TODO: set value
         double STALL_CURRENT_LIMIT = 0; //TODO: set value
+        double STALL_DEBOUNCE = 1.0; //TODO: VERIFY
     }
 
     public interface Spindexer {
@@ -123,7 +124,7 @@ public interface Settings {
     
     public interface HoodedShooter {
         public final double SHOOTER_TOLERANCE_RPM = 100.0;
-        public final double HOOD_TOLERANCE_DEG = 0.5;
+        public final Rotation2d HOOD_TOLERANCE = Rotation2d.fromDegrees(0.5);
 
         public interface RPMs {
             public final SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3500.0);
@@ -201,7 +202,8 @@ public interface Settings {
             public final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(37.0);
             public final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(10.0);
 
-            public final double HOOD_STALL_CURRENT_LIMIT = 20.0;
+            public final double STALL_CURRENT_LIMIT = 20.0;
+            public final double STALL_DEBOUNCE = 0.5;
         }
     }
     public interface ShootOnTheFly {
@@ -258,7 +260,7 @@ public interface Settings {
     public interface Turret {
         public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
         public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
-        public final double TOLERANCE_DEG = 2.0;
+        public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
 
         public final Rotation2d HUB = Rotation2d.fromDegrees(0.0);
         public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);

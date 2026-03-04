@@ -37,18 +37,14 @@ public class ShooterImpl extends Shooter {
     public ShooterImpl() {
         shooterConfig = new Motors.TalonFXConfig()
             .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Coast)
             
             .withSupplyCurrentLimitEnabled(false)
             .withStatorCurrentLimitEnabled(false)
 
-            .withPIDConstants(Gains.HoodedShooter.Shooter.kP.get(), 
-                              Gains.HoodedShooter.Shooter.kI.get(),
-                              Gains.HoodedShooter.Shooter.kD.get(), 0)
-            .withFFConstants(Gains.HoodedShooter.Shooter.kS.get(), 
-                             Gains.HoodedShooter.Shooter.kV.get(),
-                             Gains.HoodedShooter.Shooter.kA.get(), 0)
+            .withPIDConstants(Gains.HoodedShooter.Shooter.kP.get(), Gains.HoodedShooter.Shooter.kI.get(), Gains.HoodedShooter.Shooter.kD.get(), 0)
+            .withFFConstants(Gains.HoodedShooter.Shooter.kS.get(), Gains.HoodedShooter.Shooter.kV.get(), Gains.HoodedShooter.Shooter.kA.get(), 0)
                              
-            .withNeutralMode(NeutralModeValue.Coast)
             .withSensorToMechanismRatio(Settings.HoodedShooter.Shooter.GEAR_RATIO);
 
         shooterLeader = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_LEAD, Ports.RIO);
@@ -57,8 +53,7 @@ public class ShooterImpl extends Shooter {
         shooterConfig.configure(shooterLeader);
         shooterConfig.configure(shooterFollower);
 
-        shooterController = new VelocityVoltage(getTargetRPM() / 60.0)
-            .withEnableFOC(true);
+        shooterController = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
         follower = new Follower(Ports.HoodedShooter.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed);
 
         shooterFollower.setControl(follower);
@@ -72,11 +67,11 @@ public class ShooterImpl extends Shooter {
     }
 
     public double getLeaderRPM() {
-        return shooterLeader.getVelocity().getValueAsDouble() * 60.0;
+        return shooterLeader.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE;
     }
 
     public double getFollowerRPM() {
-        return shooterFollower.getVelocity().getValueAsDouble() * 60.0;
+        return shooterFollower.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE;
     }
 
     @Override
@@ -113,7 +108,7 @@ public class ShooterImpl extends Shooter {
                 shooterLeader.setVoltage(voltageOverride.get());
                 shooterFollower.setControl(follower);
             } else {
-                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
+                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
                 shooterFollower.setControl(follower);
             }
         } else {
@@ -139,7 +134,7 @@ public class ShooterImpl extends Shooter {
         }
     }
 
-    public void setVoltageOverride(Optional<Double> voltageOverride) {
+    private void setVoltageOverride(Optional<Double> voltageOverride) {
         this.voltageOverride = voltageOverride;
     }
 

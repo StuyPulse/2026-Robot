@@ -1,7 +1,7 @@
 package com.stuypulse.robot.commands.auton.test;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterKB;
+import com.stuypulse.robot.commands.superstructure.HoodedShooterKB;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 import edu.wpi.first.wpilibj.DriverStation;

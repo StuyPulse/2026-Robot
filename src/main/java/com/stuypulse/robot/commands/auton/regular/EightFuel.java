@@ -2,8 +2,8 @@ package com.stuypulse.robot.commands.auton.regular;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterKB;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
+import com.stuypulse.robot.commands.superstructure.HoodedShooterKB;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;

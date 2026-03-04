@@ -40,7 +40,7 @@ public class SpindexerImpl extends Spindexer {
             .withInvertedValue(InvertedValue.Clockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake)
             
-            .withSupplyCurrentLimitAmps(60)
+            .withSupplyCurrentLimitAmps(80)
             .withStatorCurrentLimitEnabled(false)
             .withRampRate(0.25)
             
@@ -53,7 +53,7 @@ public class SpindexerImpl extends Spindexer {
             .withInvertedValue(InvertedValue.Clockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake)
             
-            .withSupplyCurrentLimitAmps(60)
+            .withSupplyCurrentLimitAmps(80)
             .withStatorCurrentLimitEnabled(false)
             .withRampRate(0.25)
             
@@ -95,9 +95,14 @@ public class SpindexerImpl extends Spindexer {
             if (voltageOverride.isPresent()) {
                 leadMotor.setVoltage(voltageOverride.get());
             } else {
-                leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
+                if (atTolerance() && getState() == SpindexerState.STOP) {
+                    leadMotor.stopMotor();
+                    followerMotor.stopMotor();
+                } else {
+                    leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
+                    followerMotor.setControl(follower);
+                }
             }
-            followerMotor.setControl(follower);
         } else {
             leadMotor.stopMotor();
             followerMotor.stopMotor();

@@ -135,9 +135,9 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        // Scoring Routine using Interpolation Settings
+        // Scoring Routine
         driver.getTopButton()
-                .whileTrue(new HoodedShooterInterpolation()
+                .whileTrue(new HoodedShooterShoot()
                 .alongWith(new SwerveDriveAlignTurretToHub())
                         // .alongWith(new TurretShoot())
                         .andThen(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance() ))
@@ -155,6 +155,10 @@ public class RobotContainer {
         // Intake Stow
         driver.getLeftTriggerButton()
             .onTrue(new IntakeStow());
+
+        driver.getLeftButton()
+            .whileTrue(new SpindexerRun())
+            .onFalse(new SpindexerStop());
 
         // Reset Heading
         driver.getDPadUp()

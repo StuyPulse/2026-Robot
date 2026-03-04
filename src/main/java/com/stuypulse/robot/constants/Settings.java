@@ -199,7 +199,7 @@ public interface Settings {
 
             public final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.043);
 
-            public final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(37.0);
+            public final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(39.0);
             public final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(10.0);
 
             public final double STALL_CURRENT_LIMIT = 20.0;

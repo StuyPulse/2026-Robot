@@ -24,12 +24,13 @@ import com.stuypulse.robot.commands.hoodedshooter.HoodAnalog;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterInterpolation;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
-import com.stuypulse.robot.commands.hoodedshooter.ZeroHood;
+import com.stuypulse.robot.commands.hoodedshooter.ZeroHoodAtLowerHardstop;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeRunRollers;
 import com.stuypulse.robot.commands.intake.IntakeStopRollers;
 import com.stuypulse.robot.commands.intake.IntakeStow;
-import com.stuypulse.robot.commands.intake.SeedPivot;
+import com.stuypulse.robot.commands.intake.ZeroPivotDeployed;
+import com.stuypulse.robot.commands.intake.ZeroPivotStowed;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveAlignTurretToHub;
@@ -38,7 +39,7 @@ import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
 import com.stuypulse.robot.commands.swerve.SwerveWheelRadiusCharacterization;
 import com.stuypulse.robot.commands.turret.TurretDefaultCommand;
 import com.stuypulse.robot.commands.turret.TurretShoot;
-import com.stuypulse.robot.commands.turret.TurretZero;
+import com.stuypulse.robot.commands.turret.ZeroTurret;
 import com.stuypulse.robot.commands.vision.ResetLimelightIMU;
 import com.stuypulse.robot.commands.vision.SetIMUMode;
 import com.stuypulse.robot.constants.Field;
@@ -107,14 +108,14 @@ public class RobotContainer {
         configureSysids();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
-        SmartDashboard.putData("Robot/Reset Pivot", new SeedPivot());
-        SmartDashboard.putData("Robot/Zero Turret Encoders", new TurretZero().ignoringDisable(true));
+        SmartDashboard.putData("Robot/Zero Pivot Encoder at Lower Limit (Deployed)", new ZeroPivotDeployed().ignoringDisable(true));
+        SmartDashboard.putData("Robot/Zero Pivot Encoder at Upper Limit (Stowed)", new ZeroPivotStowed().ignoringDisable(true));
+        SmartDashboard.putData("Robot/Zero Turret Encoders", new ZeroTurret().ignoringDisable(true));
+        SmartDashboard.putData("Robot/Zero Hood Encoder", new ZeroHoodAtLowerHardstop().ignoringDisable(true));
 
         SmartDashboard.putData("Robot/Override Up", new ClimberOverrideUp());
         SmartDashboard.putData("Robot/Override Down", new ClimberOverrideDown());
         SmartDashboard.putData("Robot/Override Stop", new  ClimberOverrideStop());
-        
-        SmartDashboard.putData("Robot/Zero Hood Encoder", new ZeroHood().ignoringDisable(true));
        
     }
 
@@ -133,54 +134,6 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        //hood analog
-        // driver.getBottomButton()
-        //     .whileTrue(new HoodAnalog(driver));
-
-
-        // // Intake Run Rollers
-        // driver.getLeftTriggerButton()
-        //     .onTrue(new IntakeRunRollers())
-        //     .onFalse(new IntakeStopRollers());
-
-        // Intake Down and On
-        // driver.getRightTriggerButton()
-        //     .onTrue(new IntakeDeploy());
-
-        //TODO: COMMENT OUT AFTER (POTENTIAL) TESTING
-
-        // driver.getBottomButton()
-        //     .onTrue(new IntakeBangBang());
-
-        // driver.getTopButton()
-        //     .whileTrue(new HoodedShooterInterpolation())
-        //     .onFalse(new HoodedShooterStow());
-
-        driver.getRightTriggerButton()
-            .onTrue(new IntakeDeploy());
-
-        driver.getLeftTriggerButton()
-            .onTrue(new IntakeStow());
-
-        // Reset Heading
-        driver.getDPadUp()
-            .onTrue(new SwerveResetHeading())
-            .onTrue(new ResetLimelightIMU())
-            .onFalse(new SetIMUMode(0));    
-        
-        driver.getRightMenuButton()
-            .onTrue(new SpindexerRun())
-            .onFalse(new SpindexerStop());
-        // driver.getTopButton()
-        //     .whileTrue(new TurretShoot());
-
-        // driver.getBottomButton()
-        //     .whileTrue(new SwerveDriveAlignTurretToHub());
-
-        // driver.getBottomButton()
-        //     .onTrue(new TurretAnalog(driver))
-        //     .onFalse(new TurretIdle());
-
         // Scoring Routine using Interpolation Settings
         driver.getTopButton()
                 .whileTrue(new HoodedShooterInterpolation()
@@ -193,6 +146,20 @@ public class RobotContainer {
                 .onFalse(new SpindexerStop()
                         .alongWith(new HoodedShooterStow())
                         .alongWith(new HandoffStop()));
+
+        // Intake Deploy
+        driver.getRightTriggerButton()
+            .onTrue(new IntakeDeploy());
+
+        // Intake Stow
+        driver.getLeftTriggerButton()
+            .onTrue(new IntakeStow());
+
+        // Reset Heading
+        driver.getDPadUp()
+            .onTrue(new SwerveResetHeading())
+            .onTrue(new ResetLimelightIMU())
+            .onFalse(new SetIMUMode(0));    
 
         // // Ferry Routine using Interpolation Settings
         // driver.getBottomButton()

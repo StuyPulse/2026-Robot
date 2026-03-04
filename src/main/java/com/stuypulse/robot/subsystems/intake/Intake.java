@@ -113,7 +113,8 @@ public abstract class Intake extends SubsystemBase {
     public abstract SysIdRoutine getPivotSysIdRoutine();
     public abstract boolean pivotStalling();
 
-    public abstract void seedPivot();
+    public abstract void zeroPivotDeployed();
+    public abstract void zeroPivotStowed();
 
     @Override
     public void periodic() {

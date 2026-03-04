@@ -4,10 +4,10 @@ import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class ZeroHood extends InstantCommand{
+public class ZeroHoodAtLowerHardstop extends InstantCommand{
     private final Hood hood;
 
-    public ZeroHood() {
+    public ZeroHoodAtLowerHardstop() {
         hood = Hood.getInstance();
 
         addRequirements(hood);
@@ -15,7 +15,7 @@ public class ZeroHood extends InstantCommand{
 
     @Override
     public void initialize() {
-        hood.zeroHoodEncoder();
-        // hood.seedHood();
+        hood.zeroHoodEncoderAtLowerHardstop();
+        hood.seedHood();
     }
 }

@@ -9,11 +9,11 @@ import com.stuypulse.robot.subsystems.turret.Turret;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class TurretZero extends InstantCommand {
+public class ZeroTurret extends InstantCommand {
 
     private final Turret turret;
 
-    public TurretZero() {
+    public ZeroTurret() {
         this.turret = Turret.getInstance();
 
         addRequirements(turret);

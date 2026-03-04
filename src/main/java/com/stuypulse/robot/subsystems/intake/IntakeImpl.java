@@ -142,8 +142,13 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
-    public void seedPivot() {
+    public void zeroPivotStowed() {
         pivot.setPosition(Settings.Intake.PIVOT_MAX_ANGLE.getRotations());
+    }
+
+    @Override
+    public void zeroPivotDeployed() {
+        pivot.setPosition(Settings.Intake.PIVOT_MIN_ANGLE.getRotations());
     } 
 
     @Override

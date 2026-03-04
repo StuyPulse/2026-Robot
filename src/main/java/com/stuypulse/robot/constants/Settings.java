@@ -88,8 +88,8 @@ public interface Settings {
 
         Rotation2d PIVOT_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3.0); 
 
-        Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(90.0); //Rotation2d.fromRotations(-0.0)
-        Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(0.0); // Rotation2d.fromRotations(-0.2)
+        Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(90.0);
+        Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(0.0);
 
         Rotation2d PIVOT_MAX_VEL_DEPLOY = Rotation2d.fromDegrees(720.0);
         Rotation2d PIVOT_MAX_ACCEL_DEPLOY = Rotation2d.fromDegrees(1440.0);
@@ -202,7 +202,7 @@ public interface Settings {
             public final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(10.0);
 
             public final double HOOD_STALL_CURRENT_LIMIT = 20.0;
-    }
+        }
     }
     public interface ShootOnTheFly {
         public final int MAX_ITERATIONS = 5;

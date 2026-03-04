@@ -85,11 +85,10 @@ public class HoodImpl extends Hood {
         return Rotation2d.fromRotations(hoodMotor.getPosition().getValueAsDouble());
     }
 
-    // TODO: INCORRECT RIGHT NOW
+    //TODO: Implementation as of 3/3 but not yet tested
+    // Should ONLY be called at the lower hardstop!
     @Override
-
-    //TODO: DEBUGGGG!!!
-    public void zeroHoodEncoder() {        
+    public void zeroHoodEncoderAtLowerHardstop() {        
         hoodEncoder.getConfigurator().refresh(hoodEncoderConfig.getConfiguration().MagnetSensor);
 
         double currentOffset = hoodEncoderConfig.getConfiguration().MagnetSensor.MagnetOffset;
@@ -114,7 +113,8 @@ public class HoodImpl extends Hood {
     */
     @Override
     public void seedHood() {
-        hoodMotor.setPosition(Settings.HoodedShooter.Angles.MIN_ANGLE.getRotations() + hoodEncoder.getAbsolutePosition().getValueAsDouble() / Settings.HoodedShooter.Hood.ENCODER_TO_MECH);
+        hoodMotor.setPosition(getCorrectHoodAngle());
+        // hoodMotor.setPosition(Settings.HoodedShooter.Angles.MIN_ANGLE.getRotations() + hoodEncoder.getAbsolutePosition().getValueAsDouble() / Settings.HoodedShooter.Hood.ENCODER_TO_MECH);
     }
 
     public double getCorrectHoodAngle() {
@@ -124,10 +124,6 @@ public class HoodImpl extends Hood {
     @Override 
     public void periodic() {
         super.periodic();
-
-        if (isStalling()) {
-            // zeroHoodEncoder();
-        }
 
         hoodConfig.updateGainsConfig(
             hoodMotor,
@@ -141,8 +137,8 @@ public class HoodImpl extends Hood {
         );
 
         if (!hasUsedAbsoluteEncoder) {
-            //seedHood();
-            //hasUsedAbsoluteEncoder = true;
+            seedHood();
+            hasUsedAbsoluteEncoder = true;
         }
 
         if (EnabledSubsystems.HOOD.get()) {
@@ -156,7 +152,8 @@ public class HoodImpl extends Hood {
         }
 
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("HoodedShooter/Hood/Correct Hood Angle (deg)", Settings.HoodedShooter.Angles.MIN_ANGLE.getDegrees() + hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Settings.HoodedShooter.Hood.ENCODER_TO_MECH);
+            SmartDashboard.putNumber("HoodedShooter/Hood/Correct Hood Angle (deg)", getCorrectHoodAngle());
+            // SmartDashboard.putNumber("HoodedShooter/Hood/Correct Hood Angle (deg)", Settings.HoodedShooter.Angles.MIN_ANGLE.getDegrees() + hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Settings.HoodedShooter.Hood.ENCODER_TO_MECH);
 
             SmartDashboard.putNumber("HoodedShooter/Hood/Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Hood/Supply Current", hoodMotor.getSupplyCurrent().getValueAsDouble());

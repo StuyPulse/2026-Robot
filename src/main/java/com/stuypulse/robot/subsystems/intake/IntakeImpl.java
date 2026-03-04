@@ -155,36 +155,21 @@ public class IntakeImpl extends Intake {
         super.periodic();
 
         if (EnabledSubsystems.INTAKE.get()) {
-
-            if (getPivotState() == PivotState.ANALOG) { //TODO: comment out the setControl line if it breaks
-                pivot.setControl(pivotController.withPosition(driverInputToAngle().getRotations()));
-            }
-            else if (getPivotState() == PivotState.DEBUG) { 
-                pivot.setControl(new VoltageOut(Settings.Intake.debugVoltage)); //TODO: check if we want DEBUG enum/state
-                if (pivotStalling.get()) { //TODO: update what we want the intake to do if 
-                    pivot.setPosition(0);
-                }
-            }
-            
-            else if (pivotVoltageOverride.isPresent()) {
+            if (pivotVoltageOverride.isPresent()) {
                 pivot.setVoltage(pivotVoltageOverride.get());
-            }
-            
-            else {
+            } else {
+                // PIVOT
                 if (getPivotState() == PivotState.DEPLOY && getPivotAngle().getDegrees() <= Settings.Intake.ARBITRARY_VOLTAGE_THRESHOLD.getDegrees()) {
                     pivot.setControl(new VoltageOut(-Settings.Intake.PUSHDOWN_VOLTAGE)); // applying 3 volts 
-                }
-
-                else {
+                } else {
                     pivot.setControl(new PositionVoltage(getPivotState().getTargetAngle().getRotations()));
                 }
 
+                // ROLLERS
                 if (getPivotAngle().getDegrees() <= Settings.Intake.THRESHHOLD_TO_START_ROLLERS.getDegrees()) {
                     rollerLeader.setControl(rollerController.withOutput(getRollerState().getTargetDutyCycle()));
                     rollerFollower.setControl(follower);
-                }
-
-                else {
+                } else {
                     rollerLeader.stopMotor();
                     rollerFollower.stopMotor();
                 }
@@ -199,7 +184,7 @@ public class IntakeImpl extends Intake {
             // PIVOT
             SmartDashboard.putBoolean("Intake/Voltage Override", pivotVoltageOverride.isPresent());
 
-            SmartDashboard.putNumber("Intake/Debug", getPivotState().getTargetAngle().getRotations());
+            SmartDashboard.putNumber("Intake/Pivot Target Angle", getPivotState().getTargetAngle().getRotations());
 
             SmartDashboard.putNumber("Intake/Pivot Voltage (volts)", pivot.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Intake/Pivot Supply Current (amps)", pivot.getSupplyCurrent().getValueAsDouble());

@@ -73,7 +73,8 @@ public abstract class Turret extends SubsystemBase {
     }
  
     public boolean atTargetAngle() {
-        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees()) < Settings.Turret.TOLERANCE;
+        double error = getAngle().minus(getTargetAngle()).getRotations();
+        return Math.abs(error) < Settings.Turret.TOLERANCE.getRotations();
     }
 
     public Rotation2d getScoringAngle() {

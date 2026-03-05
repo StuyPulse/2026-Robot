@@ -44,7 +44,8 @@ public class InterpolationCalculator {
             ferryingDistanceRPMInterpolator.put(pair[0], pair[1]);
         }
     }
-    
+
+
     
     public record InterpolatedShotInfo(
         Rotation2d targetHoodAngle,
@@ -53,16 +54,17 @@ public class InterpolationCalculator {
     }
 
     public static InterpolatedShotInfo interpolateShotInfo(){
-        return interpolateShotInfo(Field.getHubPose());
-    }
-
-    public static InterpolatedShotInfo interpolateShotInfo(Pose2d targetPose) {
         CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-        Translation2d hubPose = targetPose.getTranslation();
-        Translation2d turretPose = swerve.getTurretPose().getTranslation();
+        return interpolateShotInfo(swerve.getTurretPose(), Field.getHubPose());
+    }
 
-        double distanceMeters = turretPose.getDistance(hubPose);
+
+    public static InterpolatedShotInfo interpolateShotInfo(Pose2d turretPose, Pose2d targetPose) {
+        Translation2d hubPose = targetPose.getTranslation();
+        Translation2d currentPose = turretPose.getTranslation();
+
+        double distanceMeters = currentPose.getDistance(hubPose);
 
         Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
         double targetRPM = distanceRPMInterpolator.get(distanceMeters);

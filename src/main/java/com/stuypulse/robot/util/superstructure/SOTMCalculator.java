@@ -1,7 +1,5 @@
 package com.stuypulse.robot.util.superstructure;
 
-import java.util.function.Supplier;
-
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
@@ -55,7 +53,6 @@ public class SOTMCalculator {
 
     public static SOTMSolution solveShootOnTheMove(
         Pose2d turretPose,
-        Pose2d robotPose,
         Pose2d targetPose,
         ChassisSpeeds fieldRelativeSpeeds,
         int maxIterations,
@@ -89,7 +86,7 @@ public class SOTMCalculator {
         */
         
 
-        InterpolatedShotInfo sol = InterpolationCalculator.interpolateShotInfo();
+        InterpolatedShotInfo sol = InterpolationCalculator.interpolateShotInfo(turretPose, targetPose);
 
         
         double t_guess = sol.flightTimeSeconds();
@@ -110,7 +107,7 @@ public class SOTMCalculator {
                 targetPose.getRotation());
 
   
-            InterpolatedShotInfo newSol = InterpolationCalculator.interpolateShotInfo(virtualPose);
+            InterpolatedShotInfo newSol = InterpolationCalculator.interpolateShotInfo(turretPose, virtualPose);
 
             if (Math.abs(newSol.flightTimeSeconds() - t_guess) < timeTolerance) {
                 break;
@@ -185,7 +182,6 @@ public class SOTMCalculator {
 
         SOTMSolution solution = solveShootOnTheMove(
             futureTurretPose,
-            robotPose,
             hubPose,
             fieldRelativeSpeeds,
             Settings.Superstructure.SOTM.MAX_ITERATIONS,

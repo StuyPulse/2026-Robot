@@ -6,6 +6,8 @@
 
 package com.stuypulse.robot.commands.swerve;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.SwerveDriveBrake;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains.Swerve.Alignment;
 import com.stuypulse.robot.constants.Settings;
@@ -36,18 +38,13 @@ public class SwerveDriveAlignTurretToHub extends Command {
         turret = Turret.getInstance();
 
         angleController = new AnglePIDController(Alignment.THETA.kP, Alignment.THETA.kI, Alignment.THETA.kD)
-            .setSetpointFilter(new AMotionProfile(Settings.Swerve.Alignment.Constraints.DEFAULT_MAX_ANGULAR_VELOCITY, Settings.Swerve.Alignment.Constraints.DEFAULT_MAX_ANGULAR_ACCELERATION));
+            .setSetpointFilter(new AMotionProfile(Settings.Swerve.Constraints.MAX_ANGULAR_VEL_RAD_PER_S, Settings.Swerve.Constraints.MAX_ANGULAR_ACCEL_RAD_PER_S_SQUARED));
                 
         addRequirements(swerve);
     }
 
     protected double getAngleError() {
         return angleController.getError().getRotation2d().getDegrees();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return angleController.isDoneDegrees(Settings.Swerve.Alignment.Tolerances.THETA_TOLERANCE_DEG);
     }
 
     public Rotation2d getTargetAngle() {
@@ -69,5 +66,15 @@ public class SwerveDriveAlignTurretToHub extends Command {
 
         SmartDashboard.putNumber("Swerve/Angle Error", angleController.getError().toDegrees());
         SmartDashboard.putNumber("Swerve/Target Angle Hub Deg", TurretAngleCalculator.getPointAtTargetAngle(Field.getHubPose().getTranslation(), swerve.getTurretPose().getTranslation()).getDegrees());
+    }
+
+    @Override
+    public boolean isFinished() {
+        return angleController.isDoneDegrees(Settings.Swerve.Alignment.Tolerances.THETA_TOLERANCE_DEG);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        swerve.setControl(new SwerveRequest.SwerveDriveBrake());
     }
 }

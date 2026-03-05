@@ -279,13 +279,21 @@ public interface Settings {
         public final double MODULE_VELOCITY_DEADBAND_M_PER_S = 0.1;
         public final double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
 
+        public interface Constraints {
+            public final double MAX_VELOCITY_M_PER_S = 4.93; // 4.3p
+            public final double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
+            public final double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(600.0);
+            public final double MAX_ANGULAR_ACCEL_RAD_PER_S_SQUARED = Units.degreesToRadians(900.0);
+
+            public final PathConstraints DEFAULT_CONSTRAINTS =
+                new PathConstraints(
+                    MAX_VELOCITY_M_PER_S,
+                    MAX_ACCEL_M_PER_S_SQUARED,
+                    MAX_ANGULAR_VEL_RAD_PER_S,
+                    MAX_ANGULAR_ACCEL_RAD_PER_S_SQUARED);
+        }
+
         public interface Alignment {
-            public interface Constraints {
-                public final double DEFAULT_MAX_VELOCITY = 4.93;
-                public final double DEFAULT_MAX_ACCELERATION = 15.0;
-                public final double DEFAULT_MAX_ANGULAR_VELOCITY = Units.degreesToRadians(600.0);
-                public final double DEFAULT_MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(900.0);
-            }
 
             public interface Targets {}
 
@@ -303,20 +311,6 @@ public interface Settings {
 
                 public final double ALIGNMENT_DEBOUNCE = 0.15;
             }
-        }
-
-        public interface Constraints {
-            public final double MAX_VELOCITY_M_PER_S = 1.0; // 4.3p
-            public final double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
-            public final double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400.0);
-            public final double MAX_ANGULAR_ACCEL_RAD_PER_S = Units.degreesToRadians(900.0);
-
-            public final PathConstraints DEFAULT_CONSTRAINTS =
-                new PathConstraints(
-                    MAX_VELOCITY_M_PER_S,
-                    MAX_ACCEL_M_PER_S_SQUARED,
-                    MAX_ANGULAR_VEL_RAD_PER_S,
-                    MAX_ANGULAR_ACCEL_RAD_PER_S);
         }
     }
 

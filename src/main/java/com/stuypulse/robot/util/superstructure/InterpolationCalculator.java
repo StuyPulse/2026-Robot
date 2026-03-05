@@ -1,9 +1,6 @@
 package com.stuypulse.robot.util.superstructure;
 
-import java.util.function.Supplier;
-
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Superstructure.AngleInterpolation;
 import com.stuypulse.robot.constants.Settings.Superstructure.FerryRPMInterpolation;
 import com.stuypulse.robot.constants.Settings.Superstructure.RPMInterpolation;
@@ -71,9 +68,9 @@ public class InterpolationCalculator {
         double flightTime = distanceTOFInterpolator.get(distanceMeters);
         
 
-        SmartDashboard.putNumber("Superstructure/Interpolated Target Angle", targetAngle.getDegrees());
-        SmartDashboard.putNumber("Superstructure/Interpolated RPM", targetRPM);
-        SmartDashboard.putNumber("Superstructure/Interpolated TOF", flightTime);
+        SmartDashboard.putNumber("InterpolationTesting/Interpolated Target Angle", targetAngle.getDegrees());
+        SmartDashboard.putNumber("InterpolationTesting/Interpolated RPM", targetRPM);
+        SmartDashboard.putNumber("InterpolationTesting/Interpolated TOF", flightTime);
 
         return new InterpolatedShotInfo(
             targetAngle, 

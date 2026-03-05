@@ -8,7 +8,7 @@ package com.stuypulse.robot.commands.superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
 public class SuperstructureFerry extends SuperstructureSetState {
-    public SuperstructureFerry(){
+    public SuperstructureFerry() {
         super(SuperstructureState.FERRY);
     }
 }

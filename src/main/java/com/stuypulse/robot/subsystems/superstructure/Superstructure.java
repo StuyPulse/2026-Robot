@@ -95,19 +95,7 @@ public class Superstructure extends SubsystemBase {
     }
 
     public boolean isHoodUnderTrench() {
-        Pose2d pose = CommandSwerveDrivetrain.getInstance().getTurretPose();
-
-        boolean isBetweenRightTrenchesY = Field.NearRightTrench.rightEdge.getY() < pose.getY() && Field.NearRightTrench.leftEdge.getY() > pose.getY();
-
-        boolean isBetweenLeftTrenchesY = Field.NearLeftTrench.rightEdge.getY() < pose.getY() && Field.NearLeftTrench.leftEdge.getY() > pose.getY();
-
-        boolean isCloseToAllianceSideTrenchX = Math.abs(pose.getX() - Field.NearRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
-
-        boolean isCloseToNeutralSideTrenchX = Math.abs(pose.getX() - Field.FarRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
-
-        boolean isUnderTrench = (isBetweenRightTrenchesY || isBetweenLeftTrenchesY) && (isCloseToAllianceSideTrenchX || isCloseToNeutralSideTrenchX);
-        
-        return isUnderTrench;
+        return hood.isUnderTrench();
     }
 
     public boolean isShooterAtTolerance() {
@@ -119,19 +107,11 @@ public class Superstructure extends SubsystemBase {
     }
 
     public boolean isTurretAtTolerance(){
-        return turret.atTargetAngle();
+        return turret.atTolerance();
     }
 
     public double getTargetRPM() {
         return shooter.getTargetRPM();
-    }
-
-    public Rotation2d getTargetYaw() {
-        return hood.getTargetAngle();
-    }
-
-    public Rotation2d getTargetPitch(){
-        return turret.getTargetAngle();
     }
 
     public double getShooterRPM() {
@@ -155,22 +135,12 @@ public class Superstructure extends SubsystemBase {
         SmartDashboard.putString("Superstructure/State", state.name());
         SmartDashboard.putString("States/SuperStructure", state.name());
 
-        SmartDashboard.putNumber("Superstructure/Target RPM", getTargetRPM());
-        SmartDashboard.putNumber("Superstructure/Target Yaw", getTargetYaw().getDegrees());
-        SmartDashboard.putNumber("Superstructure/Target Pitch", getTargetPitch().getDegrees());
-
-        SmartDashboard.putNumber("Superstructure/Current RPM", getShooterRPM());
-        SmartDashboard.putNumber("Superstructure/Current Yaw", getTurretAngle().getDegrees());
-        SmartDashboard.putNumber("Superstructure/Current Pitch", getHoodAngle().getDegrees());
-
-        SmartDashboard.putNumber("Superstructure/Hood Angle Error (Deg)", getTargetPitch().getDegrees() - getHoodAngle().getDegrees());
-
         SmartDashboard.putBoolean("Superstructure/Shooter At Tolerance?", isShooterAtTolerance());
         SmartDashboard.putBoolean("Superstructure/Hood At Tolerance?", isHoodAtTolerance());
-        SmartDashboard.putBoolean("Superstructure/Turret At Tolerant?", isHoodAtTolerance());
+        SmartDashboard.putBoolean("Superstructure/Turret At Tolerance?", isTurretAtTolerance());
 
         SmartDashboard.putBoolean("Superstructure/Hood/Under Trench", isHoodUnderTrench());
-        SmartDashboard.putNumber("InterpolationTesting/Hood Angle", getHoodAngle().getDegrees());
-        SmartDashboard.putNumber("InterpolationTesting/Shooter RPM", getShooterRPM());
+        SmartDashboard.putNumber("InterpolationTesting/Current Hood Angle", getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("InterpolationTesting/Current Shooter RPM", getShooterRPM());
     }
 }

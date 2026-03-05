@@ -6,15 +6,18 @@
 package com.stuypulse.robot.subsystems.superstructure.hood;
 
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
+import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SysId;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -107,6 +110,23 @@ public class HoodImpl extends Hood {
     public boolean isStalling() {
         return isStalling.getAsBoolean();
     }
+
+    @Override
+    public boolean isUnderTrench() {
+        Pose2d pose = CommandSwerveDrivetrain.getInstance().getTurretPose();
+
+        boolean isBetweenRightTrenchesY = Field.NearRightTrench.rightEdge.getY() < pose.getY() && Field.NearRightTrench.leftEdge.getY() > pose.getY();
+
+        boolean isBetweenLeftTrenchesY = Field.NearLeftTrench.rightEdge.getY() < pose.getY() && Field.NearLeftTrench.leftEdge.getY() > pose.getY();
+
+        boolean isCloseToAllianceSideTrenchX = Math.abs(pose.getX() - Field.NearRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
+
+        boolean isCloseToNeutralSideTrenchX = Math.abs(pose.getX() - Field.FarRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
+
+        boolean isUnderTrench = (isBetweenRightTrenchesY || isBetweenLeftTrenchesY) && (isCloseToAllianceSideTrenchX || isCloseToNeutralSideTrenchX);
+        
+        return isUnderTrench;
+    }
     
     /*
     * Example:
@@ -135,9 +155,6 @@ public class HoodImpl extends Hood {
             if (voltageOverride.isPresent()) {
                 hoodMotor.setVoltage(voltageOverride.get());
             } else {
-                if (Superstructure.getInstance().isHoodUnderTrench()) {
-                    setState(HoodState.STOW);
-                }
                 hoodMotor.setControl(controller.withPosition(getTargetAngle().getRotations()));
             }
         } else {
@@ -156,8 +173,6 @@ public class HoodImpl extends Hood {
 
             SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value", hoodMotor.getPosition().getValueAsDouble());
             
-            SmartDashboard.putNumber("InterpolationTesting/Hood Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
-
             SmartDashboard.putNumber("Current Draws/Hood (amps)", hoodMotor.getSupplyCurrent().getValueAsDouble());
         }
     }

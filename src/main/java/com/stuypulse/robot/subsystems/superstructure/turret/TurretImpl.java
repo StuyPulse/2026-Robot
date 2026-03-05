@@ -128,7 +128,7 @@ public class TurretImpl extends Turret {
     }
     
     @Override
-    public boolean atTargetAngle() {
+    public boolean atTolerance() {
         double error = getAngle().minus(getTargetAngle()).getRotations() + 0.5;
         return Math.abs(error) < Settings.Superstructure.Turret.TOLERANCE.getRotations();
     }

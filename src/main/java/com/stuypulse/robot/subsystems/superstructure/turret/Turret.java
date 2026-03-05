@@ -15,7 +15,7 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
 import com.stuypulse.robot.util.superstructure.TurretAngleCalculator;
-import com.stuypulse.robot.util.superstructure.TurretVisualizer;
+import com.stuypulse.robot.util.superstructure.VisualizerTurret;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -75,7 +75,7 @@ public abstract class Turret extends SubsystemBase {
         return Rotation2d.fromDegrees(driverInput.x * 180); 
     }
  
-    public boolean atTargetAngle() {
+    public boolean atTolerance() {
         double error = getAngle().minus(getTargetAngle()).getRotations();
         return Math.abs(error) < Settings.Superstructure.Turret.TOLERANCE.getRotations();
     }
@@ -113,15 +113,16 @@ public abstract class Turret extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putString("Superstructure/Turret/State", state.name());
         SmartDashboard.putString("States/Turret", state.name());
+        
         SmartDashboard.putNumber("Superstructure/Turret/Target Angle", getTargetAngle().getDegrees());
-        SmartDashboard.putBoolean("Superstructure/Turret/At Target Angle?", atTargetAngle());
+        SmartDashboard.putNumber("Superstructure/Turret/Current Angle", getAngle().getDegrees());
 
         if (Settings.DEBUG_MODE) {
             if (EnabledSubsystems.TURRET.get()) {
-                TurretVisualizer.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
+                VisualizerTurret.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTolerance());
             }
             else {
-                TurretVisualizer.getInstance().updateTurretAngle(new Rotation2d(), false);
+                VisualizerTurret.getInstance().updateTurretAngle(new Rotation2d(), false);
             }
         }
     }

@@ -15,14 +15,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class TurretVisualizer {
-    public static TurretVisualizer instance;
+public class VisualizerTurret {
+    public static VisualizerTurret instance;
 
     static {
-        instance = new TurretVisualizer();
+        instance = new VisualizerTurret();
     }
 
-    public static TurretVisualizer getInstance() {
+    public static VisualizerTurret getInstance() {
         return instance;
     }
 
@@ -32,7 +32,7 @@ public class TurretVisualizer {
     private final MechanismRoot2d turretPivot;
     private final MechanismLigament2d turret;
 
-    private TurretVisualizer() {
+    private VisualizerTurret() {
         width = Units.inchesToMeters(20);
         height = Units.inchesToMeters(20);
 

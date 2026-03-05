@@ -175,8 +175,8 @@ public interface Settings {
             public final double FLYWHEEL_RADIUS = Units.inchesToMeters(3.965 / 2);
 
             public interface RPM {
-                public final SmartNumber SHOOT = new SmartNumber("Superstructure/Shoot State Target RPM", 3500.0);
-                public final SmartNumber FERRY = new SmartNumber("Superstructure/Ferry State Target RPM", 2000.0);
+                public final SmartNumber SHOOT = new SmartNumber("InterpolationTesting/Shoot State Target RPM", 3500.0);
+                public final SmartNumber FERRY = new SmartNumber("InterpolationTesting/Ferry State Target RPM", 2000.0);
                 public final double REVERSE = 0.0;
                 public final double KB = 0.0;
                 public final double LEFT_CORNER = 0.0;
@@ -210,13 +210,13 @@ public interface Settings {
             public final double STALL_DEBOUNCE = 0.5;
 
             public interface Angles {
-                public final SmartNumber SHOOT = new SmartNumber("Superstructure/Shoot State Target Angle (deg)", 15.0);
-                public final SmartNumber FERRY = new SmartNumber("Superstructure/Ferry State Target Angle (deg)", 20.0);
+                public final SmartNumber SHOOT = new SmartNumber("InterpolationTesting/Shoot State Target Angle (deg)", 15.0);
+                public final SmartNumber FERRY = new SmartNumber("InterpolationTesting/Ferry State Target Angle (deg)", 20.0);
 
                 public final Rotation2d MIN = Rotation2d.fromDegrees(7.0);
                 public final Rotation2d MAX = Rotation2d.fromDegrees(40.0);
 
-                public final Rotation2d UNDER_TRENCH = Rotation2d.fromDegrees(11.0);
+                public final Rotation2d STOW = Rotation2d.fromDegrees(11.0);
                 public final Rotation2d KB = Rotation2d.fromDegrees(12.0);
                 public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(10.0);
                 public final Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(10.0);

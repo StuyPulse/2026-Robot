@@ -89,7 +89,5 @@ public abstract class Shooter extends SubsystemBase {
 
         SmartDashboard.putNumber("Superstructure/Shooter/Current RPM", getRPM());
         SmartDashboard.putNumber("Superstructure/Shooter/Target RPM", getTargetRPM());
-
-        SmartDashboard.putNumber("InterpolationTesting/Shooter Interpolated Target Shoot RPM", InterpolationCalculator.interpolateShotInfo().targetRPM());
     }
 }

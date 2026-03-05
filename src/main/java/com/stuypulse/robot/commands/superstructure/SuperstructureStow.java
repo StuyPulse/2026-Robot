@@ -7,8 +7,8 @@ package com.stuypulse.robot.commands.superstructure;
 
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
-public class SuperstructureStow extends SuperstructureSetState{
-    public SuperstructureStow(){
+public class SuperstructureStow extends SuperstructureSetState {
+    public SuperstructureStow() {
         super(SuperstructureState.STOW);
     }
 }

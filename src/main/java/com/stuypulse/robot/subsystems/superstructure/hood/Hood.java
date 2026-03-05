@@ -5,8 +5,11 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.superstructure.hood;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
+import com.stuypulse.robot.util.superstructure.VisualizerHood;
 import com.stuypulse.robot.util.superstructure.InterpolationCalculator;
 import com.stuypulse.stuylib.input.Gamepad;
 
@@ -23,7 +26,11 @@ public abstract class Hood extends SubsystemBase{
     private Rotation2d driverInput;
 
     static {
-        instance = new HoodImpl();
+        if (Robot.isReal()) {
+            instance = new HoodImpl();
+        } else {
+            instance = new HoodSim();
+        }
     }
     
     public static Hood getInstance(){
@@ -56,8 +63,12 @@ public abstract class Hood extends SubsystemBase{
     }
 
     public Rotation2d getTargetAngle() {
+        if (isUnderTrench()) {
+            return Settings.Superstructure.Hood.Angles.STOW;
+        }
+
         return switch(state) {
-            case STOW -> Settings.Superstructure.Hood.Angles.MIN;
+            case STOW -> Settings.Superstructure.Hood.Angles.STOW;
             case FERRY -> Rotation2d.fromDegrees(30);
             case SHOOT -> Rotation2d.fromDegrees(Settings.Superstructure.Hood.Angles.SHOOT.get());
             case KB -> Settings.Superstructure.Hood.Angles.KB;
@@ -72,7 +83,11 @@ public abstract class Hood extends SubsystemBase{
 
     public boolean atTolerance() {
         double error = getAngle().minus(getTargetAngle()).getRotations();
-        return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations();
+        if (Robot.isReal()) {
+            return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations();
+        } else {
+            return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations() + (0.5 / 360.0);
+        }
     }
 
     public abstract Rotation2d getAngle();
@@ -88,8 +103,11 @@ public abstract class Hood extends SubsystemBase{
         return this.driverInput;
     }
     
+    public abstract boolean isUnderTrench();
     public abstract boolean isStalling();
+
     public abstract SysIdRoutine getHoodSysIdRoutine();
+
     public abstract void zeroHoodEncoderAtLowerHardstop();
     public abstract void seedHood();
 
@@ -101,7 +119,12 @@ public abstract class Hood extends SubsystemBase{
         SmartDashboard.putNumber("Superstructure/Hood/Target Angle", getTargetAngle().getDegrees());
         SmartDashboard.putNumber("Superstructure/Hood/Current Angle", getAngle().getDegrees());
 
-        //SmartDashboard.putNumber("Superstructure/Hood/Analog Target Angle", hoodAnalogToOutput().getDegrees());
-
+        if (Settings.DEBUG_MODE) {
+            if (EnabledSubsystems.HOOD.get()) {
+                    VisualizerHood.getInstance().update(getAngle(), atTolerance());
+            } else {
+                // VisualizerHood.getInstance().update(new Rotation2d(), false);
+            }
+        }
     }
 }

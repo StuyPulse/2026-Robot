@@ -10,7 +10,6 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Superstructure.Turret;
 import com.stuypulse.robot.util.SysId;
 import com.stuypulse.robot.util.turret.TurretAngleCalculator;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -139,7 +138,7 @@ public class TurretImpl extends Turret {
         if (delta > 180.0) delta -= 360;
         else if (delta < -180) delta += 360;
 
-        if (Math.abs(current + delta) < Constants.RANGE) return delta;
+        if (Math.abs(current + delta) < Settings.Superstructure.Turret.Constants.RANGE) return delta;
 
         return delta < 0 ? delta + 360 : delta - 360;
     }

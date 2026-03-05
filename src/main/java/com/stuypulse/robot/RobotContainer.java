@@ -176,10 +176,10 @@ public class RobotContainer {
         // driver.getBottomButton()
         //         .onTrue(new SuperstructureFerry()
         //                 .alongWith(new TurretFerry())
-        //                 .alongWith(new WaitUntilCommand(() -> hoodedShooter.bothAtTolerance()))
-        //                 .andThen(new HandoffRun().onlyIf(() -> hoodedShooter.bothAtTolerance())
+        //                 .alongWith(new WaitUntilCommand(() -> superstructure.bothAtTolerance()))
+        //                 .andThen(new HandoffRun().onlyIf(() -> superstructure.bothAtTolerance())
         //                         .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
-        //                         .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && hoodedShooter.bothAtTolerance())))      
+        //                         .andThen(new SpindexerRun().onlyIf(() -> handoff.atTolerance() && superstructure.bothAtTolerance())))      
         //         )
         //         .onFalse(new SpindexerStop()
         //                 .alongWith(new SuperstructureStow())
@@ -199,14 +199,14 @@ public class RobotContainer {
         driver.getLeftButton()
             .whileTrue(
                 new SwerveXMode().alongWith(
-                    new HoodedShooterLeftCorner().alongWith(
+                    new SuperstructureLeftCorner().alongWith(
                         new TurretLeftCorner()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
                                 new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
-                new HoodedShooterStow().alongWith(
+                new SuperstructureStow().alongWith(
                 new SpindexerRun().alongWith(
                 new HandoffStop()))
             );
@@ -215,14 +215,14 @@ public class RobotContainer {
         driver.getRightButton()
             .whileTrue(
                 new SwerveXMode().alongWith(
-                    new HoodedShooterRightCorner().alongWith(
+                    new SuperstructureRightCorner().alongWith(
                         new TurretRightCorner()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
                                 new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
-                new HoodedShooterStow().alongWith(
+                new SuperstructureStow().alongWith(
                 new SpindexerRun().alongWith(
                 new HandoffStop()))
             );
@@ -231,14 +231,14 @@ public class RobotContainer {
         driver.getBottomButton()
             .whileTrue(
                 new SwerveXMode().alongWith(
-                    new HoodedShooterShoot().alongWith(
+                    new SuperstructureShoot().alongWith(
                         new TurretShoot()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> Superstructure.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> Superstructure.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
                                 new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
-                new HoodedShooterStow().alongWith(
+                new SuperstructureStow().alongWith(
                 new SpindexerRun().alongWith(
                 new HandoffStop()))
             );
@@ -270,14 +270,14 @@ public class RobotContainer {
         driver.getDPadLeft()
             .whileTrue(
                 new SwerveXMode().alongWith(
-                    new HoodedShooterFerry().alongWith(
+                    new SuperstructureFerry().alongWith(
                         new TurretFerry()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
                                 new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
-                new HoodedShooterStow().alongWith(
+                new SuperstructureStow().alongWith(
                 new SpindexerRun().alongWith(
                 new HandoffStop()))
             );
@@ -286,14 +286,14 @@ public class RobotContainer {
         driver.getDPadRight()
             .whileTrue(
                 new SwerveXMode().alongWith(
-                    new HoodedShooterShoot().alongWith(
+                    new SuperstructureShoot().alongWith(
                         new TurretShoot()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isHoodAtTolerance())).alongWith(
+                            new WaitUntilCommand(() -> superstructure.isShooterAtTolerance())).alongWith(
                             new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
                                 new SpindexerRun().alongWith(new HandoffRun()))))
             .onFalse(
-                new HoodedShooterStow().alongWith(
+                new SuperstructureStow().alongWith(
                 new SpindexerRun().alongWith(
                 new HandoffStop()))
             );

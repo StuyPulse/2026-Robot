@@ -68,7 +68,7 @@ public class HoodAngleCalculator {
 
             Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
 
-            SmartDashboard.putNumber("HoodedShooter/Interpolated Target Angle", targetAngle.getDegrees());
+            SmartDashboard.putNumber("Superstructure/Interpolated Target Angle", targetAngle.getDegrees());
 
             return targetAngle;
         };
@@ -83,7 +83,7 @@ public class HoodAngleCalculator {
 
             double targetRPM = ShotCalculator.solveInterpolation(turretPose, hubPose).targetRPM();
 
-            SmartDashboard.putNumber("HoodedShooter/Interpolated RPM", targetRPM);
+            SmartDashboard.putNumber("Superstructure/Interpolated RPM", targetRPM);
             
             return targetRPM;
         };
@@ -100,7 +100,7 @@ public class HoodAngleCalculator {
 
             double targetRPM = ferryingDistanceRPMInterpolator.get(distanceMeters);
 
-            SmartDashboard.putNumber("HoodedShooter/Interpolated Ferrying RPM", targetRPM);
+            SmartDashboard.putNumber("Superstructure/Interpolated Ferrying RPM", targetRPM);
             
             return targetRPM;
         };
@@ -144,10 +144,10 @@ public class HoodAngleCalculator {
         futureTurretPose2d.setPose((Robot.isBlue() ? futureTurretPose : Field.transformToOppositeAlliance(futureTurretPose)));
   
   
-        SmartDashboard.putNumber("HoodedShooter/SOTM/Calculated Turret Angle", sol.targetTurretAngle().getDegrees());
-        SmartDashboard.putNumber("HoodedShooter/SOTM/Calculated Hood Angle", sol.targetHoodAngle().getDegrees());
-        SmartDashboard.putNumber("HoodedShooter/SOTM/Calculated Flight time", sol.flightTime());
-        SmartDashboard.putNumber("HoodedShooter/SOTM/Turret Dist to Virtual Pose", futureTurretPose.getTranslation().getDistance(sol.virtualPose().getTranslation()));
+        SmartDashboard.putNumber("Superstructure/SOTM/Calculated Turret Angle", sol.targetTurretAngle().getDegrees());
+        SmartDashboard.putNumber("Superstructure/SOTM/Calculated Hood Angle", sol.targetHoodAngle().getDegrees());
+        SmartDashboard.putNumber("Superstructure/SOTM/Calculated Flight time", sol.flightTime());
+        SmartDashboard.putNumber("Superstructure/SOTM/Turret Dist to Virtual Pose", futureTurretPose.getTranslation().getDistance(sol.virtualPose().getTranslation()));
     }
 
     public static Supplier<Rotation2d> calculateHoodAngleSOTM() {

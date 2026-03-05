@@ -75,14 +75,14 @@ public class ShooterSim extends Shooter {
         if (EnabledSubsystems.SHOOTER.get()) {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
-                SmartDashboard.putNumber("HoodedShooter/Shooter/Input Voltage", voltageOverride.get());
+                SmartDashboard.putNumber("Superstructure/Shooter/Input Voltage", voltageOverride.get());
             } else {
-                SmartDashboard.putNumber("HoodedShooter/Shooter/Input Voltage", controller.getU(0));
+                SmartDashboard.putNumber("Superstructure/Shooter/Input Voltage", controller.getU(0));
                 sim.setInput(controller.getU(0));
             }
         } else {
             sim.setInput(0);
-            SmartDashboard.putNumber("HoodedShooter/Shooter/Input Voltage", 0.0);
+            SmartDashboard.putNumber("Superstructure/Shooter/Input Voltage", 0.0);
         }
 
         sim.update(Settings.DT);

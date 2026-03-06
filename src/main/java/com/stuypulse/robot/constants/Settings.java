@@ -286,9 +286,8 @@ public interface AngleInterpolation {
             Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
             
             /* CONSTANTS */
-            public final double RANGE = 210.0;
-            public final double RANGE_LOWER = -45;
-            public final double RANGE_UPPER = 390;
+            public final double RANGE_LEFT = -45;
+            public final double RANGE_RIGHT = 390;
         
             public final double SLOT_SWITCHING_THRESHOLD_ROT = .5;
         
@@ -303,12 +302,12 @@ public interface AngleInterpolation {
         
             public interface Encoder17t {
                 public final int TEETH = 17;
-                public final Rotation2d OFFSET = new Rotation2d();
+                public final Rotation2d OFFSET = new Rotation2d(); //-0.86962890625
             }
         
             public interface Encoder18t {
                 public final int TEETH = 18;
-                public final Rotation2d OFFSET = new Rotation2d();
+                public final Rotation2d OFFSET = new Rotation2d(); //-0.700927734375
             }
         
             public interface SoftwareLimit {

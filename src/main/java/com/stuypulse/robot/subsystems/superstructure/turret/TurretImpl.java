@@ -140,8 +140,8 @@ public class TurretImpl extends Turret {
         else if (delta < -180) delta += 360;
 
         // if (Math.abs(current + delta) < Settings.Superstructure.Turret.RANGE) return delta;
-        if (current + delta < Settings.Superstructure.Turret.RANGE_LOWER) return delta + 360;
-        if (current + delta > Settings.Superstructure.Turret.RANGE_UPPER) return delta - 360;
+        if (current + delta < Settings.Superstructure.Turret.RANGE_LEFT) return delta + 360;
+        if (current + delta > Settings.Superstructure.Turret.RANGE_RIGHT) return delta - 360;
 
         return delta < 0 ? delta + 360 : delta - 360;
     }

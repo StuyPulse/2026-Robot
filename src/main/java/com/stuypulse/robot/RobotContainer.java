@@ -217,11 +217,11 @@ public class RobotContainer {
             .whileTrue(new SwerveClimbAlign().alongWith(new ClimberUp()).andThen(new SwerveXMode()));
 
         // Climber Up
-        driver.getLeftTriggerButton()
-            .onTrue(new ClimberUp());
+        driver.getRightBumper()
+            .whileTrue(new ClimberUp());
 
         // Climber Down
-        driver.getRightTriggerButton()
+        driver.getLeftBumper()
             .onTrue(new ClimberDown());
 
         // Left Corner Shoot

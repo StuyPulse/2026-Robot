@@ -91,8 +91,8 @@ public class ClimberHopperImpl extends ClimberHopper {
         if (voltageOverride.isPresent()) {
             voltage = voltageOverride.get();
         } else {
-            if (getState() == ClimberHopperState.CLIMBER_DOWN) voltage = -Settings.ClimberHopper.MOTOR_VOLTAGE;
-            else if (getState() == ClimberHopperState.CLIMBER_UP) voltage = Settings.ClimberHopper.MOTOR_VOLTAGE;
+            if (getState() == ClimberHopperState.CLIMBER_DOWN && !atTargetHeight()) voltage = -Settings.ClimberHopper.MOTOR_VOLTAGE;
+            else if (getState() == ClimberHopperState.CLIMBER_UP && !atTargetHeight()) voltage = Settings.ClimberHopper.MOTOR_VOLTAGE;
             else voltage = 0;
         }
         
@@ -106,6 +106,7 @@ public class ClimberHopperImpl extends ClimberHopper {
             SmartDashboard.putBoolean("ClimberHopper/Stalling", getStalling());
             
             SmartDashboard.putNumber("ClimberHopper/Current Height", getCurrentHeight());
+            SmartDashboard.putBoolean("Climber/At Target Height?", atTargetHeight());
             SmartDashboard.putNumber("ClimberHopper/Voltage", voltage);
             SmartDashboard.putNumber("ClimberHopper/Applied Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("ClimberHopper/Supply Current", motor.getSupplyCurrent().getValueAsDouble());

@@ -41,7 +41,7 @@ public interface Settings {
         public final double GEAR_RATIO = 45.0;
 
         public final double MIN_HEIGHT_METERS = 0.0;
-        public final double MAX_HEIGHT_METERS = 1.0;
+        public final double MAX_HEIGHT_METERS = 2.884;
 
         public final double MASS_KG = 1.0;
 
@@ -69,7 +69,7 @@ public interface Settings {
 
         public final double RAMP_RATE = 50.0;
 
-        public final double MOTOR_VOLTAGE = 12;
+        public final double MOTOR_VOLTAGE = 1;
     }
 
     public interface Handoff {

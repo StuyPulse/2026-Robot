@@ -30,7 +30,7 @@ public interface Field {
     double WIDTH = Units.inchesToMeters(317.000); 
     double LENGTH = Units.inchesToMeters(651.200);
 
-    public static final double trenchXTolerance = Units.inchesToMeters(50);
+    public static final double trenchHopperTolerance = Units.inchesToMeters(50);
     public static final double trenchHoodTolerance = Units.inchesToMeters(15);
 
     // Alliance relative hub center coordinates
@@ -42,12 +42,14 @@ public interface Field {
 
 	public static final double OPPONENT_ZONE_X = LENGTH - Units.inchesToMeters(158.6);
 
+    public static final double hubTolerance = Units.inchesToMeters(283);
+
     public static Pose2d getHubPose() {
         return hubCenter;
     }
 
     // Alliance relative tower center coordinates
-    public final Pose2d towerCenter = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47), new Rotation2d());
+    public final Pose2d towerFarCenter = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47), new Rotation2d());
     public final Pose2d towerFarRight = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47-23.5), new Rotation2d());
     public final Pose2d towerFarLeft = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47+23.5), new Rotation2d());
     public final double barDisplacement = Units.inchesToMeters(11.38);
@@ -55,7 +57,7 @@ public interface Field {
     public final double DISTANCE_TO_RUNGS = Units.inchesToMeters(20); // placeholder value, how far away in terms of y-cord from the rung
 
     public static boolean closerToTop(){
-        return (CommandSwerveDrivetrain.getInstance().getPose().getY() >= Field.towerCenter.getY());
+        return (CommandSwerveDrivetrain.getInstance().getPose().getY() >= Field.towerFarCenter.getY());
     }
 
     // 1.0 meters from driverstation wall and field wall

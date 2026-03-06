@@ -63,13 +63,16 @@
     },
     "transitory": {
       "SmartDashboard": {
+        "FieldPositions": {
+          "open": true
+        },
         "HoodedShooter": {
           "Hood": {
             "open": true
           },
           "open": true
         },
-        "Superstructure": {
+        "States": {
           "open": true
         },
         "Turret": {

@@ -452,15 +452,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public boolean isUnderTrench() {
-        Pose2d pose = getTurretPose();
+        Translation2d turretTranslation = getTurretPose().getTranslation();
 
-        boolean isBetweenRightTrenchesY = Field.NearRightTrench.rightEdge.getY() < pose.getY() && Field.NearRightTrench.leftEdge.getY() > pose.getY();
+        boolean isBetweenRightTrenchesY = Field.NearRightTrench.rightEdge.getY() < turretTranslation.getY() && Field.NearRightTrench.leftEdge.getY() > turretTranslation.getY();
 
-        boolean isBetweenLeftTrenchesY = Field.NearLeftTrench.rightEdge.getY() < pose.getY() && Field.NearLeftTrench.leftEdge.getY() > pose.getY();
+        boolean isBetweenLeftTrenchesY = Field.NearLeftTrench.rightEdge.getY() < turretTranslation.getY() && Field.NearLeftTrench.leftEdge.getY() > turretTranslation.getY();
 
-        boolean isCloseToAllianceSideTrenchX = Math.abs(pose.getX() - Field.NearRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
+        boolean isCloseToAllianceSideTrenchX = Math.abs(turretTranslation.getX() - Field.NearRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
 
-        boolean isCloseToNeutralSideTrenchX = Math.abs(pose.getX() - Field.FarRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
+        boolean isCloseToNeutralSideTrenchX = Math.abs(turretTranslation.getX() - Field.FarRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
 
         boolean isUnderTrench = (isBetweenRightTrenchesY || isBetweenLeftTrenchesY) && (isCloseToAllianceSideTrenchX || isCloseToNeutralSideTrenchX);
         
@@ -469,20 +469,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
 
     public boolean isInOpponentZone(){
-        Translation2d turretPose = getTurretPose().getTranslation();
-        return turretPose.getX() > Field.OPPONENT_ZONE_X;
+        Translation2d turretTranslation = getTurretPose().getTranslation();
+        return turretTranslation.getX() > Field.OPPONENT_ZONE_X;
     }
     
     public boolean isBehindTower() {
-        boolean withinTowerX = Field.towerFarRight.getX() < getTurretPose().getTranslation().getX() && getTurretPose().getTranslation().getX() < Field.towerFarLeft.getX();
-        boolean withinTowerY = getPose().getTranslation().getY() < Field.towerCenter.getY();
+        boolean withinTowerX = getPose().getTranslation().getX() < Field.towerFarCenter.getX();
+        boolean withinTowerY = Field.towerFarRight.getY() < getTurretPose().getTranslation().getY() && getTurretPose().getTranslation().getY() < Field.towerFarLeft.getY();
         return withinTowerX && withinTowerY;
     }
 
-    // Stop ferrying when in rectangle behind hub (on neutral zone
+    // Stop ferrying when in rectangle behind hub (in neutral zone)
     public boolean isBehindHub() {
-        Translation2d turretPose = getTurretPose().getTranslation();
-        boolean behindHubX = Field.hubFarLeftCorner.getX() < turretPose.getX() && turretPose.getX() < Field.hubFarLeftCorner.getX() + Units.inchesToMeters(283);
+        Translation2d turretTranslation = getTurretPose().getTranslation();
+        boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX() && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubTolerance;
         boolean withinHubY = Field.hubFarRightCorner.getY() < getTurretPose().getY() && getTurretPose().getY() < Field.hubFarLeftCorner.getY();
 
         return behindHubX && withinHubY;
@@ -531,8 +531,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? pose : Field.transformToOppositeAlliance(pose));
 
         
-        if (Settings.DEBUG_MODE) {
-        }
+        if (Settings.DEBUG_MODE) {}
         
         SmartDashboard.putNumber("Swerve/Velocity Robot Relative X (m per s)", getChassisSpeeds().vxMetersPerSecond);
         SmartDashboard.putNumber("Swerve/Velocity Robot Relative Y (m per s)", getChassisSpeeds().vyMetersPerSecond);
@@ -544,5 +543,5 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", getChassisSpeeds().omegaRadiansPerSecond);
         
         SmartDashboard.putNumber("Swerve/Distance From Hub (meters)", Field.hubCenter.getTranslation().getDistance(getPose().getTranslation()));
-        }
+    }
 }

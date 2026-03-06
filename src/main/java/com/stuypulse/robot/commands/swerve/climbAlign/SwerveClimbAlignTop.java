@@ -15,7 +15,7 @@ import edu.wpi.first.math.util.Units;
 
 public class SwerveClimbAlignTop extends SwerveDrivePIDToPose{
     public SwerveClimbAlignTop(){
-        super(new Pose2d(Field.towerCenter.getX(), Field.towerCenter.getY() + Field.barDisplacement + Field.DISTANCE_TO_RUNGS, new Rotation2d(Units.degreesToRadians(180))));
+        super(new Pose2d(Field.towerFarCenter.getX(), Field.towerFarCenter.getY() + Field.barDisplacement + Field.DISTANCE_TO_RUNGS, new Rotation2d(Units.degreesToRadians(180))));
     }
 
     @Override

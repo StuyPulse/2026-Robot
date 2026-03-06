@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class SwerveClimbAlignBot extends SwerveDrivePIDToPose{
     public SwerveClimbAlignBot(){
-        super(new Pose2d(Field.towerCenter.getX(), Field.towerCenter.getY() - Field.barDisplacement - Field.DISTANCE_TO_RUNGS, new Rotation2d(0)));
+        super(new Pose2d(Field.towerFarCenter.getX(), Field.towerFarCenter.getY() - Field.barDisplacement - Field.DISTANCE_TO_RUNGS, new Rotation2d(0)));
     }
 
     @Override

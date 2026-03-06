@@ -11,11 +11,13 @@ import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class SuperstructureDefaultCommand extends Command {
     private final CommandSwerveDrivetrain swerve;
     private final Superstructure superstructure;
+    // private boolean trench = false;
 
     public SuperstructureDefaultCommand() {
         swerve = CommandSwerveDrivetrain.getInstance();
@@ -26,22 +28,26 @@ public class SuperstructureDefaultCommand extends Command {
 
     @Override
     public void execute() {
-        // TODO: check if stop Handoff only is possible or both Handoff & Spindexer is needed
-        
-        // 
+
         if (swerve.isUnderTrench()) {
             new SuperstructureStow();
             new SpindexerStop().alongWith(new HandoffStop());
         } 
-        if (swerve.isInOpponentZone()){
-            new SpindexerStop().alongWith(new HandoffStop())
-                .andThen(new WaitUntilCommand(superstructure::atTolerance))
-                .andThen(new HandoffRun()).alongWith(new SpindexerRun());
-        }
 
-        // Prevent shooting from hard to aim places
-        if (swerve.isBehindTower() || swerve.isBehindHub()) {
-            new SpindexerStop().alongWith(new HandoffStop());
-        }
+        // SIMON's WORK
+        // if (swerve.isUnderTrench() && trench == false) {
+        //     CommandScheduler.getInstance().schedule(new SuperstructureStow());
+        //     CommandScheduler.getInstance().schedule(new SpindexerStop().alongWith(new HandoffStop()));
+        //     trench = true;
+        // } else {
+        //     trench = false;
+        // }
+        
+        // TODO: WHAT REASON FOR THIS?
+        // if (swerve.isInOpponentZone()) {
+        //     new SpindexerStop().alongWith(new HandoffStop())
+        //         .andThen(new WaitUntilCommand(superstructure::atTolerance))
+        //         .andThen(new HandoffRun()).alongWith(new SpindexerRun());
+        // }
     }
 }

@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.097247924080665,
-        "y": 7.763060498220641
+        "x": 6.236512455516015,
+        "y": 4.739727164887308
       },
       "isLocked": false,
       "linkedName": "NZ Top Center (P)"
     },
     {
       "anchor": {
-        "x": 4.558078291814947,
-        "y": 7.655468564650059
+        "x": 6.2042348754448415,
+        "y": 5.761850533807828
       },
       "prevControl": {
-        "x": 6.73143534994069,
-        "y": 7.666227758007118
+        "x": 6.247271648873072,
+        "y": 4.9871886120996445
       },
       "nextControl": {
-        "x": 2.6534508870348223,
-        "y": 7.646039716111543
+        "x": 6.138366113055437,
+        "y": 6.947488256817166
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.536559905100831,
+        "y": 7.397247924080664
+      },
+      "prevControl": {
+        "x": 6.26879003558719,
+        "y": 7.440284697508897
+      },
+      "nextControl": {
+        "x": 2.6324967222244107,
+        "y": 7.349942006493671
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +52,8 @@
         "y": 4.933392645314354
       },
       "prevControl": {
-        "x": 2.3524436536180313,
-        "y": 7.3434519572953745
+        "x": 2.6321826809015425,
+        "y": 6.8485290628707
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,8 +62,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.15,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 1.2612055641421953,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.2581143740340126,
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [],
@@ -68,7 +88,7 @@
   "reversed": false,
   "folder": "To Tower",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 3.5,
     "rotation": -90.0
   },
   "useDefaultConstraints": true

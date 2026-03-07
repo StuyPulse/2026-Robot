@@ -331,9 +331,9 @@ public interface AngleInterpolation {
         }
 
         public interface SOTM {
-            public final int MAX_ITERATIONS = 5;
-            public final double TIME_TOLERANCE = 0.01;
-            public final SmartNumber UPDATE_DELAY = new SmartNumber("Superstructure/SOTM/Update Delay", 0.00);
+            public final int MAX_ITERATIONS = 10;
+            double TIME_TOLERANCE = 1e-5;
+            SmartNumber UPDATE_DELAY = new SmartNumber("Superstructure/SOTM/update delay", 0.23);
         }
     }
     

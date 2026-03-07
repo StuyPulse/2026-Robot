@@ -162,13 +162,13 @@ public class SOTMCalculator {
             )
         );
 
-        Vector2D oppositeDirection = new Vector2D(new Translation2d(
-            -robotRelativeSpeeds.vxMetersPerSecond,
-            -robotRelativeSpeeds.vyMetersPerSecond
-        ));
+        Vector2D oppositeDirection = Vector2D.kOrigin;
 
-        if (!oppositeDirection.equals(Vector2D.kOrigin)) {
-            oppositeDirection = oppositeDirection.normalize();
+        if (Math.abs(robotRelativeSpeeds.vxMetersPerSecond) > Settings.Swerve.MODULE_VELOCITY_DEADBAND_M_PER_S && Math.abs(robotRelativeSpeeds.vyMetersPerSecond) > Settings.Swerve.MODULE_VELOCITY_DEADBAND_M_PER_S) {
+            oppositeDirection = new Vector2D(new Translation2d(
+                -robotRelativeSpeeds.vxMetersPerSecond,
+                -robotRelativeSpeeds.vyMetersPerSecond
+            ));
         }
 
         hubPose = hubPose.exp(

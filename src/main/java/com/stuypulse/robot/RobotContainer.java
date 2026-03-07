@@ -227,18 +227,21 @@ public class RobotContainer {
             .onTrue(new SwerveResetHeading())
             .onTrue(new ResetLimelightIMU())
             .onFalse(new SetIMUMode(0));   
+
+        driver.getLeftBumper()
+            .onTrue(new IntakeStopRollers());
         
         // Climb Align
         // driver.getTopButton()
         //     .whileTrue(new SwerveClimbAlign().alongWith(new ClimberUp()).andThen(new SwerveXMode()));
 
         // Climber Up
-        driver.getRightBumper()
-            .whileTrue(new ClimberUp());
+        // driver.getRightBumper()
+        //     .whileTrue(new ClimberUp());
 
-        // Climber Down
-        driver.getLeftBumper()
-            .onTrue(new ClimberDown());
+        // // Climber Down
+        // driver.getLeftBumper()
+        //     .onTrue(new ClimberDown());
 
         // // Left Corner Shoot
         // driver.getLeftButton()

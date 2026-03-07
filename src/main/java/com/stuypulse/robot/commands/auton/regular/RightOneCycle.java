@@ -28,9 +28,7 @@ public class RightOneCycle extends SequentialCommandGroup {
             ),
 
             // Trip 1 To Score
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new IntakeStow()
-            ),
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]),
             new ParallelCommandGroup(
                 new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance())
                 // new SwerveClimbAlign()

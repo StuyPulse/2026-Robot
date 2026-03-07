@@ -20,31 +20,40 @@
         "y": 6.1814590747330955
       },
       "prevControl": {
-        "x": 6.258030842230132,
-        "y": 4.546061684460261
+        "x": 6.167817715485877,
+        "y": 4.542594017799959
       },
       "nextControl": {
-        "x": 6.1110029711424225,
-        "y": 7.73866688522192
+        "x": 6.193475682087783,
+        "y": 7.36497034400949
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.9555634638196917,
-        "y": 7.623190984578885
+        "x": 4.42896797153025,
+        "y": 7.3434519572953745
       },
       "prevControl": {
-        "x": 6.505492289442469,
-        "y": 7.784578884934756
+        "x": 6.301067615658363,
+        "y": 7.408007117437722
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Top Trench Score"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.18547140649150043,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 0.6491499227202471,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -54,16 +63,16 @@
     "maxAngularVelocity": 400.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": false
+    "unlimited": true
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "To Score",
   "idealStartingState": {
-    "velocity": 3.5,
+    "velocity": 5.75,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

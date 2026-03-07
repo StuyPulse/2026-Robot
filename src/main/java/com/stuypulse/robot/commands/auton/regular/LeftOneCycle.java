@@ -29,13 +29,14 @@ public class LeftOneCycle extends SequentialCommandGroup {
             ),
 
             // Trip 1 To Score
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new IntakeStow()
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]),
+            new ParallelCommandGroup(
+                new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance())
+                // new SwerveClimbAlign()
             ),
-            new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new SpindexerRun().alongWith(
                 new HandoffRun()
-            ).withTimeout(5.0)
+            )
             // .until(() -> DriverStation.getMatchTime() < 2).andThen(
             //     new ParallelCommandGroup(
             //         new HandoffStop(),

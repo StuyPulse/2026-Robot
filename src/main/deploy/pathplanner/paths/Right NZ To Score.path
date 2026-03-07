@@ -32,19 +32,28 @@
     },
     {
       "anchor": {
-        "x": 4.375172004744959,
-        "y": 0.4037722419928821
+        "x": 4.063155397390274,
+        "y": 0.6942704626334513
       },
       "prevControl": {
-        "x": 6.3979003558718865,
-        "y": 0.5006049822064051
+        "x": 6.085883748517201,
+        "y": 0.7911032028469743
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Bottom Trench Score"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.15455950540958613,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 0.7789799072642942,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -54,16 +63,16 @@
     "maxAngularVelocity": 400.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": false
+    "unlimited": true
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "To Score",
   "idealStartingState": {
-    "velocity": 3.5,
+    "velocity": 5.75,
     "rotation": 180.0
   },
   "useDefaultConstraints": true

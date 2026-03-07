@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.375172004744959,
-        "y": 0.4037722419928821
+        "x": 4.063155397390274,
+        "y": 0.6942704626334513
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3243705006655637,
-        "y": 0.61599292104715
+        "x": 1.0123538933108782,
+        "y": 0.9064911416877192
       },
       "isLocked": false,
       "linkedName": "Bottom Trench Score"
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.17310664605873255,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -43,7 +43,7 @@
     "maxAngularVelocity": 400.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": false
+    "unlimited": true
   },
   "goalEndState": {
     "velocity": 0,
@@ -52,8 +52,8 @@
   "reversed": false,
   "folder": "To Tower",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 0.0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

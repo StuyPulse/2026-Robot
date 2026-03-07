@@ -299,6 +299,14 @@ public interface Motors {
             return this;
         }
 
+        public TalonFXConfig withVelocityTimeFilter(double filterInSeconds) {
+            feedbackConfigs.withVelocityFilterTimeConstant(filterInSeconds);
+
+            configuration.withFeedback(feedbackConfigs);
+
+            return this;
+        }
+
         // RAMP RATE CONFIGS
 
         public TalonFXConfig withRampRate(double rampRate) {

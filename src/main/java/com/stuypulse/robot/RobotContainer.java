@@ -99,7 +99,7 @@ public class RobotContainer {
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
 
         SmartBoolean BACK_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Back Limelight Is Enabled", true);
-        SmartBoolean LEFT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Left Limelight Is Enabled", true);
+        SmartBoolean LEFT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Left Limelight Is Enabled", false);
         SmartBoolean RIGHT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Right Limelight Is Enabled", true);
     }
 
@@ -161,6 +161,21 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // Scoring Routine
         driver.getTopButton()
+            .whileTrue(new SwerveXMode())
+                .onTrue(new IntakeRunRollers())
+                .whileTrue(new SuperstructureShoot()
+                        .andThen(new WaitUntilCommand(superstructure::atTolerance))
+                            .andThen(new HandoffRun())
+                        .andThen(new WaitUntilCommand(handoff::atTolerance))
+                            .andThen(new SpindexerRun()))
+                .onFalse(new SpindexerStop()
+                        .alongWith(new SuperstructureStow())
+                        .alongWith(new HandoffStop()));
+
+        // Interpolation-based Scoring
+        driver.getBottomButton()
+            .whileTrue(new SwerveXMode())
+                .onTrue(new IntakeRunRollers())
                 .whileTrue(new SuperstructureInterpolation()
                         .andThen(new WaitUntilCommand(superstructure::atTolerance))
                             .andThen(new HandoffRun())
@@ -189,15 +204,16 @@ public class RobotContainer {
             .onTrue(new IntakeStopRollers());
 
         // SOTM
-        // driver.getRightMenuButton()
-        //         .whileTrue(new SuperstructureSOTM().onlyIf(() -> !swerve.isUnderTrench())
-        //                 .andThen(new WaitUntilCommand(superstructure::atTolerance))
-        //                 .andThen(new HandoffConditionalCommand().onlyIf(superstructure::atTolerance)
-        //                         .alongWith(new WaitUntilCommand(handoff::atTolerance))
-        //                         .andThen(new SpindexerConditionalCommand().onlyIf(() -> handoff.atTolerance() && superstructure.atTolerance()))))
-        //         .onFalse(new SpindexerStop()
-        //                 .alongWith(new SuperstructureStow())
-        //                 .alongWith(new HandoffStop()));
+        // should be right menu
+        driver.getRightButton()
+                .whileTrue(new SuperstructureSOTM().onlyIf(() -> !swerve.isUnderTrench())
+                        .andThen(new WaitUntilCommand(superstructure::atTolerance))
+                        .andThen(new HandoffConditionalCommand().onlyIf(superstructure::atTolerance)
+                                .alongWith(new WaitUntilCommand(handoff::atTolerance))
+                                .andThen(new SpindexerConditionalCommand().onlyIf(() -> handoff.atTolerance() && superstructure.atTolerance()))))
+                .onFalse(new SpindexerStop()
+                        .alongWith(new SuperstructureStow())
+                        .alongWith(new HandoffStop()));
 
         // Scoring SOTM
         // driver.getRightMenuButton()
@@ -212,7 +228,8 @@ public class RobotContainer {
         //         () -> superstructure.getState() == SuperstructureState.SOTM
         //     ));
 
-        // driver.getDPadDown()
+        // digestion by moving the pivot
+        // driver.getDPadDown() 
         //     .whileTrue(new IntakeDigestion())
         //     .onFalse(new IntakeDeploy());
 

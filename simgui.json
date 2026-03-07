@@ -22,7 +22,6 @@
       "/SmartDashboard/Robot/Zero Pivot Encoder at Upper Limit (Stowed)": "Command",
       "/SmartDashboard/Robot/Zero Turret Encoders": "Command",
       "/SmartDashboard/Scheduler": "Scheduler",
-      "/SmartDashboard/Scheduler": "Scheduler",
       "/SmartDashboard/Visualizers/ClimberHopper": "Mechanism2d",
       "/SmartDashboard/Visualizers/Hood": "Mechanism2d",
       "/SmartDashboard/Visualizers/Turret": "Mechanism2d"
@@ -35,6 +34,11 @@
         "right": 3942,
         "top": 118,
         "width": 16.54119300842285,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Scheduler": {
         "window": {
           "visible": true
         }
@@ -72,13 +76,15 @@
           },
           "open": true
         },
+        "Intake": {
+          "open": true
+        },
         "Superstructure": {
           "Hood": {
             "open": true
-          },
-          "Turret": {
-            "open": true
-          },
+          }
+        },
+        "Swerve": {
           "open": true
         },
         "Turret": {

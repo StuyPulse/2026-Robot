@@ -23,6 +23,7 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Gains.Intake.Pivot;
 import com.stuypulse.robot.util.SettableNumber;
 import com.stuypulse.robot.util.SysId;
 import com.stuypulse.stuylib.streams.booleans.BStream;
@@ -75,7 +76,7 @@ public class IntakeImpl extends Intake {
                 .withInvertedValue(InvertedValue.CounterClockwise_Positive)
                 .withNeutralMode(NeutralModeValue.Brake)
 
-                .withSupplyCurrentLimitAmps(45)
+                .withSupplyCurrentLimitAmps(Settings.Intake.CURRENT_LIMIT)
                 .withStatorCurrentLimitEnabled(false)
                 .withRampRate(0.50);
 
@@ -155,22 +156,25 @@ public class IntakeImpl extends Intake {
     @Override
     public void periodic() {
         super.periodic();
+        PivotState state = getPivotState();
 
         if (EnabledSubsystems.INTAKE.get()) {
             if (pivotVoltageOverride.isPresent()) {
                 pivot.setVoltage(pivotVoltageOverride.get());
             } else {
                 // PIVOT
-                if (getPivotState() == PivotState.DEPLOY
+                if (state == PivotState.DEPLOY
                         && getPivotAngle().getDegrees() <= Settings.Intake.ARBITRARY_VOLTAGE_THRESHOLD.getDegrees()) {
                     pivot.setControl(new VoltageOut(-Settings.Intake.PUSHDOWN_VOLTAGE)); // applying 3 volts
+                } else if (state == PivotState.DIGESTION_DOWN || state == PivotState.DIGESTION_UP) {
+                    pivot.setControl(new MotionMagicVoltage(state.getTargetAngle().getRotations())); //TODO: verify motion profile works
                 } else {
-                    pivot.setControl(new PositionVoltage(getPivotState().getTargetAngle().getRotations()));
+                    pivot.setControl(new PositionVoltage(state.getTargetAngle().getRotations()));
                 }
 
                 // ROLLERS
                 if (getPivotState() == PivotState.DEPLOY
-                        && getPivotAngle().getDegrees() <= Settings.Intake.THRESHHOLD_TO_START_ROLLERS.getDegrees()) {
+                        && getPivotAngle().getDegrees() <= Settings.Intake.THRESHOLD_TO_START_ROLLERS.getDegrees()) {
                     rollerLeader.setControl(rollerController.withOutput(getRollerState().getTargetDutyCycle()));
                 } else {
                     rollerLeader.stopMotor();

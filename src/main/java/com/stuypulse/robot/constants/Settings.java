@@ -97,10 +97,13 @@ public interface Settings {
         Rotation2d PIVOT_STOW_ANGLE = Rotation2d.fromDegrees(90.0); 
         Rotation2d PIVOT_DEPLOY_ANGLE = Rotation2d.fromDegrees(0.0);
 
+        Rotation2d DIGESTION_UP_ANGLE = Rotation2d.fromDegrees(70); // TODO: verify
+        Rotation2d DIGESTION_DOWN_ANGLE = Rotation2d.fromDegrees(20);
+
         Rotation2d PIVOT_ANGLE_TOLERANCE = Rotation2d.fromDegrees(5.0); 
 
-        Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(90.0);
-        Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(0.0);
+        Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(88.0);
+        Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(-10.0);
 
         Rotation2d PIVOT_MAX_VEL_DEPLOY = Rotation2d.fromDegrees(720.0);
         Rotation2d PIVOT_MAX_ACCEL_DEPLOY = Rotation2d.fromDegrees(1440.0);
@@ -108,7 +111,7 @@ public interface Settings {
         Rotation2d PIVOT_MAX_VEL_STOW = Rotation2d.fromDegrees(360.0);
         Rotation2d PIVOT_MAX_ACCEL_STOW = Rotation2d.fromDegrees(600.0);
 
-        Rotation2d THRESHHOLD_TO_START_ROLLERS = Rotation2d.fromDegrees(5.0);
+        Rotation2d THRESHOLD_TO_START_ROLLERS = Rotation2d.fromDegrees(10.0);
 
         Rotation2d ARBITRARY_VOLTAGE_THRESHOLD = Rotation2d.fromDegrees(15.0);
         
@@ -120,6 +123,8 @@ public interface Settings {
         SmartNumber debugDutyCycle = new SmartNumber("Intake/Debug Duty Cycle", 0.1);
         double STALL_CURRENT_LIMIT = 0; //TODO: set value
         double STALL_DEBOUNCE = 1.0; //TODO: VERIFY
+        double DIGESTION_DEBOUNCE = 0.2; //TODO: verify
+        double CURRENT_LIMIT = 45.0;
     }
 
     public interface Spindexer {
@@ -137,12 +142,13 @@ public interface Settings {
         public final double SHOOTER_TOLERANCE_RPM = 100.0;
         public final Rotation2d HOOD_TOLERANCE = Rotation2d.fromDegrees(0.5);
 
-public interface AngleInterpolation {
+        public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
                 {1.22, Units.degreesToRadians(20)},             //AGAINST THE HUB
                 {1.43, Units.degreesToRadians(21.0)},           //meters, radians
                 {2.15, Units.degreesToRadians(23.23)},          //KEVIN-APPROVED
                 {2.864967, Units.degreesToRadians(27)},         //KEVIN-APPROVED
+                // {3.38, Units.degreesToRadians(37.5)},                
                 {3.65, Units.degreesToRadians(28.0)},           //KEVIN-APPROVED
                 {4.43, Units.degreesToRadians(33.5)},           //KEVIN-APPROVED
                 {5.66, Units.degreesToRadians(39)}              //KEVIN-APPROVED
@@ -154,6 +160,7 @@ public interface AngleInterpolation {
                 {1.43, 3000.0}, // meters, RPM 
                 {2.15, 3050.0},                                         //KEVIN-APPROVED
                 {2.864967, 3150},                                       //KEVIN-APPROVED
+                //{3.38, 3200}
                 {3.65, 3400.0},                                         //KEVIN-APPROVED
                 {4.43, 3600.0},                                         //KEVIN-APPROVED
                 {5.66, 3900.0}                                          //KEVIN-APPROVED
@@ -277,7 +284,7 @@ public interface AngleInterpolation {
         public interface Turret {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
-            public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(5.0); // TODO: reduce to 2 degrees
+            public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
             public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);
@@ -334,7 +341,9 @@ public interface AngleInterpolation {
         public final double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
 
         public interface Constraints {
-            public final double MAX_VELOCITY_M_PER_S = 4.93; // 4.3p
+            public final double MAX_VELOCITY_M_PER_S = 4.93; 
+            public final double MAX_VELOCITY_SOTM_M_PER_S = 1.00; 
+
             public final double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
             public final double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400.0);
             public final double MAX_ANGULAR_ACCEL_RAD_PER_S_SQUARED = Units.degreesToRadians(900.0);

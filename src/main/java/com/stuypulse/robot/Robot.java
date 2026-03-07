@@ -5,7 +5,9 @@
 /***************************************************************/
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.vision.SetIMUMode;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.util.FMSUtil;
 
@@ -25,7 +27,7 @@ public class Robot extends TimedRobot {
     private RobotContainer robot;
     private Command auto;
     private static Alliance alliance;
-    private PowerDistribution powerDistribution;
+    // private PowerDistribution powerDistribution;
 
     // private FMSUtil fmsUtil;
 
@@ -40,12 +42,12 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robot = new RobotContainer();
-        powerDistribution = new PowerDistribution();
+        // powerDistribution = new PowerDistribution();
         // fmsUtil = new FMSUtil(false);
 
         DataLogManager.start();
         SignalLogger.start();
-
+        CommandScheduler.getInstance().schedule(new SetIMUMode(Settings.Vision.RESET_IMU_INDEX));
     }
 
     @Override
@@ -77,7 +79,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        CommandScheduler.getInstance().schedule(new SetIMUMode(Settings.Vision.RESET_IMU_INDEX));
+    }
 
     /***********************/
     /*** AUTONOMOUS MODE ***/
@@ -88,6 +92,7 @@ public class Robot extends TimedRobot {
         // fmsUtil.restartTimer(true);
 
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        CommandScheduler.getInstance().schedule(new SetIMUMode(Settings.Vision.INTERNAL_EXTERNAL_ASSIST_INDEX));
 
         auto = robot.getAutonomousCommand();
 
@@ -111,6 +116,7 @@ public class Robot extends TimedRobot {
         // fmsUtil.restartTimer(false);
 
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        CommandScheduler.getInstance().schedule(new SetIMUMode(Settings.Vision.INTERNAL_EXTERNAL_ASSIST_INDEX));
 
         if (auto != null) {
             auto.cancel();

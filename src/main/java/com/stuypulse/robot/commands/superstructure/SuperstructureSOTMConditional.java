@@ -11,6 +11,6 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 
 public class SuperstructureSOTMConditional extends ConditionalCommand {
     public SuperstructureSOTMConditional() {
-        super(new SuperstructureStow(), new SuperstructureSOTM(), () -> (Superstructure.getInstance().getState() == SuperstructureState.SOTM));
+        super(new SuperstructureInterpolation(), new SuperstructureSOTM(), () -> (Superstructure.getInstance().getState() == SuperstructureState.SOTM));
     }
 }

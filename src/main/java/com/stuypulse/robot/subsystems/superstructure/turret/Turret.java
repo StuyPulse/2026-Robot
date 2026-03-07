@@ -39,7 +39,7 @@ public abstract class Turret extends SubsystemBase {
 
     public Turret() {
         driverInput = Vector2D.kOrigin;
-        state = TurretState.IDLE;
+        state = TurretState.SHOOT;
     }
 
     public void setDriverInput(Gamepad gamepad) {

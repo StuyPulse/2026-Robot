@@ -91,7 +91,7 @@ public class Superstructure extends SubsystemBase {
     }
 
     public boolean atTolerance() {
-        return isShooterAtTolerance() && isHoodAtTolerance();// && isTurretAtTolerance();
+        return isShooterAtTolerance() && isHoodAtTolerance() && isTurretAtTolerance();
     }
 
     // public boolean isHoodUnderTrench() {

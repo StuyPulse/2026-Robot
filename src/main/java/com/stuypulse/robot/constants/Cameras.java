@@ -12,20 +12,21 @@ import com.stuypulse.robot.RobotContainer;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 
 /** This interface stores information about each camera. */
 public interface Cameras {
 
     public Camera[] LimelightCameras = {
-            new Camera("limelight-right",
-                    new Pose3d(-0.233, 0.375959, 0.20368,
+            new Camera("limelight-right", //.381, .2325, .2069592
+                    new Pose3d(Units.inchesToMeters(-14.962), Units.inchesToMeters(9.164), Units.inchesToMeters(8.118), //TODO: check this offset
                     // new Pose3d(0.0,0.0,0.0,
                     new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(31.08), Units.degreesToRadians(-80))),
                     RobotContainer.EnabledSubsystems.RIGHT_LIMELIGHT),
             new Camera("limelight-left", 
                     new Pose3d(Units.inchesToMeters(2.490), Units.inchesToMeters(14.8620), Units.inchesToMeters(7.920157), 
                     // new Pose3d(0.0,0.0,0.0,
-                    new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(15.0), Units.degreesToRadians(251.0))), 
+                    new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(15.0), Units.degreesToRadians(289.0))), 
                     RobotContainer.EnabledSubsystems.LEFT_LIMELIGHT),
             new Camera("limelight-back",   //11.0845u
                     new Pose3d(Units.inchesToMeters(-10.768823), Units.inchesToMeters(-12.717519), Units.inchesToMeters(8.331714), 

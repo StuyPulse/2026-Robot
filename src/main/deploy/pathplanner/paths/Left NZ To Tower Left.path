@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.785836298932384,
-        "y": 4.4169513641755636
+        "x": 8.259240806642943,
+        "y": 4.43846975088968
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.139679715302492,
-        "y": 4.38467378410439
+        "x": 6.161198102016607,
+        "y": 7.515599051008303
       },
       "isLocked": false,
-      "linkedName": "NZ Top Center"
+      "linkedName": "NZ Left Center"
     },
     {
       "anchor": {
-        "x": 6.2903084223013055,
-        "y": 6.256773428232503
+        "x": 4.633392645314355,
+        "y": 7.655468564650059
       },
       "prevControl": {
-        "x": 6.253236331698933,
-        "y": 5.493088361823635
+        "x": 5.92449584816133,
+        "y": 7.655468564650059
       },
       "nextControl": {
-        "x": 6.3441043890865965,
-        "y": 7.36497034400949
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.676429418742587,
-        "y": 7.408007117437722
-      },
-      "prevControl": {
-        "x": 6.279549228944247,
-        "y": 7.397247924080664
-      },
-      "nextControl": {
-        "x": 2.7718215695294193,
-        "y": 7.420789720452577
+        "x": 2.6733286409106265,
+        "y": 7.655468564650059
       },
       "isLocked": false,
       "linkedName": null
@@ -52,26 +36,18 @@
         "y": 4.922633451957295
       },
       "prevControl": {
-        "x": 2.5461091340450777,
-        "y": 7.343451957295374
+        "x": 2.2018149466192183,
+        "y": 7.268137603795967
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Tower Left 1"
+      "linkedName": "Tower Left"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.27742946708464067,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 0.5266457680250779,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 2.24884080370944,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 1.2581143740340126,
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [],
@@ -87,13 +63,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "To Tower",
   "idealStartingState": {
     "velocity": 5.75,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

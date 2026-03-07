@@ -13,7 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right NZ To Tower Right"
+            "pathName": "Right NZ To Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Score Score Tower"
           }
         }
       ]

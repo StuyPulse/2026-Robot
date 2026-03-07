@@ -8,6 +8,7 @@ import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeStow;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
+import com.stuypulse.robot.commands.superstructure.SuperstructureInterpolation;
 import com.stuypulse.robot.commands.swerve.climbAlign.SwerveClimbAlign;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -27,6 +28,7 @@ public class RightTwoCycle extends SequentialCommandGroup {
             new IntakeDeploy().alongWith(
                 CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0])
             ),
+            new SuperstructureInterpolation(),
 
             // Trip 1 To Score
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
@@ -38,18 +40,12 @@ public class RightTwoCycle extends SequentialCommandGroup {
             ).withTimeout(5.0),
 
             // NZ Trip 2
-            new IntakeDeploy().alongWith(
-                new ParallelCommandGroup(
-                    CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]),
-                    new HandoffStop(),
-                    new SpindexerStop()
-                )
+            new ParallelCommandGroup(
+                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]),
+                new HandoffStop(),
+                new SpindexerStop()
             ),
 
-            // Trip 2 To Score
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]).alongWith(
-                new IntakeStow()
-            ),
             new ParallelCommandGroup(
                 new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance())
                 // new SwerveClimbAlign()

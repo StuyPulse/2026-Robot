@@ -1,0 +1,111 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.42896797153025,
+        "y": 0.5006049822064051
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.656120996441281,
+        "y": 0.4145314353499395
+      },
+      "isLocked": false,
+      "linkedName": "Right Trench Start"
+    },
+    {
+      "anchor": {
+        "x": 5.9890510083036785,
+        "y": 3.4271055753262156
+      },
+      "prevControl": {
+        "x": 6.010569395017794,
+        "y": 0.6727520759193353
+      },
+      "nextControl": {
+        "x": 5.981149519717918,
+        "y": 4.438496114303611
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.946619217081851,
+        "y": 3.6315302491103196
+      },
+      "prevControl": {
+        "x": 6.903582443653619,
+        "y": 4.104934756820878
+      },
+      "nextControl": {
+        "x": 6.994277354658343,
+        "y": 3.107290735768909
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.1295255041518395,
+        "y": 1.415136417556346
+      },
+      "prevControl": {
+        "x": 7.118173588922177,
+        "y": 1.6648785526089203
+      },
+      "nextControl": {
+        "x": 7.172562277580072,
+        "y": 0.4683274021352315
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.052396204033215,
+        "y": 0.6512336892052202
+      },
+      "prevControl": {
+        "x": 6.171957295373667,
+        "y": 0.6512336892052202
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Center NZ (2)"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9449378330372995,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.2,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.75,
+    "maxAcceleration": 6.75,
+    "maxAngularVelocity": 400.0,
+    "maxAngularAcceleration": 900.0,
+    "nominalVoltage": 12.0,
+    "unlimited": true
+  },
+  "goalEndState": {
+    "velocity": 5.75,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "To NZ",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}

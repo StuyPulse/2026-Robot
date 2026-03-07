@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.041637010676157,
-        "y": 0.6297153024911029
+        "x": 4.461245551601425,
+        "y": 0.5006049822064051
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.990835506596762,
-        "y": 0.8419359815453707
+        "x": 1.4104440475220295,
+        "y": 0.712825661260673
       },
       "isLocked": false,
-      "linkedName": "Bottom Trench Score"
+      "linkedName": "Right Trench Score"
     },
     {
       "anchor": {
@@ -25,13 +25,13 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Tower Right 1"
+      "linkedName": "Tower Right"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.17310664605873255,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.41536050156739895,
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [],
@@ -47,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "To Tower",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

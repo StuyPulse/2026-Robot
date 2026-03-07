@@ -3,57 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.785836298932384,
-        "y": 4.4169513641755636
+        "x": 8.259240806642943,
+        "y": 4.43846975088968
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.15043890865955,
-        "y": 4.459988137603796
+        "x": 6.376381969157771,
+        "y": 7.612431791221827
       },
       "isLocked": false,
-      "linkedName": "NZ Top Center"
+      "linkedName": "NZ Left Center"
     },
     {
       "anchor": {
-        "x": 6.118161328588376,
-        "y": 5.98779359430605
+        "x": 4.020118623962041,
+        "y": 7.590913404507711
       },
       "prevControl": {
-        "x": 6.070175108111238,
-        "y": 4.692165641423325
-      },
-      "nextControl": {
-        "x": 6.171957295373667,
-        "y": 7.440284697508897
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.375172004744959,
-        "y": 7.472562277580071
-      },
-      "prevControl": {
-        "x": 6.3979003558718865,
-        "y": 7.558635824436535
+        "x": 6.462455516014234,
+        "y": 7.6985053380782915
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Top Trench Score"
+      "linkedName": "Left Trench Score"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.36166924265842487,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 0.856259659969088,
-      "rotationDegrees": 180.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -67,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "To Score",
   "idealStartingState": {
     "velocity": 5.75,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

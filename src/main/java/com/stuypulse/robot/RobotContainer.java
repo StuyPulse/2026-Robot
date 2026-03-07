@@ -6,18 +6,14 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.auton.poaching.RightTwoCyclePoach;
-import com.stuypulse.robot.commands.auton.poaching.LeftOneCyclePoach;
-import com.stuypulse.robot.commands.auton.poaching.LeftTwoCyclePoach;
-import com.stuypulse.robot.commands.auton.poaching.RightOneCyclePoach;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
+// import com.stuypulse.robot.commands.auton.test.BoxTest;
 import com.stuypulse.robot.commands.auton.regular.DepotAuton;
 import com.stuypulse.robot.commands.auton.regular.EightFuel;
 import com.stuypulse.robot.commands.auton.regular.LeftOneCycle;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
 import com.stuypulse.robot.commands.auton.regular.RightOneCycle;
 import com.stuypulse.robot.commands.climberhopper.ClimberDown;
-// import com.stuypulse.robot.commands.auton.test.BoxTest;
 import com.stuypulse.robot.commands.climberhopper.ClimberOverrideDown;
 import com.stuypulse.robot.commands.climberhopper.ClimberOverrideStop;
 import com.stuypulse.robot.commands.climberhopper.ClimberOverrideUp;
@@ -359,55 +355,38 @@ public class RobotContainer {
 
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
 
-        // autonChooser.addOption("Wheel Radius", new SwerveWheelRadiusCharacterization());
-        // // TESTS
+        // TESTS
         // AutonConfig BOX_TEST = new AutonConfig("Box Test", BoxTest::new, 
         // "Box 1", "Box 2", "Box 3", "Box 4");
         // BOX_TEST.register(autonChooser);
 
-        // // BASE
-        // AutonConfig EIGHT_FUEL = new AutonConfig("Eight Fuel", EightFuel::new, 
-        // "");
-        // EIGHT_FUEL.register(autonChooser);
+        // BASE
+        AutonConfig EIGHT_FUEL = new AutonConfig("Eight Fuel", EightFuel::new, 
+        "");
+        EIGHT_FUEL.register(autonChooser);
 
-        // // DEPOT
-        // AutonConfig DEPOT_AUTON = new AutonConfig("Depot Auton", DepotAuton::new, 
-        // "Left Bump To Depot", "Depot To Tower Left");
-        // DEPOT_AUTON.register(autonChooser);
+        // DEPOT
+        AutonConfig DEPOT_AUTON = new AutonConfig("Depot Auton", DepotAuton::new, 
+        "Left Bump To Depot", "Depot To Tower Left");
+        DEPOT_AUTON.register(autonChooser);
 
         // ONE CYCLES
         AutonConfig LEFT_ONE_CYCLE = new AutonConfig("Left One Cycle", LeftOneCycle::new,  
-        "Left Trench To NZ", "Left NZ To Tower Left");
+        "Left Trench To NZ", "Left NZ To Score");
         LEFT_ONE_CYCLE.register(autonChooser);
 
         AutonConfig RIGHT_ONE_CYCLE = new AutonConfig("Right One Cycle", RightOneCycle::new,  
-        "Right Trench To NZ", "Right NZ To Tower Right");
+        "Right Trench To NZ", "Right NZ To Score");
         RIGHT_ONE_CYCLE.register(autonChooser);
 
-        AutonConfig LEFT_ONE_CYCLE_POACH = new AutonConfig("Left One Cycle (Poach)", LeftOneCyclePoach::new,  
-        "Left Trench To NZ (P)", "Left NZ To Tower Left (P)");
-        LEFT_ONE_CYCLE_POACH.register(autonChooser);
-
-        AutonConfig RIGHT_ONE_CYCLE_POACH = new AutonConfig("Right One Cycle (Poach)", RightOneCyclePoach::new,  
-        "Right Trench To NZ (P)", "Right NZ To Tower Right (P)");
-        RIGHT_ONE_CYCLE_POACH.register(autonChooser);
-
         // TWO CYCLES
-        // AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  
-        // "Left Trench To NZ", "Left NZ To Score", "Left Score To NZ", "Left NZ To Tower Left");
-        // LEFT_TWO_CYCLE.register(autonChooser);
+        AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  
+        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score");
+        LEFT_TWO_CYCLE.register(autonChooser);
 
-        // AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,  
-        // "Right Trench To NZ", "Right NZ To Score", "Right Score To NZ", "Right NZ To Tower Right");
-        // RIGHT_TWO_CYCLE.register(autonChooser);
-
-        // AutonConfig LEFT_TWO_CYCLE_POACH = new AutonConfig("Left Two Cycle (Poach)", LeftTwoCyclePoach::new,  
-        // "Left Trench To NZ (P)", "Left NZ To Score (P)", "Left Score To NZ", "Left NZ To Tower Left");  
-        // LEFT_TWO_CYCLE_POACH.register(autonChooser);
-
-        // AutonConfig RIGHT_TWO_CYCLE_POACH = new AutonConfig("Right Two Cycle (Poach)", RightTwoCyclePoach::new,  
-        // "Right Trench To NZ (P)", "Right NZ To Score (P)", "Right Score To NZ", "Right NZ To Tower Right");
-        // RIGHT_TWO_CYCLE_POACH.register(autonChooser);
+        AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,  
+        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score");
+        RIGHT_TWO_CYCLE.register(autonChooser);
 
         SmartDashboard.putData("Autonomous", autonChooser);
 

@@ -17,6 +17,8 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -36,6 +38,8 @@ public class LimelightVision extends SubsystemBase{
     private SmartBoolean enabled;
     // private SmartBoolean[] camerasEnabled;
     private MegaTagMode megaTagMode;
+    private Pose2d[] arrayOfLimelightPoses;
+    private final StructArrayPublisher<Pose2d> arrayPublisher;
 
     public enum MegaTagMode {
         MEGATAG1,
@@ -43,7 +47,12 @@ public class LimelightVision extends SubsystemBase{
     }
 
     public LimelightVision() {
+        arrayPublisher = NetworkTableInstance.getDefault()
+        .getStructArrayTopic("MyPoseArray", Pose2d.struct).publish();
+
+        arrayOfLimelightPoses = new Pose2d[Cameras.LimelightCameras.length];
         names = new String[Cameras.LimelightCameras.length];
+
         for (int i = 0; i < Cameras.LimelightCameras.length; i++) {
             names[i] = Cameras.LimelightCameras[i].getName();
             Pose3d robotRelativePose = Cameras.LimelightCameras[i].getLocation();
@@ -56,6 +65,8 @@ public class LimelightVision extends SubsystemBase{
                 Rotation2d.fromRadians(robotRelativePose.getRotation().getY()).getDegrees(), 
                 Rotation2d.fromRadians(robotRelativePose.getRotation().getZ()).getDegrees()
             );
+
+            arrayOfLimelightPoses[i] = new Pose2d();
         }
 
         // camerasEnabled = new SmartBoolean[Cameras.LimelightCameras.length];
@@ -168,6 +179,8 @@ public class LimelightVision extends SubsystemBase{
                         } else {
                             CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT2_STDEVS);
                         }
+
+                        arrayOfLimelightPoses[i] = robotPose;
                         
                         SmartDashboard.putNumber("Vision/Pose X Component", robotPose.getX());
                         SmartDashboard.putNumber("Vision/Pose Y Component", robotPose.getY());
@@ -178,7 +191,12 @@ public class LimelightVision extends SubsystemBase{
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
                     }
 
-                    
+                    SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
+                    // this yaw is seems to be the robot yaw passed into the LL
+                    SmartDashboard.putNumber("Vision/Limelight Robot Yaw", LimelightHelpers.getIMUData(limelightName).robotYaw);
+                    // this is just the yaw of the internal imu 
+                    SmartDashboard.putNumber("Vision/Limelight Yaw", LimelightHelpers.getIMUData(limelightName).Yaw);
+
                 }
                 String limelightName = names[i];
                 SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
@@ -188,6 +206,7 @@ public class LimelightVision extends SubsystemBase{
                 SmartDashboard.putNumber("Vision/Limelight Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).Yaw);
                 SmartDashboard.putNumber("Vision/Limelight Robot Yaw Passed in", (CommandSwerveDrivetrain.getInstance().getPose().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360);
             }
+            arrayPublisher.set(arrayOfLimelightPoses);
         }
     }
 }

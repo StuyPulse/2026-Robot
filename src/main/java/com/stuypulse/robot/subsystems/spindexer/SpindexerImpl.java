@@ -10,6 +10,7 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -97,9 +98,7 @@ public class SpindexerImpl extends Spindexer {
             if (voltageOverride.isPresent()) {
                 leadMotor.setVoltage(voltageOverride.get());
             } else {
-                /**
-                 * THE FOLLOWING LINE IS NOT A MISTAKE
-                 */
+                // DO NOT REMOVE BELOW LINE - needed to brake the motor in STOP state
                 if (atTolerance() && getState() == SpindexerState.STOP) {
                     leadMotor.stopMotor();
                 } else {

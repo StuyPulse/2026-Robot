@@ -42,6 +42,16 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Visualizers/Hood": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Visualizers/Turret": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -57,7 +67,7 @@
         "Enabled Subsystems": {
           "open": true
         },
-        "FieldPositions": {
+        "Handoff": {
           "open": true
         },
         "HoodedShooter": {
@@ -73,9 +83,6 @@
           "open": true
         },
         "Superstructure": {
-          "Hood": {
-            "open": true
-          },
           "open": true
         },
         "Swerve": {

@@ -3,12 +3,12 @@
 /* Use of this source code is governed by an MIT-style license */
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
-package com.stuypulse.robot.commands.spindexer;
+package com.stuypulse.robot.commands.intake;
 
-import com.stuypulse.robot.subsystems.spindexer.Spindexer.SpindexerState;
+import com.stuypulse.robot.subsystems.intake.Intake.RollerState;
 
-public class SpindexerDynamic extends SpindexerSetState {
-    public SpindexerDynamic() {
-        super(SpindexerState.DYNAMIC);
+public class IntakeOuttake extends IntakeSetState {
+    public IntakeOuttake() {
+        super(RollerState.OUTTAKE);
     }
 }

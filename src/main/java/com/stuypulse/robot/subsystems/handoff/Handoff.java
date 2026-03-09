@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.handoff;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +19,11 @@ public abstract class Handoff extends SubsystemBase {
     private HandoffState state;
 
     static {
-        instance = new HandoffImpl();
+        if (Robot.isReal()) {
+            instance = new HandoffImpl();
+        } else {
+            instance = new HandoffSim();
+        }
     }
 
     public static Handoff getInstance() {

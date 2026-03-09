@@ -15,8 +15,11 @@ import com.stuypulse.robot.util.SysId;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -30,6 +33,7 @@ public class ShooterImpl extends Shooter {
     private final TalonFX shooterFollower;
 
     private final VelocityVoltage shooterController;
+    // private final VelocityTorqueCurrentFOC shooterController;
     private final Follower follower;
 
     private Optional<Double> voltageOverride;
@@ -45,15 +49,20 @@ public class ShooterImpl extends Shooter {
             .withPIDConstants(Gains.Superstructure.Shooter.kP.get(), Gains.Superstructure.Shooter.kI.get(), Gains.Superstructure.Shooter.kD.get(), 0)
             .withFFConstants(Gains.Superstructure.Shooter.kS.get(), Gains.Superstructure.Shooter.kV.get(), Gains.Superstructure.Shooter.kA.get(), 0)
                              
-            .withSensorToMechanismRatio(Settings.Superstructure.Shooter.GEAR_RATIO);
+            .withSensorToMechanismRatio(Settings.Superstructure.Shooter.GEAR_RATIO)
+            .withVelocityTimeFilter(0.1);
 
         shooterLeader = new TalonFX(Ports.Superstructure.Shooter.MOTOR_LEAD, Ports.RIO);
+        shooterLeader.getVelocity().setUpdateFrequency(1000.0);
+
         shooterFollower = new TalonFX(Ports.Superstructure.Shooter.MOTOR_FOLLOW, Ports.RIO);
+        shooterFollower.getVelocity().setUpdateFrequency(1000.0);
 
         shooterConfig.configure(shooterLeader);
         shooterConfig.configure(shooterFollower);
 
         shooterController = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
+        // shooterController = new VelocityTorqueCurrentFOC(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE);
         follower = new Follower(Ports.Superstructure.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed);
 
         shooterFollower.setControl(follower);

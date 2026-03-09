@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.intake;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,7 +22,11 @@ public abstract class Intake extends SubsystemBase {
     private RollerState rollerState;
 
     static {
-        instance = new IntakeImpl();
+        if (Robot.isReal()) {
+            instance = new IntakeImpl();
+        } else {
+            instance = new IntakeSim();
+        }
     }
 
     public static Intake getInstance() {
@@ -35,7 +40,9 @@ public abstract class Intake extends SubsystemBase {
 
     public enum PivotState {
         DEPLOY(Settings.Intake.PIVOT_DEPLOY_ANGLE),
-        STOW(Settings.Intake.PIVOT_STOW_ANGLE);
+        STOW(Settings.Intake.PIVOT_STOW_ANGLE),
+        DIGESTION_UP(Settings.Intake.DIGESTION_UP_ANGLE),
+        DIGESTION_DOWN(Settings.Intake.DIGESTION_DOWN_ANGLE);
 
         private final Rotation2d targetAngle;
 

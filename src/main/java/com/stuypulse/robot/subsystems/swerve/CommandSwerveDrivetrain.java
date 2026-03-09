@@ -506,6 +506,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         SmartDashboard.putNumber("Superstructure/Turret/Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
         SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
+        SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Ferry Zone", turretPose.getTranslation().getDistance(Field.getFerryZonePose(pose.getTranslation()).getTranslation()));
 
         SmartDashboard.putNumber("Swerve/Pose/X", pose.getX());
         SmartDashboard.putNumber("Swerve/Pose/Y", pose.getY());
@@ -532,15 +533,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         
         if (Settings.DEBUG_MODE) {}
-        
-        SmartDashboard.putNumber("Swerve/Velocity Robot Relative X (m per s)", getChassisSpeeds().vxMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/Velocity Robot Relative Y (m per s)", getChassisSpeeds().vyMetersPerSecond);
+        ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+        SmartDashboard.putNumber("Swerve/Velocity Robot Relative X (m per s)", chassisSpeeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/Velocity Robot Relative Y (m per s)", chassisSpeeds.vyMetersPerSecond);
         
         SmartDashboard.putNumber("Swerve/Velocity Field Relative X (m per s)", getFieldRelativeSpeeds().x);
         SmartDashboard.putNumber("Swerve/Field Relative Rotation", pose.getRotation().getDegrees());
         SmartDashboard.putNumber("Swerve/Velocity Field Relative Y (m per s)", getFieldRelativeSpeeds().y);
         
-        SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", getChassisSpeeds().omegaRadiansPerSecond);
+        SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", chassisSpeeds.omegaRadiansPerSecond);
         
         SmartDashboard.putNumber("Swerve/Distance From Hub (meters)", Field.hubCenter.getTranslation().getDistance(getPose().getTranslation()));
     }

@@ -3,7 +3,7 @@
 /* Use of this source code is governed by an MIT-style license */
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
-package com.stuypulse.robot.subsystems.superstructure.shooter;
+package com.stuypulse.robot.subsystems.handoff;
 
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Settings;
@@ -24,15 +24,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.Optional;
 
-public class ShooterSim extends Shooter {
+public class HandoffSim extends Handoff {
 
     private LinearSystemSim<N1, N1, N1> sim;
     private final LinearSystemLoop<N1, N1, N1> controller;
 
     private Optional<Double> voltageOverride;
 
-    public ShooterSim() {
-        LinearSystem<N1, N1, N1> flywheel = LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX44(2), 0.05, 1.0);
+    public HandoffSim() {
+        LinearSystem<N1, N1, N1> flywheel = LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX44(1), 0.01, 1.0);
 
         sim = new LinearSystemSim<>(flywheel);
         
@@ -56,12 +56,8 @@ public class ShooterSim extends Shooter {
     }
 
     @Override
-    public double getRPM() {
+    public double getCurrentRPM() {
         return sim.getOutput(0) * 60.0 / (2.0 * Math.PI); // convert to RPM
-    }
-
-    private void setVoltageOverride(Optional<Double> volts) {
-        voltageOverride = volts;
     }
 
     @Override
@@ -75,25 +71,30 @@ public class ShooterSim extends Shooter {
         if (EnabledSubsystems.SHOOTER.get()) {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
-                SmartDashboard.putNumber("Superstructure/Shooter/Input Voltage", voltageOverride.get());
+                SmartDashboard.putNumber("Handoff/Input Voltage", voltageOverride.get());
             } else {
-                SmartDashboard.putNumber("Superstructure/Shooter/Input Voltage", controller.getU(0));
+                SmartDashboard.putNumber("Handoff/Input Voltage", controller.getU(0));
                 sim.setInput(controller.getU(0));
             }
         } else {
             sim.setInput(0);
-            SmartDashboard.putNumber("Superstructure/Shooter/Input Voltage", 0.0);
+            SmartDashboard.putNumber("Handoff/Input Voltage", 0.0);
         }
 
         sim.update(Settings.DT);
     }
 
     @Override
-    public SysIdRoutine getShooterSysIdRoutine() {
+    public void setVoltageOverride(Optional<Double> volts) {
+        voltageOverride = volts;
+    }
+
+    @Override
+    public SysIdRoutine getSysIdRoutine() {
         return SysId.getRoutine(
                 2,
                 6,
-                "Shooter",
+                "Handoff",
                 voltage -> setVoltageOverride(Optional.of(voltage)),
                 () -> 0.0,
                 () -> 0.0,

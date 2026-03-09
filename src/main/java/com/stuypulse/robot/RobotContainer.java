@@ -143,6 +143,7 @@ public class RobotContainer {
                 new SpindexerReverse().andThen(new WaitCommand(0.25)).andThen(new SpindexerRun()), 
                 new SpindexerReverse().andThen(new WaitCommand(0.25).andThen(new SpindexerStop())),
                 () -> spindexer.getState() == SpindexerState.FORWARD));
+        SmartDashboard.putData("Turret Seed", new ZeroTurret());
        
     }
 

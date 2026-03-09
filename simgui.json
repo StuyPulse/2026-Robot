@@ -1,11 +1,4 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "window": {
-        "visible": false
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -14,28 +7,20 @@
       "/SmartDashboard/Handoff Reverse": "Command",
       "/SmartDashboard/Intake Reverse": "Command",
       "/SmartDashboard/PathPlanner": "Alerts",
-      "/SmartDashboard/Robot/Override Down": "Command",
-      "/SmartDashboard/Robot/Override Stop": "Command",
-      "/SmartDashboard/Robot/Override Up": "Command",
-      "/SmartDashboard/Robot/Reset Pivot": "Command",
-      "/SmartDashboard/Robot/Zero Encoders": "Command",
+      "/SmartDashboard/Robot/Handoff Reverse": "Command",
+      "/SmartDashboard/Robot/Intake Reverse": "Command",
+      "/SmartDashboard/Robot/Seed Turret": "Command",
+      "/SmartDashboard/Robot/Spindexer Reverse": "Command",
       "/SmartDashboard/Robot/Zero Hood Encoder": "Command",
       "/SmartDashboard/Robot/Zero Pivot Encoder at Lower Limit (Deployed)": "Command",
       "/SmartDashboard/Robot/Zero Pivot Encoder at Upper Limit (Stowed)": "Command",
       "/SmartDashboard/Robot/Zero Turret Encoders": "Command",
       "/SmartDashboard/Scheduler": "Scheduler",
-      "/SmartDashboard/Scheduler": "Scheduler",
       "/SmartDashboard/Spindexer Reverse": "Command",
-      "/SmartDashboard/Visualizers/ClimberHopper": "Mechanism2d",
       "/SmartDashboard/Visualizers/Hood": "Mechanism2d",
       "/SmartDashboard/Visualizers/Turret": "Mechanism2d"
     },
     "windows": {
-      "/SmartDashboard/Autonomous": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "bottom": 1914,
         "height": 8.069275856018066,
@@ -46,91 +31,18 @@
         "window": {
           "visible": true
         }
-      },
-      "/SmartDashboard/Scheduler": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Visualizers/Hood": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Visualizers/Turret": {
-        "window": {
-          "visible": true
-        }
       }
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
-    "Retained Values": {
-      "open": false
-    },
     "transitory": {
       "SmartDashboard": {
-        "Enabled Subsystems": {
-          "open": true
-        },
-        "FMSUtil": {
-          "open": true
-        },
         "FieldPositions": {
-        "Handoff": {
-          "open": true
-        },
-        "HoodedShooter": {
-          "Hood": {
-            "open": true
-          },
-          "open": true
-        },
-        "Intake": {
           "open": true
         },
         "States": {
           "open": true
         },
-        "States": {
-          "open": true
-        },
-        "Superstructure": {
-          "Hood": {
-            "open": true
-          },
-          "Turret": {
-            "open": true
-          },
-          "open": true
-        },
-        "Swerve": {
-          "Modules": {
-            "Module 0": {
-              "open": true
-            },
-            "Module 1": {
-              "open": true
-            },
-            "Module 2": {
-              "open": true
-            },
-            "Module 3": {
-              "open": true
-            },
-            "open": true
-          },
-          "open": true
-        },
-        "Turret": {
-          "open": true
-        },
-        "open": true
-      },
-      "limelight-right": {
         "open": true
       }
     }

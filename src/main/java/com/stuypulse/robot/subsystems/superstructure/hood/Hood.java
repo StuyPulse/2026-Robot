@@ -89,9 +89,13 @@ public abstract class Hood extends SubsystemBase{
     public boolean atTolerance() {
         double error = getAngle().minus(getTargetAngle()).getRotations();
         if (Robot.isReal()) {
-            return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations();
+            if (state == HoodState.SOTM) {
+                return Math.abs(error) < Settings.Superstructure.HOOD_SOTM_TOLERANCE.getRotations();
+            } else {
+                return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations();
+            }
         } else {
-            return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations() + (2 / 360.0);
+            return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations() + (5 / 360.0);
         }
     }
 

@@ -145,7 +145,8 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        // turret.setDefaultCommand(new TurretDefaultCommand());
+        spindexer.setDefaultCommand(new SpindexerDefaultCommand());
+        handoff.setDefaultCommand(new HandoffDefaultCommand());
     }
 
     /***************/

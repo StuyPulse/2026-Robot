@@ -76,6 +76,9 @@ public interface Settings {
         public final double SHOOTER_TOLERANCE_RPM = 100.0;
         public final Rotation2d HOOD_TOLERANCE = Rotation2d.fromDegrees(0.5);
 
+        public final double SHOOTER_SOTM_TOLERANCE_RPM = 150.0;
+        public final Rotation2d HOOD_SOTM_TOLERANCE = Rotation2d.fromDegrees(2.0);
+
         public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
                 {1.22, Units.degreesToRadians(22.5)},           //BLAY-APPROVED (ALMOST AGAINST HUB), LOCKED IN
@@ -183,6 +186,7 @@ public interface Settings {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
+            public final Rotation2d SOTM_TOLERANCE = Rotation2d.fromDegrees(4.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
             public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);
@@ -194,10 +198,8 @@ public interface Settings {
             Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
             
             /* CONSTANTS */
-            public final double RANGE_LEFT = -360.0; // -120
-            public final double RANGE_RIGHT = 85.0; //390; // 410
-
-            // 85, -360
+            public final double RANGE_LEFT = -360.0;
+            public final double RANGE_RIGHT = 85.0;
         
             public final Rotation2d GAIN_SWITCHING_THRESHOLD = Rotation2d.fromDegrees(30);
         
@@ -212,12 +214,12 @@ public interface Settings {
         
             public interface Encoder17t {
                 public final int TEETH = 17;
-                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.716);//(-0.28125);//.fromRotations(-0.279541015625);//(-0.86962890625); //0.6787109375
+                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.716);
             }
         
             public interface Encoder18t {
                 public final int TEETH = 18;
-                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.559);//(-0.442);//(0.58203125);//.fromRotations(-0.42822265625);//(-0.700927734375); //0.53564453125
+                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.559);
             }
         
             public interface SoftwareLimit {

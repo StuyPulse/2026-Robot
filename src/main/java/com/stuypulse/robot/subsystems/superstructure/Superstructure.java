@@ -94,7 +94,7 @@ public class Superstructure extends SubsystemBase {
     public boolean atTolerance() {
         return isShooterAtTolerance() && isHoodAtTolerance() && isTurretAtTolerance();
     }
-
+    
     public boolean isShooterAtTolerance() {
         return shooter.atTolerance();
     }
@@ -123,7 +123,7 @@ public class Superstructure extends SubsystemBase {
         return turret.getAngle();
     }
 
-    public boolean isWrapping() {
+    public boolean isTurretWrapping() {
         return turret.isWrapping();
     }
 

@@ -198,15 +198,19 @@ public class LimelightVision extends SubsystemBase{
                     SmartDashboard.putNumber("Vision/Limelight Yaw", LimelightHelpers.getIMUData(limelightName).Yaw);
 
                 }
-                String limelightName = names[i];
-                SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
-                    // this yaw is seems to be the robot yaw passed into the LL
-                SmartDashboard.putNumber("Vision/Limelight Robot Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).robotYaw);
-                    // this is just the yaw of the internal imu 
-                SmartDashboard.putNumber("Vision/Limelight Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).Yaw);
-                SmartDashboard.putNumber("Vision/Limelight Robot Yaw Passed in", (CommandSwerveDrivetrain.getInstance().getPose().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360);
+                if (Settings.DEBUG_MODE) {
+                    String limelightName = names[i];
+                    SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
+                        // this yaw is seems to be the robot yaw passed into the LL
+                    SmartDashboard.putNumber("Vision/Limelight Robot Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).robotYaw);
+                        // this is just the yaw of the internal imu 
+                    SmartDashboard.putNumber("Vision/Limelight Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).Yaw);
+                    SmartDashboard.putNumber("Vision/Limelight Robot Yaw Passed in", (CommandSwerveDrivetrain.getInstance().getPose().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360);
+                }
             }
-            arrayPublisher.set(arrayOfLimelightPoses);
+            if (Settings.DEBUG_MODE) {
+                arrayPublisher.set(arrayOfLimelightPoses);
+            }
         }
     }
 }

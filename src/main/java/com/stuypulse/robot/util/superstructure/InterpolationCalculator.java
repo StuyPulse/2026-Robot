@@ -106,7 +106,7 @@ public class InterpolationCalculator {
 
         Rotation2d targetAngle = Rotation2d.fromDegrees(Settings.Superstructure.Hood.Angles.FERRY.getAsDouble());
         double targetRPM = ferryingDistanceRPMInterpolator.get(distanceMeters);
-        double flightTime = 1.3;
+        double flightTime = 2.1;
         
         SmartDashboard.putNumber("Superstructure/Interpolated Ferry Target Angle", targetAngle.getDegrees());
         SmartDashboard.putNumber("Superstructure/Interpolated Ferry RPM", targetRPM);

@@ -38,6 +38,7 @@ public interface Settings {
         double HANDOFF_MAX = 4800.0;
         double HANDOFF_REVERSE = -500.0;
         double RPM_TOLERANCE = 200.0;
+        double RPM_SOTM_TOLERANCE = 700.0;
         SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/Target RPM", HANDOFF_MAX);
 
         SmartNumber HANDOFF_STALL_CURRENT = new SmartNumber("Handoff/Stall Current Limit for Reverse", 30.0);
@@ -70,7 +71,8 @@ public interface Settings {
         double REVERSE_SPEED = -4500.0;
         double STOP_SPEED = 0.0;
 
-        double RPM_TOLERANCE = 400.0;
+        double RPM_TOLERANCE = 800.0;
+
 
         /* CONSTANTS */
         double GEAR_RATIO = 8.0 / 1.0;
@@ -269,6 +271,8 @@ public interface Settings {
             public final double MAX_ANGULAR_VEL_FOTM_RAD_PER_S = Units.degreesToRadians(150.0);
 
             public final double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
+            public final double MAX_ACCEL_M_PER_S_SQUARED_STOM = 15.0;
+            public final double MAX_ACCEL_M_PER_S_SQUARED_FOTM = 15.0;
             public final double MAX_ANGULAR_ACCEL_RAD_PER_S_SQUARED = Units.degreesToRadians(900.0);
 
             public final PathConstraints DEFAULT_CONSTRAINTS =

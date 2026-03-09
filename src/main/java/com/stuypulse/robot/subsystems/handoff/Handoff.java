@@ -6,7 +6,10 @@
 package com.stuypulse.robot.subsystems.handoff;
 
 import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.commands.superstructure.SuperstructureSetState;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -57,8 +60,12 @@ public abstract class Handoff extends SubsystemBase {
     }
 
     public boolean atTolerance() {
-        double diff = Math.abs(getTargetRPM() - getCurrentRPM());
-        return diff < Settings.Handoff.RPM_TOLERANCE;
+        double error = Math.abs(getTargetRPM() - getCurrentRPM());
+        SuperstructureState superstructureState = Superstructure.getInstance().getState();
+        if (superstructureState == SuperstructureState.SOTM || superstructureState == SuperstructureState.FOTM) {
+            return error < Settings.Handoff.RPM_TOLERANCE;
+        }
+        return error < Settings.Handoff.RPM_TOLERANCE;
     }
 
     public abstract double getCurrentRPM();

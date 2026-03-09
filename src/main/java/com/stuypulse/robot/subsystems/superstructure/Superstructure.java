@@ -133,6 +133,10 @@ public class Superstructure extends SubsystemBase {
         if (state == SuperstructureState.SOTM || state == SuperstructureState.FOTM) {
             SOTMCalculator.updateSOTMSolution();
         }
+        
+        if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && state == SuperstructureState.SOTM) {
+            setState(SuperstructureState.FERRY);
+        }
 
         SmartDashboard.putString("Superstructure/State", state.name());
         SmartDashboard.putString("States/SuperStructure", state.name());

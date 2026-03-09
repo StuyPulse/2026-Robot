@@ -30,8 +30,7 @@ public interface Field {
     double WIDTH = Units.inchesToMeters(317.000); 
     double LENGTH = Units.inchesToMeters(651.200);
 
-    public static final double trenchHopperTolerance = Units.inchesToMeters(50);
-    public static final double trenchHoodTolerance = Units.inchesToMeters(20);
+    public static final double TRENCH_HOOD_TOLERANCE = Units.inchesToMeters(20);
 
     // Alliance relative hub center coordinates
     public static final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
@@ -74,19 +73,22 @@ public interface Field {
     }
 
     /*** TRENCH COORDINATES ***/
-    public interface NearLeftTrench {
+    public interface AllianceLeftTrench {
         public static final Pose2d leftEdge = new Pose2d(Units.inchesToMeters(182.11), WIDTH, new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(Units.inchesToMeters(182.11), WIDTH - Units.inchesToMeters(50.59), new Rotation2d());
     }
-    public interface NearRightTrench {
+    public interface AllianceRightTrench {
         public static final Pose2d leftEdge = new Pose2d(Units.inchesToMeters(182.11), Units.inchesToMeters(50.59), new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(Units.inchesToMeters(182.11), Units.inchesToMeters(0), new Rotation2d());
     }
-    public interface FarLeftTrench {
+
+    // OPPONENT SIDE, BUT LEFT/RIGHT RELATIVE TO YOUR ALLIANCE POV
+    public interface OpponentLeftTrench {
         public static final Pose2d leftEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), WIDTH, new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), WIDTH - Units.inchesToMeters(50.59), new Rotation2d());
     }
-    public interface FarRightTrench {
+    // OPPONENT SIDE, BUT LEFT/RIGHT RELATIVE TO YOUR ALLIANCE POV
+    public interface OpponentRightTrench {
         public static final Pose2d leftEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), Units.inchesToMeters(50.59), new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), Units.inchesToMeters(0), new Rotation2d());
     }

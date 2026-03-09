@@ -173,8 +173,8 @@ public class RobotContainer {
 
         // Intake Deploy
         driver.getRightTriggerButton()
-        .onTrue(new IntakeDeploy());
-        // .onTrue(new SuperstructureShoot()); // TODO: put shooter in shoot --> turn off sotm
+            .onTrue(new IntakeDeploy())
+            .onTrue(new SuperstructureStow()); // TURNS OFF SOTM
         
         // Reset Heading
         driver.getDPadUp()

@@ -39,7 +39,7 @@ public class HandoffDefaultCommand extends Command {
 
         boolean shouldRun = !shouldStop && prerequisiteMet;
         
-        if (shouldStop || !prerequisiteMet) {
+        if (!shouldRun) {
             handoff.setState(HandoffState.STOP);
         } else if (shouldRun && superstructure.getState() == SuperstructureState.SOTM) {
             handoff.setState(HandoffState.FORWARD);

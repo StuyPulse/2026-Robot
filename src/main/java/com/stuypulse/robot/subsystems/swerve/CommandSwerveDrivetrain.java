@@ -454,15 +454,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public boolean isUnderTrench() {
         Translation2d turretTranslation = getTurretPose().getTranslation();
 
-        boolean isBetweenRightTrenchesY = Field.NearRightTrench.rightEdge.getY() < turretTranslation.getY() && Field.NearRightTrench.leftEdge.getY() > turretTranslation.getY();
+        boolean isBetweenRightTrenchesY = Field.AllianceRightTrench.rightEdge.getY() < turretTranslation.getY() && Field.AllianceRightTrench.leftEdge.getY() > turretTranslation.getY();
 
-        boolean isBetweenLeftTrenchesY = Field.NearLeftTrench.rightEdge.getY() < turretTranslation.getY() && Field.NearLeftTrench.leftEdge.getY() > turretTranslation.getY();
+        boolean isBetweenLeftTrenchesY = Field.AllianceLeftTrench.rightEdge.getY() < turretTranslation.getY() && Field.AllianceLeftTrench.leftEdge.getY() > turretTranslation.getY();
 
-        boolean isCloseToAllianceSideTrenchX = Math.abs(turretTranslation.getX() - Field.NearRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
+        boolean isUnderAllianceTrenchX = Math.abs(turretTranslation.getX() - Field.AllianceRightTrench.rightEdge.getX()) < Field.TRENCH_HOOD_TOLERANCE;
 
-        boolean isCloseToNeutralSideTrenchX = Math.abs(turretTranslation.getX() - Field.FarRightTrench.rightEdge.getX()) < Field.trenchHoodTolerance;
+        boolean isUnderOpponentTrenchX = Math.abs(turretTranslation.getX() - Field.OpponentRightTrench.rightEdge.getX()) < Field.TRENCH_HOOD_TOLERANCE;
 
-        boolean isUnderTrench = (isBetweenRightTrenchesY || isBetweenLeftTrenchesY) && (isCloseToAllianceSideTrenchX || isCloseToNeutralSideTrenchX);
+        boolean isUnderTrench = (isBetweenRightTrenchesY || isBetweenLeftTrenchesY) && (isUnderAllianceTrenchX || isUnderOpponentTrenchX);
         
         return isUnderTrench;
     }
@@ -486,6 +486,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         boolean withinHubY = Field.hubFarRightCorner.getY() < getTurretPose().getY() && getTurretPose().getY() < Field.hubFarLeftCorner.getY();
 
         return behindHubX && withinHubY;
+    }
+
+    public boolean isOutsideAllianceZone() {
+        return getPose().getX() > Field.AllianceRightTrench.rightEdge.getX() + Field.TRENCH_HOOD_TOLERANCE;
     }
     
     @Override

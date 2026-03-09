@@ -32,23 +32,18 @@ public class SwerveDriveSOTM extends Command {
     private final IStream turn;
 
     private final VRateLimit stomAcellLimit;
-    private double previous;
-    private double current;
  
     public SwerveDriveSOTM(Gamepad driver) {
        swerve = CommandSwerveDrivetrain.getInstance();
         superstructure = Superstructure.getInstance();
         stomAcellLimit = new VRateLimit(Settings.Swerve.Constraints.MAX_ACCEL_M_PER_S_SQUARED_STOM);
 
-        previous = 0.0;
-        current = 0.0;
-        
         speed = VStream.create(this::getDriverInputAsVelocity)
         .filtered(
             new VDeadZone(Drive.DEADBAND), 
             x -> x.clamp(1),
             x -> x.pow(Drive.POWER),
-            x -> x.mul(Swerve.Constraints.MAX_VELOCITY_M_PER_S),
+            x -> x.mul(Swerve.Constraints.MAX_VELOCITY_SOTM_M_PER_S),
             stomAcellLimit,
             new VLowPassFilter(Drive.RC)
         );
@@ -57,7 +52,7 @@ public class SwerveDriveSOTM extends Command {
         .filtered(
             x -> SLMath.deadband(x, Turn.DEADBAND),
             x -> SLMath.spow(x, Turn.POWER),
-            x -> x * Swerve.Constraints.MAX_ANGULAR_VEL_RAD_PER_S,
+            x -> x * Swerve.Constraints.MAX_VELOCITY_SOTM_M_PER_S,
             new LowPassFilter(Turn.RC)
         );
 
@@ -73,29 +68,10 @@ public class SwerveDriveSOTM extends Command {
     @Override
     public void execute() {
 
-        Vector2D speedVector = speed.get();
-        double angularVel = turn.get();
-        //TODO: test this 
-        double maxAngularVel = Swerve.Constraints.MAX_ANGULAR_VEL_RAD_PER_S;
-        previous = current;
-        current = speed.get().x;
-        
-
-        if (speedVector.magnitude() > 0.05 && superstructure.getState() == SuperstructureState.SOTM) {
-            speedVector = speedVector.normalize().mul(Settings.Swerve.Constraints.MAX_VELOCITY_SOTM_M_PER_S);
-            maxAngularVel = Settings.Swerve.Constraints.MAX_ANGULAR_VEL_SOTM_RAD_PER_S;
-            
-        } else if (speedVector.magnitude() > 0.05 && superstructure.getState() == SuperstructureState.FOTM) {
-            speedVector = speedVector.normalize().mul(Settings.Swerve.Constraints.MAX_VELOCITY_SOTM_M_PER_S);
-            maxAngularVel = Settings.Swerve.Constraints.MAX_ANGULAR_VEL_SOTM_RAD_PER_S;
-        }
-
-        angularVel = MathUtil.clamp(angularVel, -maxAngularVel, maxAngularVel);
-
         swerve.setControl(swerve.getFieldCentricSwerveRequest()
             .withVelocityX(speed.get().x)
             .withVelocityY(speed.get().y)
-            .withRotationalRate(-angularVel));
+            .withRotationalRate(-turn.get()));
 
         SmartDashboard.putNumber("Swerve/Speed x", speed.get().x);
         SmartDashboard.putNumber("Swerve/Speed y", speed.get().y);

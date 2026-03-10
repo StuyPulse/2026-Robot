@@ -15,6 +15,7 @@ import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class LeftTwoCycle extends SequentialCommandGroup {
@@ -34,7 +35,7 @@ public class LeftTwoCycle extends SequentialCommandGroup {
                 new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().alongWith(new WaitUntilCommand(() -> Handoff.getInstance().atTolerance())).andThen(
                 new SpindexerRun()
-            ).withTimeout(10.0),
+            ).andThen(new WaitCommand(5.0)),
 
 
             // NZ Trip 2

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.28075919335706,
-        "y": 3.6638078291814944
+        "x": 8.282938659058486,
+        "y": 3.4333523537803137
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.634602609727167,
-        "y": 0.5221233689205218
+        "x": 8.347631954350925,
+        "y": 1.0008844507845942
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Center NZ"
     },
     {
       "anchor": {
-        "x": 4.461245551601425,
-        "y": 0.5006049822064051
+        "x": 3.508573466476462,
+        "y": 0.44452211126961516
       },
       "prevControl": {
-        "x": 6.656120996441283,
-        "y": 0.4683274021352317
+        "x": 7.299600570613409,
+        "y": 0.4574607703281026
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,12 +33,12 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.93,
-    "maxAcceleration": 15.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0.0,
@@ -47,8 +47,8 @@
   "reversed": false,
   "folder": "To Score",
   "idealStartingState": {
-    "velocity": 4.93,
+    "velocity": 0.0,
     "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.74821391703567,
-        "y": 0.5681744021261762
+        "x": 9.188644793152639,
+        "y": 0.48333808844507875
       },
       "isLocked": false,
       "linkedName": "Right Trench Start"
     },
     {
       "anchor": {
-        "x": 8.28075919335706,
-        "y": 3.6638078291814944
+        "x": 8.282938659058486,
+        "y": 3.4333523537803137
       },
       "prevControl": {
-        "x": 8.205444839857652,
-        "y": 0.371494661921707
+        "x": 8.153552068473608,
+        "y": 1.182025677603424
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Center NZ"
     }
   ],
   "rotationTargets": [],
@@ -33,15 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.93,
-    "maxAcceleration": 15.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
-    "velocity": 4.93,
+    "velocity": 0.0,
     "rotation": 90.0
   },
   "reversed": false,

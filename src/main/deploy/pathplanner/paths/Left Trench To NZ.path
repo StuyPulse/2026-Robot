@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.646571767497036,
-        "y": 7.483321470937129
+        "x": 9.162767475035661,
+        "y": 7.651355206847361
       },
       "isLocked": false,
       "linkedName": "Left Trench Start"
     },
     {
       "anchor": {
-        "x": 8.259240806642943,
-        "y": 4.43846975088968
+        "x": 8.231184022824536,
+        "y": 4.6366476462196875
       },
       "prevControl": {
-        "x": 8.302277580071175,
-        "y": 7.8060972716488735
+        "x": 8.20530670470756,
+        "y": 6.706833095577747
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,15 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.93,
-    "maxAcceleration": 15.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
-    "velocity": 4.93,
+    "velocity": 0.0,
     "rotation": -90.0
   },
   "reversed": false,

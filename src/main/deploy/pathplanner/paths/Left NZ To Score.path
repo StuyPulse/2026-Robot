@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.259240806642943,
-        "y": 4.43846975088968
+        "x": 8.231184022824536,
+        "y": 4.6366476462196875
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.376381969157771,
-        "y": 7.612431791221827
+        "x": 7.0796433666191145,
+        "y": 7.237318116975751
       },
       "isLocked": false,
       "linkedName": "NZ Left Center"
     },
     {
       "anchor": {
-        "x": 4.020118623962041,
-        "y": 7.590913404507711
+        "x": 3.52151212553495,
+        "y": 7.547845934379458
       },
       "prevControl": {
-        "x": 6.462455516014234,
-        "y": 7.6985053380782915
+        "x": 6.619852845367487,
+        "y": 7.647103713894571
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,12 +33,12 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.93,
-    "maxAcceleration": 15.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
@@ -47,8 +47,8 @@
   "reversed": false,
   "folder": "To Score",
   "idealStartingState": {
-    "velocity": 4.93,
+    "velocity": 0.0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

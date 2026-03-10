@@ -90,19 +90,19 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.93,
-    "maxAcceleration": 15.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0.0,
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "To NZ",
+  "folder": "To Score",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

@@ -9,6 +9,7 @@
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/Robot/Handoff Reverse": "Command",
       "/SmartDashboard/Robot/Intake Reverse": "Command",
+      "/SmartDashboard/Robot/Ryan Testing Seed Hood Encoder (NEW)": "Command",
       "/SmartDashboard/Robot/Seed Hood Relative Encoder At Upper Hardstop": "Command",
       "/SmartDashboard/Robot/Seed Turret": "Command",
       "/SmartDashboard/Robot/Spindexer Reverse": "Command",

@@ -27,13 +27,15 @@ public class RightTwoCycle extends SequentialCommandGroup {
         addCommands(
 
             // NZ Trip 1
-            new IntakeDeploy().alongWith(
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0])
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]).alongWith(
+                new WaitCommand(0.5).andThen(new IntakeDeploy())
             ),
-            new SuperstructureInterpolation().alongWith(new IntakeStopRollers()),
+            new IntakeStopRollers(),
 
             // Trip 1 To Score
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]),
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
+                new WaitCommand(0.5).andThen(new SuperstructureInterpolation())
+            ),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().alongWith(new WaitUntilCommand(() -> Handoff.getInstance().atTolerance())).andThen(
                 new SpindexerRun()

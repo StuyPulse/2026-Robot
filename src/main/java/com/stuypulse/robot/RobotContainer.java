@@ -58,6 +58,7 @@ import com.stuypulse.robot.commands.turret.TurretLeftCorner;
 import com.stuypulse.robot.commands.turret.ZeroTurret;
 import com.stuypulse.robot.commands.vision.ResetLimelightIMU;
 import com.stuypulse.robot.commands.vision.SetIMUMode;
+import com.stuypulse.robot.commands.vision.SetMegaTagMode;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.handoff.Handoff;
@@ -73,6 +74,7 @@ import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer.SpindexerState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
+import com.stuypulse.robot.subsystems.vision.LimelightVision.MegaTagMode;
 import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
@@ -140,6 +142,9 @@ public class RobotContainer {
         SmartDashboard.putData("Robot/Seed Turret", new SeedTurret().ignoringDisable(true));
         SmartDashboard.putData("Robot/Seed Hood Relative Encoder At Upper Hardstop", new SeedHoodRelativeEncoderAtUpperHardstop().ignoringDisable(true));
         SmartDashboard.putData("Robot/Ryan Testing Seed Hood Encoder (NEW)", new NewZeroAtUpperHardstop());
+        SmartDashboard.putData("Robot/Set Megatag 1", new SetMegaTagMode(MegaTagMode.MEGATAG1).ignoringDisable(true));
+        SmartDashboard.putData("Robot/Set Megatag 2", new SetMegaTagMode(MegaTagMode.MEGATAG2).ignoringDisable(true));
+
 
 
         SmartDashboard.putData("Robot/Handoff Reverse", 

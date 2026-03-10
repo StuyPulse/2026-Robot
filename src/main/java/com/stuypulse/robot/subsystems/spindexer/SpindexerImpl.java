@@ -12,7 +12,10 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -30,9 +33,12 @@ public class SpindexerImpl extends Spindexer {
 
     private final TalonFX leadMotor;
     private final TalonFX followerMotor;
+    private final Timer timer;
+    private boolean timerTriggered;
 
     private final VelocityVoltage controller;
     private final Follower follower;
+    private final BStream isStalling;
 
     private Optional<Double> voltageOverride;
 
@@ -72,7 +78,14 @@ public class SpindexerImpl extends Spindexer {
         controller = new VelocityVoltage(getTargetRPM()).withEnableFOC(true);
         follower = new Follower(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, MotorAlignmentValue.Aligned);
 
+        isStalling = BStream.create(() -> leadMotor.getSupplyCurrent().getValueAsDouble() > Settings.Spindexer.STALL_CURRENT_LIMIT)
+                .filtered(new BDebounce.Both(Settings.Superstructure.Hood.STALL_DEBOUNCE));
+
         followerMotor.setControl(follower);
+
+        timer = new Timer();
+
+        timerTriggered = false;
 
         voltageOverride = Optional.empty();
     }
@@ -104,6 +117,15 @@ public class SpindexerImpl extends Spindexer {
                 } else {
                     leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
                 }
+
+                // if (isStalling()) {
+                //     if (timer.hasElapsed(0.25)) {
+                //         timer.reset();
+                //     }
+                //     else {
+                //         leadMotor.setControl(controller.withVelocity(Settings.Spindexer.REVERSE_SPEED));
+                //     }
+                // }
             }
         } else {
             leadMotor.stopMotor();
@@ -126,6 +148,10 @@ public class SpindexerImpl extends Spindexer {
             SmartDashboard.putNumber("Current Draws/Spindexer Leader (amps)", leadMotor.getSupplyCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Current Draws/Spindexer Follower (amps)", followerMotor.getSupplyCurrent().getValueAsDouble());
         }
+    }
+
+    public boolean isStalling() {
+        return isStalling.get();
     }
 
     @Override

@@ -72,6 +72,7 @@ public interface Settings {
         double STOP_SPEED = 0.0;
 
         double RPM_TOLERANCE = 800.0;
+        double STALL_CURRENT_LIMIT = 40.0; // random number as of 3/9
 
 
         /* CONSTANTS */
@@ -153,9 +154,9 @@ public interface Settings {
                 public final SmartNumber FERRY = new SmartNumber("InterpolationTesting/Ferry State Target RPM", 2000.0);
 
                 public final double REVERSE = 0.0;
-                public final double KB = 0.0;
-                public final double LEFT_CORNER = 0.0;
-                public final double RIGHT_CORNER = 0.0;
+                public final double KB = 2720.0;
+                public final double LEFT_CORNER = 3850.0;
+                public final double RIGHT_CORNER = 3850.0;
             }
         }
 
@@ -177,7 +178,7 @@ public interface Settings {
             public final double ENCODER_TO_MECH = 32.0 / 3.0;
             public final double HOOD_HOMING_VOLTAGE = 2.0;
 
-            public final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.043);
+            public final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.052);
 
             public final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(39.0);
             public final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(20.0);
@@ -197,9 +198,9 @@ public interface Settings {
                 public final Rotation2d MAX = Rotation2d.fromDegrees(40.0);
 
                 public final Rotation2d STOW = Rotation2d.fromDegrees(21.0);
-                public final Rotation2d KB = Rotation2d.fromDegrees(12.0);
-                public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(10.0);
-                public final Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(10.0);
+                public final Rotation2d KB = Rotation2d.fromDegrees(22.0);
+                public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(38.0);
+                public final Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(38.0);
             }
         }
 
@@ -210,8 +211,8 @@ public interface Settings {
             public final Rotation2d SOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
-            public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);
-            public final Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(0.0);
+            public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(-127);
+            public final Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(-60);
             
             double RESOLUTION_OF_ABSOLUTE_ENCODER = 0.1;
             double WRAP_DEBOUNCE = 0.5;

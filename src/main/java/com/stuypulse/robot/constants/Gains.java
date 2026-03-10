@@ -103,13 +103,21 @@ public class Gains {
 
     public interface Intake {
         public interface Pivot {
-            double kP = 100.0;
-            double kI = 0.0;
-            double kD = 10.0;
+            // double kP = 100.0;
+            // double kI = 0.0;
+            // double kD = 10.0;
 
-            double kS = 0.0;
-            double kV = 0.12;
-            double kA = 0.0;
+            // double kS = 0.0;
+            // double kV = 0.12;
+            // double kA = 0.0;
+
+            SmartNumber kP = new SmartNumber("Intake/Pivot/Gains/kP", 100.0);
+            SmartNumber kI = new SmartNumber("Intake/Pivot/Gains/kI", 0.0);
+            SmartNumber kD = new SmartNumber("Intake/Pivot/Gains/kD", 10.0);
+            
+            SmartNumber kS = new SmartNumber("Intake/Pivot/Gains/kS", 0.0);
+            SmartNumber kV = new SmartNumber("Intake/Pivot/Gains/kV", 0.12);
+            SmartNumber kA = new SmartNumber("Intake/Pivot/Gains/kA", 0.0);
 
             double kG = 0.5;
         }

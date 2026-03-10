@@ -115,7 +115,7 @@ public class HoodImpl extends Hood {
     }
 
     private double getAbsoluteHoodAngleDeg() {
-        return Settings.Superstructure.Hood.MIN_FROM_HORIZON.getDegrees() + hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Settings.Superstructure.Hood.ENCODER_TO_MECH;
+        return hoodEncoder.getPosition().getValueAsDouble() * 360.0; //Settings.Superstructure.Hood.MIN_FROM_HORIZON.getDegrees() + hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Settings.Superstructure.Hood.ENCODER_TO_MECH;
     }
 
     @Override

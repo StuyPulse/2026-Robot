@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.656120996441281,
-        "y": 0.4145314353499395
+        "x": 7.151043890865957,
+        "y": 0.5006049822064051
       },
       "isLocked": false,
       "linkedName": "Right Trench Start"
@@ -20,12 +20,12 @@
         "y": 3.4271055753262156
       },
       "prevControl": {
-        "x": 6.010569395017794,
-        "y": 0.6727520759193353
+        "x": 5.902977461447213,
+        "y": 0.7050296559905087
       },
       "nextControl": {
-        "x": 5.981149519717918,
-        "y": 4.438496114303611
+        "x": 6.0210167361443325,
+        "y": 4.438021718286884
       },
       "isLocked": false,
       "linkedName": null
@@ -90,8 +90,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 7.5,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
@@ -107,5 +107,5 @@
     "velocity": 0,
     "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

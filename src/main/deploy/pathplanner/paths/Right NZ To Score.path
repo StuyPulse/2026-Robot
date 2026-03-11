@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.347631954350925,
-        "y": 1.0008844507845942
+        "x": 7.2371174377224206,
+        "y": 0.3284578884934768
       },
       "isLocked": false,
       "linkedName": "Right Center NZ"
@@ -20,8 +20,8 @@
         "y": 0.44452211126961516
       },
       "prevControl": {
-        "x": 7.299600570613409,
-        "y": 0.4574607703281026
+        "x": 7.64596678529063,
+        "y": 0.5651601423487547
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 7.5,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,

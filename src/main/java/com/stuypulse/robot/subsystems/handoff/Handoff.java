@@ -6,7 +6,6 @@
 package com.stuypulse.robot.subsystems.handoff;
 
 import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.commands.superstructure.SuperstructureSetState;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;

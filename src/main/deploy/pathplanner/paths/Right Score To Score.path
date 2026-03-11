@@ -1,0 +1,125 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.042781740370898,
+        "y": 0.5221540656205423
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.859686162624821,
+        "y": 0.4703994293865924
+      },
+      "isLocked": false,
+      "linkedName": "Right Trench Score"
+    },
+    {
+      "anchor": {
+        "x": 5.9890510083036785,
+        "y": 3.4271055753262156
+      },
+      "prevControl": {
+        "x": 6.186875891583452,
+        "y": 0.2504422253922973
+      },
+      "nextControl": {
+        "x": 5.924849720295674,
+        "y": 4.458047058785347
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.946619217081851,
+        "y": 3.6315302491103196
+      },
+      "prevControl": {
+        "x": 6.903582443653619,
+        "y": 4.104934756820878
+      },
+      "nextControl": {
+        "x": 6.994277354658343,
+        "y": 3.107290735768909
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.1295255041518395,
+        "y": 1.415136417556346
+      },
+      "prevControl": {
+        "x": 7.118173588922177,
+        "y": 1.6648785526089207
+      },
+      "nextControl": {
+        "x": 7.172562277580072,
+        "y": 0.4683274021352315
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.5991440798858774,
+        "y": 0.71623395149786
+      },
+      "prevControl": {
+        "x": 5.718705171226329,
+        "y": 0.71623395149786
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Center NZ (2)"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9449378330372995,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.2,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 3.467854869509843,
+      "maxWaypointRelativePos": 4.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 300.0,
+        "maxAngularAcceleration": 900.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 300.0,
+    "maxAngularAcceleration": 900.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "To Score",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": false
+}

@@ -9,7 +9,6 @@ import com.ctre.phoenix6.CANBus;
 
 /** This file contains the different ports of motors, solenoids and sensors */
 public interface Ports {
-    // TODO: Get bus name
     public CANBus RIO = new CANBus("rio");
     public CANBus CANIVORE = new CANBus("CANIVORE");
     
@@ -25,7 +24,7 @@ public interface Ports {
         int HANDOFF = 43;
     }
 
-    public interface HoodedShooter {
+    public interface Superstructure {
         public interface Hood {
             int MOTOR = 45;
             int THROUGHBORE_ENCODER = 44;
@@ -34,6 +33,12 @@ public interface Ports {
         public interface Shooter {
             int MOTOR_LEAD = 47;
             int MOTOR_FOLLOW = 46;
+        }
+
+        public interface Turret {
+            int MOTOR = 40;
+            int ENCODER17T = 42;
+            int ENCODER18T = 41;
         }
     }
 
@@ -46,11 +51,5 @@ public interface Ports {
     public interface Spindexer {
         int SPINDEXER_LEAD_MOTOR = 30;
         int SPINDEXER_FOLLOW_MOTOR = 31;
-    }
-
-    public interface Turret {
-        int MOTOR = 40;
-        int ENCODER17T = 42;
-        int ENCODER18T = 41;
     }
 }

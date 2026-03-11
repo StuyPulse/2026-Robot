@@ -5,13 +5,14 @@
 /***************************************************************/
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.vision.SetIMUMode;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +25,6 @@ public class Robot extends TimedRobot {
     private RobotContainer robot;
     private Command auto;
     private static Alliance alliance;
-    private PowerDistribution powerDistribution;
 
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
@@ -40,14 +40,17 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start();
         SignalLogger.start();
-
-        powerDistribution = new PowerDistribution();
+        CommandScheduler.getInstance().schedule(new SetIMUMode(Settings.Vision.RESET_IMU_INDEX));
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        SmartDashboard.putNumber("Robot/Voltage of Robot", powerDistribution.getVoltage());
+        if (!Robot.isReal()) {
+            SmartDashboard.putData(CommandScheduler.getInstance());
+        }
+
+        SmartDashboard.putNumber("Robot/Match Time", DriverStation.getMatchTime());
 
         if (DriverStation.getAlliance().isPresent()) {
             alliance = DriverStation.getAlliance().get();
@@ -64,7 +67,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        CommandScheduler.getInstance().schedule(new SetIMUMode(Settings.Vision.RESET_IMU_INDEX));
+    }
 
     /***********************/
     /*** AUTONOMOUS MODE ***/
@@ -72,7 +77,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        CommandScheduler.getInstance().schedule(new SetIMUMode(Settings.Vision.INTERNAL_EXTERNAL_ASSIST_INDEX));
 
         auto = robot.getAutonomousCommand();
 
@@ -85,7 +92,9 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit(
+        
+    ) {}
 
     /*******************/
     /*** TELEOP MODE ***/
@@ -93,15 +102,19 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
-        
+        CommandScheduler.getInstance().schedule(new SetIMUMode(0));
+
         if (auto != null) {
             auto.cancel();
         }
+
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+    }
 
     @Override
     public void teleopExit() {}

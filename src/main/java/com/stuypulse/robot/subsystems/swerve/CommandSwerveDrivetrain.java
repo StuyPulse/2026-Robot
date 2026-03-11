@@ -16,12 +16,13 @@ import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
 import com.stuypulse.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
-import com.stuypulse.robot.subsystems.turret.Turret;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -55,6 +56,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private FieldObject2d turret2d = Field.FIELD2D.getObject("Turret 2D");
     private Pose2d turretPose = new Pose2d();
+
+
+    
 
     static {
         instance = TunerConstants.createDrivetrain();
@@ -113,7 +117,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SysIdRoutine m_sysIdRoutineChassisTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
             /* This is in meters per second², but SysId only supports "volts per second" */
-            Volts.of(1).per(Second),
+            Volts.of(0.5).per(Second),
             /* This is in meters per second, but SysId only supports "volts" */
             Volts.of(Settings.Swerve.Constraints.MAX_VELOCITY_M_PER_S),
             null, // Use default timeout (10 s)
@@ -123,7 +127,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         new SysIdRoutine.Mechanism(
             output -> {
                 /* output is actually meters per second, but SysId only supports "volts" */
-                setControl(getFieldCentricSwerveRequest().withVelocityX(output.in(Volts)).withVelocityY(0).withRotationalRate(0));
+                setControl(getRobotCentricSwerveRequest().withVelocityX(output.in(Volts)).withVelocityY(0).withRotationalRate(0));
                 /* also log the requested output for SysId */
                 SignalLogger.writeDouble("Target X Velocity ('voltage')", output.in(Volts));
                 SignalLogger.writeDouble("X Position", getPose().getX());
@@ -180,7 +184,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     );
 
     /* The SysId routine to test */
-    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineModuleTranslation;
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineChassisTranslation;
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -290,6 +294,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    public Command sysidRotationDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineRotation.dynamic(direction);
+    }
+
+    public Command sysidRotationQuasiStatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineRotation.quasistatic(direction);
+    }
+    
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
@@ -405,6 +417,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             .withRotationalRate(robotSpeeds.omegaRadiansPerSecond));
     }
 
+    
+
     public void drive(Vector2D velocity, double rotation) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             Robot.isBlue() ? velocity.y : -velocity.y, 
@@ -429,18 +443,75 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return turretPose;
     }
 
+    public double[] getWheelDrivePositionsRadians(){
+        double[] positions = new double[4];
+        double kDriveGearRatio = 6.48;
+        for(int i = 0; i < 4; i++){
+            positions[i] = getModule(i).getDriveMotor().getPosition().getValueAsDouble() * 2 * Math.PI / kDriveGearRatio;
+        }
+        return positions;
+    }
+
+    public boolean isUnderTrench() {
+        Translation2d turretTranslation = getTurretPose().getTranslation();
+
+        boolean isBetweenRightTrenchesY = Field.AllianceRightTrench.rightEdge.getY() < turretTranslation.getY() && Field.AllianceRightTrench.leftEdge.getY() > turretTranslation.getY();
+
+        boolean isBetweenLeftTrenchesY = Field.AllianceLeftTrench.rightEdge.getY() < turretTranslation.getY() && Field.AllianceLeftTrench.leftEdge.getY() > turretTranslation.getY();
+
+        boolean isUnderAllianceTrenchX = Math.abs(turretTranslation.getX() - Field.AllianceRightTrench.rightEdge.getX()) < Field.TRENCH_HOOD_TOLERANCE;
+
+        boolean isUnderOpponentTrenchX = Math.abs(turretTranslation.getX() - Field.OpponentRightTrench.rightEdge.getX()) < Field.TRENCH_HOOD_TOLERANCE;
+
+        boolean isUnderTrench = (isBetweenRightTrenchesY || isBetweenLeftTrenchesY) && (isUnderAllianceTrenchX || isUnderOpponentTrenchX);
+        
+        return isUnderTrench;
+    }
+    
+
+    public boolean isInOpponentZone(){
+        Translation2d turretTranslation = getTurretPose().getTranslation();
+        return turretTranslation.getX() > Field.OPPONENT_ZONE_X;
+    }
+    
+    public boolean isBehindTower() {
+        boolean withinTowerX = getPose().getTranslation().getX() < Field.towerFarCenter.getX();
+        boolean withinTowerY = Field.towerFarRight.getY() < getTurretPose().getTranslation().getY() && getTurretPose().getTranslation().getY() < Field.towerFarLeft.getY();
+        return withinTowerX && withinTowerY;
+    }
+
+    // Stop ferrying when in rectangle behind hub (in neutral zone)
+    public boolean isBehindHub() {
+        Translation2d turretTranslation = getTurretPose().getTranslation();
+        boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX() && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubTolerance;
+        boolean withinHubY = Field.hubFarRightCorner.getY() < getTurretPose().getY() && getTurretPose().getY() < Field.hubFarLeftCorner.getY();
+
+        return behindHubX && withinHubY;
+    }
+
+    public boolean isOutsideAllianceZone() {
+        return getPose().getX() > Field.AllianceRightTrench.rightEdge.getX() + Field.TRENCH_HOOD_TOLERANCE;
+    }
+    
     @Override
     public void periodic() {
         Pose2d pose = getPose();
         turretPose = new Pose2d(
-            pose.getTranslation().plus(Settings.Turret.Constants.TURRET_OFFSET.getTranslation().rotateBy(pose.getRotation())),
+            pose.getTranslation().plus(Settings.Superstructure.Turret.TURRET_OFFSET.getTranslation().rotateBy(pose.getRotation())),
             pose.getRotation().plus(Turret.getInstance().getAngle())
         );
 
         turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 
-        SmartDashboard.putNumber("Turret/Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
+        SmartDashboard.putBoolean("FieldPositions/isBehindTower", isBehindTower());
+        SmartDashboard.putBoolean("FieldPositions/isUnderTrench", isUnderTrench());
+        SmartDashboard.putBoolean("FieldPositions/isBehindHub", isBehindHub());
+        SmartDashboard.putBoolean("FieldPositions/isInOpponentZone", isInOpponentZone());
+
+
+        SmartDashboard.putNumber("Superstructure/Turret/Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
         SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
+        SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Ferry Zone", turretPose.getTranslation().getDistance(Field.getFerryZonePose(pose.getTranslation()).getTranslation()));
 
         SmartDashboard.putNumber("Swerve/Pose/X", pose.getX());
         SmartDashboard.putNumber("Swerve/Pose/Y", pose.getY());
@@ -466,18 +537,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? pose : Field.transformToOppositeAlliance(pose));
 
         
-        if (Settings.DEBUG_MODE) {
-        }
-        
-        SmartDashboard.putNumber("Swerve/Velocity Robot Relative X (m per s)", getChassisSpeeds().vxMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/Velocity Robot Relative Y (m per s)", getChassisSpeeds().vyMetersPerSecond);
+        if (Settings.DEBUG_MODE) {}
+        ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+        SmartDashboard.putNumber("Swerve/Velocity Robot Relative X (m per s)", chassisSpeeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/Velocity Robot Relative Y (m per s)", chassisSpeeds.vyMetersPerSecond);
         
         SmartDashboard.putNumber("Swerve/Velocity Field Relative X (m per s)", getFieldRelativeSpeeds().x);
         SmartDashboard.putNumber("Swerve/Field Relative Rotation", pose.getRotation().getDegrees());
         SmartDashboard.putNumber("Swerve/Velocity Field Relative Y (m per s)", getFieldRelativeSpeeds().y);
         
-        SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", getChassisSpeeds().omegaRadiansPerSecond);
-        
+        SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", chassisSpeeds.omegaRadiansPerSecond);
         SmartDashboard.putNumber("Swerve/Distance From Hub (meters)", Field.hubCenter.getTranslation().getDistance(getPose().getTranslation()));
-        }
+    }
 }

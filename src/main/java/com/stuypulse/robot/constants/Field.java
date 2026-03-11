@@ -30,52 +30,74 @@ public interface Field {
     double WIDTH = Units.inchesToMeters(317.000); 
     double LENGTH = Units.inchesToMeters(651.200);
 
-    public static final double trenchXTolerance = Units.inchesToMeters(50);
+    public static final double TRENCH_HOOD_TOLERANCE = Units.inchesToMeters(20);
 
     // Alliance relative hub center coordinates
     public static final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
-    public static final Pose3d hubCenter3d = new Pose3d(hubCenter.getX(), hubCenter.getY(), Units.inchesToMeters(72), Rotation3d.kZero);
+    public static final Pose2d hubFarRightCorner = new Pose2d(Units.inchesToMeters(205.6), WIDTH / 2.0 - Units.inchesToMeters(47 / 2.0), Rotation2d.kZero);
+    public static final Pose2d hubFarLeftCorner = new Pose2d(Units.inchesToMeters(205.6), WIDTH / 2.0 + Units.inchesToMeters(47 / 2.0), Rotation2d.kZero);
+    
+    public static final double HUB_RADIUS = Units.inchesToMeters(41.7 / 2);
+
+	public static final double OPPONENT_ZONE_X = LENGTH - Units.inchesToMeters(158.6);
+
+    public static final double hubTolerance = Units.inchesToMeters(283);
 
     public static Pose2d getHubPose() {
         return hubCenter;
     }
 
     // Alliance relative tower center coordinates
-    public final Pose2d towerCenter = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47), new Rotation2d());
+    public final Pose2d towerFarCenter = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47), new Rotation2d());
+    public final Pose2d towerFarRight = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47-23.5), new Rotation2d());
+    public final Pose2d towerFarLeft = new Pose2d(Units.inchesToMeters(42.0), Units.inchesToMeters(147.47+23.5), new Rotation2d());
     public final double barDisplacement = Units.inchesToMeters(11.38);
     
     public final double DISTANCE_TO_RUNGS = Units.inchesToMeters(20); // placeholder value, how far away in terms of y-cord from the rung
 
-    public static boolean closerToTop(){
-        return (CommandSwerveDrivetrain.getInstance().getPose().getY() >= Field.towerCenter.getY());
+    public static boolean closerToTop() {
+        return CommandSwerveDrivetrain.getInstance().getPose().getY() >= Field.towerFarCenter.getY();
     }
 
-    // 1.0 meters from driverstation wall and field wall
-    public final Pose2d leftFerryZone = new Pose2d(1.0, WIDTH - 1.0, new Rotation2d());
-    public final Pose2d rightFerryZone = new Pose2d(1.0 + Units.feetToMeters(6), 1.0 + Units.feetToMeters(3), new Rotation2d()); //TODO: GET ACTUAL POS
+    public final Pose2d leftFerryZone = new Pose2d(
+        Units.inchesToMeters(31.5), 
+        WIDTH - Units.inchesToMeters(34.5), 
+        new Rotation2d()
+    );
+
+    public final Pose2d rightFerryZone = new Pose2d(
+        Units.inchesToMeters(20.75), 
+        Units.inchesToMeters(76), 
+        new Rotation2d()
+    );
 
     public static Pose2d getFerryZonePose(Translation2d robot) { 
-        if (robot.getDistance(leftFerryZone.getTranslation()) > robot.getDistance(rightFerryZone.getTranslation())) {
-            return rightFerryZone;
-        } else {
+        double fieldMidY = WIDTH / 2.0;
+        
+        if (robot.getY() > fieldMidY) {
             return leftFerryZone;
+        } else {
+            return rightFerryZone;
         }
     }
 
     /*** TRENCH COORDINATES ***/
-    public interface NearLeftTrench {
+    public interface AllianceLeftTrench {
         public static final Pose2d leftEdge = new Pose2d(Units.inchesToMeters(182.11), WIDTH, new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(Units.inchesToMeters(182.11), WIDTH - Units.inchesToMeters(50.59), new Rotation2d());
     }
-    public interface NearRightTrench {
+    public interface AllianceRightTrench {
         public static final Pose2d leftEdge = new Pose2d(Units.inchesToMeters(182.11), Units.inchesToMeters(50.59), new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(Units.inchesToMeters(182.11), Units.inchesToMeters(0), new Rotation2d());
     }
-    public interface FarLeftTrench {
+
+    // OPPONENT SIDE, BUT LEFT/RIGHT RELATIVE TO YOUR ALLIANCE POV
+    public interface OpponentLeftTrench {
         public static final Pose2d leftEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), WIDTH, new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), WIDTH - Units.inchesToMeters(50.59), new Rotation2d());
     }
-    public interface FarRightTrench {
+    // OPPONENT SIDE, BUT LEFT/RIGHT RELATIVE TO YOUR ALLIANCE POV
+    public interface OpponentRightTrench {
         public static final Pose2d leftEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), Units.inchesToMeters(50.59), new Rotation2d());
         public static final Pose2d rightEdge = new Pose2d(LENGTH - Units.inchesToMeters(182.11), Units.inchesToMeters(0), new Rotation2d());
     }

@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.intake.IntakeTeleopInit;
+import com.stuypulse.robot.commands.swerve.SwerveAutonInit;
 import com.stuypulse.robot.commands.swerve.SwerveTeleopInit;
 import com.stuypulse.robot.commands.turret.SeedTurret;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 import com.ctre.phoenix6.SignalLogger;
 
@@ -79,8 +81,8 @@ public class Robot extends TimedRobot {
 
     @Override 
     public void autonomousInit() {
-
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        CommandScheduler.getInstance().schedule(new SwerveAutonInit());
         // CommandScheduler.getInstance().schedule(new SeedTurret());
 
         auto = robot.getAutonomousCommand();

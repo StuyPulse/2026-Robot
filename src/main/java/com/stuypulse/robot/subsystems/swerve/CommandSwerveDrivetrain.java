@@ -498,13 +498,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void teleopInit() {
-        for(SwerveModule<TalonFX, TalonFX, CANcoder> motor: getModules()) {
-            TalonFXConfiguration newConfigs = TunerConstants.driveInitialConfigs
+        for(SwerveModule<TalonFX, TalonFX, CANcoder> module: getModules()) {
+            TalonFXConfiguration newConfigs = new TalonFXConfiguration();
+            module.getDriveMotor().getConfigurator().refresh(newConfigs);
+            newConfigs = newConfigs
                     .withCurrentLimits(new CurrentLimitsConfigs()
                         .withStatorCurrentLimit(100)
                         .withStatorCurrentLimitEnable(true));
                         
-            motor.getDriveMotor().getConfigurator().apply(newConfigs);
+            module.getDriveMotor().getConfigurator().apply(newConfigs);
+        }
+    }
+
+    public void autonInit() {
+        for(SwerveModule<TalonFX, TalonFX, CANcoder> module: getModules()) {
+            TalonFXConfiguration newConfigs = new TalonFXConfiguration();
+            module.getDriveMotor().getConfigurator().refresh(newConfigs);
+            newConfigs = newConfigs
+                    .withCurrentLimits(new CurrentLimitsConfigs()
+                        .withStatorCurrentLimit(120)
+                        .withStatorCurrentLimitEnable(true));
+                        
+            module.getDriveMotor().getConfigurator().apply(newConfigs);
         }
     }
 

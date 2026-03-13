@@ -113,8 +113,24 @@ public class RobotContainer {
         configureButtonBindings();
         configureAutons();
         configureSysids();
+        configureElasticButtons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
+    }
+
+    /****************/
+    /*** DEFAULTS ***/
+    /****************/
+
+    private void configureDefaultCommands() {
+        swerve.setDefaultCommand(new SwerveDriveDrive(driver));
+    }
+
+    /***************/
+    /*** ELASTIC ***/
+    /***************/
+
+    private void configureElasticButtons() {
         SmartDashboard.putData("Robot/Zero Pivot Encoder at Lower Limit (Deployed)", new ZeroPivotDeployed().ignoringDisable(true));
         SmartDashboard.putData("Robot/Zero Pivot Encoder at Upper Limit (Stowed)", new ZeroPivotStowed().ignoringDisable(true));
         SmartDashboard.putData("Robot/Zero Turret Encoders", new ZeroTurret().ignoringDisable(true));
@@ -138,14 +154,6 @@ public class RobotContainer {
                 () -> spindexer.getState() == SpindexerState.FORWARD));
     }
 
-    /****************/
-    /*** DEFAULTS ***/
-    /****************/
-
-    private void configureDefaultCommands() {
-        swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-    }
-
     /***************/
     /*** BUTTONS ***/
     /***************/
@@ -154,7 +162,7 @@ public class RobotContainer {
         // Scoring Routine 
         driver.getTopButton()
             .whileTrue(new SwerveXMode())
-            .onTrue(new IntakeRunRollers())
+            .onTrue(new WaitUntilCommand(() -> spindexer.canStartIntakeRollers()).andThen(new IntakeRunRollers()))
             .whileTrue(new SuperstructureInterpolation()
                     .alongWith(new WaitUntilCommand(() -> superstructure.getState() == SuperstructureState.INTERPOLATION && superstructure.atTolerance()))
                         .andThen(new HandoffRun())

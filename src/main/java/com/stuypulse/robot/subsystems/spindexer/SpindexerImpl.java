@@ -95,11 +95,6 @@ public class SpindexerImpl extends Spindexer {
         return followerMotor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Spindexer.GEAR_RATIO;
     }
 
-    private boolean atTolerance() {
-        double error = getCurrentLeadMotorRPM() - getTargetRPM();
-        return Math.abs(error) <= Settings.Spindexer.RPM_TOLERANCE;
-    }
-
     public boolean shouldStop() {
         // boolean isStopState = getState() == SpindexerState.STOP;
         // boolean isTurretWrapping = Superstructure.getInstance().isTurretWrapping();
@@ -110,6 +105,19 @@ public class SpindexerImpl extends Spindexer {
         boolean isTurretWrapping = Superstructure.getInstance().isTurretWrapping();
 
         return isTurretWrapping;
+    }
+
+
+    @Override
+    public boolean atTolerance() {
+        double error = getCurrentLeadMotorRPM() - getTargetRPM();
+        return Math.abs(error) <= Settings.Spindexer.RPM_TOLERANCE;
+    }
+
+    @Override
+    public boolean canStartIntakeRollers() {
+        double error = getCurrentLeadMotorRPM() - getTargetRPM();
+        return Math.abs(error) <= Settings.Spindexer.TOLERANCE_TO_START_INTAKE_ROLLERS_DURING_SCORING_ROUTINE;
     }
 
     @Override

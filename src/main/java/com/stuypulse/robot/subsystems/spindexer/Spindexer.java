@@ -51,6 +51,9 @@ public abstract class Spindexer extends SubsystemBase {
         this.spindexerState = state;
     }
 
+    public abstract boolean atTolerance();
+    public abstract boolean canStartIntakeRollers();
+
     public abstract SysIdRoutine getSysIdRoutine();
     public abstract void setVoltageOverride(Optional<Double> voltage);
 

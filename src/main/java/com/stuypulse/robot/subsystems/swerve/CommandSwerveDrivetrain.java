@@ -418,8 +418,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             .withRotationalRate(robotSpeeds.omegaRadiansPerSecond));
     }
 
-    
-
     public void drive(Vector2D velocity, double rotation) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             Robot.isBlue() ? velocity.y : -velocity.y, 
@@ -468,7 +466,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         return isUnderTrench;
     }
-    
 
     public boolean isInOpponentZone(){
         Translation2d turretTranslation = getTurretPose().getTranslation();

@@ -73,6 +73,7 @@ public interface Settings {
         double STOP_SPEED = 0.0;
 
         double RPM_TOLERANCE = 800.0;
+        double TOLERANCE_TO_START_INTAKE_ROLLERS_DURING_SCORING_ROUTINE = 1500.0;
         double STALL_CURRENT_LIMIT = 40.0; // random number as of 3/9
 
 

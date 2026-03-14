@@ -5,7 +5,10 @@
 /** ************************************************************ */
 package com.stuypulse.robot.subsystems.vision;
 
+import java.util.Arrays;
+
 import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.commands.vision.BlacklistAllTags;
 import com.stuypulse.robot.constants.Cameras;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
@@ -93,6 +96,13 @@ public class LimelightVision extends SubsystemBase {
         debouncedHasData = BStream.create(
                 () -> hasData)
                 .filtered(new BDebounce.Both(Settings.Vision.BUZZ_DEBOUNCE));
+
+        // setTagBlacklist(null, getName());
+        // BlacklistAllTags
+        
+        setTagBlacklist(Field.ALL_TAGS, "limelight-back");
+        setTagBlacklist(Field.ALL_TAGS, "limelight-right");
+        setTagBlacklist(Field.ALL_TAGS, "limelight-left");
     }
 
     public void setAllLTagWhitelist(int... ids) {
@@ -143,13 +153,25 @@ public class LimelightVision extends SubsystemBase {
      * @param limelight the name of the Limelight camera to configure
      */
     public void setTagBlacklist(int[] tagsToBlacklist, String limelight) {
-        int[] allowedTags = Field.ALL_TAGS;
+        int[] allTags = Field.ALL_TAGS.clone();
         
         for (int i = 0; i < tagsToBlacklist.length; i++) {
-            allowedTags[tagsToBlacklist[i] - 1] = 0;
+            allTags[tagsToBlacklist[i] - 1] = -1;
         }
+
+        int[] validTags = new int[allTags.length - tagsToBlacklist.length];
         
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelight, allowedTags);
+        int counter = 0;
+        for (int i = 0; i < allTags.length; i++) {
+            if (allTags[i] != -1) {
+                validTags[counter] = allTags[i];
+                counter++;
+            }
+        }
+
+        System.out.println(Arrays.toString(validTags));
+
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelight, validTags);
     }
 
     /**

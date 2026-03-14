@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.auton.regular.DepotAuton;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
@@ -69,6 +70,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
@@ -167,6 +169,7 @@ public class RobotContainer {
         // Scoring Routine 
         driver.getTopButton()
             .whileTrue(new SwerveXMode())
+            .whileTrue(new RepeatCommand(new BuzzController(driver).onlyWhile(() -> !vision.hasData())))
             .onTrue(new WaitUntilCommand(() -> spindexer.canStartIntakeRollers()).andThen(new IntakeRunRollers()))
             .whileTrue(new SuperstructureInterpolation()
                     .alongWith(new WaitUntilCommand(() -> superstructure.getState() == SuperstructureState.INTERPOLATION && superstructure.atTolerance()))
@@ -220,6 +223,7 @@ public class RobotContainer {
         
         // SOTM
         driver.getRightMenuButton()
+            .whileTrue(new RepeatCommand(new BuzzController(driver).onlyWhile(() -> !vision.hasData())))
             .onTrue(new IntakeRunRollers())
             .onTrue(new ConditionalCommand(
                 new ParallelCommandGroup(

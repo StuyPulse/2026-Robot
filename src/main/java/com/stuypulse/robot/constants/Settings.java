@@ -318,5 +318,6 @@ public interface Settings {
         public final double INVALID_POSITION_TOLERANCE_M = 0.05;
         public final double MAX_ANGULAR_VELOCITY_RAD_SEC = 2 * Math.PI;
 
+        public final double BUZZ_DEBOUNCE = 0.25;
     }
 }

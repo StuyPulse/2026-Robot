@@ -66,7 +66,7 @@ public class TurretAngleCalculator {
         return leastDistanceIndex;
     }
 
-    public static Rotation2d getPointAtTargetAngle(Translation2d targetTranslation, Translation2d turretTranslation) {
+    public static Rotation2d getPointAtTargetAngle(Translation2d targetTranslation, Translation2d turretTranslation, Rotation2d robotHeading) {
 
         // Vector2D turret = new Vector2D(turretPose.getTranslation());
         // Vector2D target = new Vector2D(targetPose.getTranslation());
@@ -82,9 +82,6 @@ public class TurretAngleCalculator {
         //     Rotation2d.fromRadians(-Math.atan2(crossProduct, dotProduct)) :
         //     Rotation2d.fromRadians(Math.atan2(crossProduct, dotProduct)));
         
-        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-
-        Pose2d robotPose = swerve.getPose();
 
         double yaw = Math.atan2(
             targetTranslation.getY() - turretTranslation.getY(),
@@ -92,8 +89,8 @@ public class TurretAngleCalculator {
         );
         
         Rotation2d targetAngle = Robot.isReal() ? 
-            Rotation2d.fromRadians(-yaw).plus(robotPose.getRotation()) :
-            Rotation2d.fromRadians(yaw).minus(robotPose.getRotation());
+            Rotation2d.fromRadians(-yaw).plus(robotHeading) :
+            Rotation2d.fromRadians(yaw).minus(robotHeading);
         
         return targetAngle;
     }

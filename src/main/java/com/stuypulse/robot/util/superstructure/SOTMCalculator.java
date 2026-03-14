@@ -77,7 +77,9 @@ public class SOTMCalculator {
     public static MoveSolution solveSOTM(
         Pose2d turretPose,
         Pose2d targetPose,
-        ChassisSpeeds fieldRelativeSpeeds,
+        Rotation2d robotHeading,
+        double vTurretX,
+        double vTurretY,
         int maxIterations,
         double timeTolerance) {
 
@@ -121,8 +123,8 @@ public class SOTMCalculator {
 
             SmartDashboard.putNumber("Superstructure/SOTM/iteration #", i);
 
-            double dx = fieldRelativeSpeeds.vxMetersPerSecond * t_guess;
-            double dy = fieldRelativeSpeeds.vyMetersPerSecond * t_guess;
+            double dx = vTurretX * t_guess;
+            double dy = vTurretY * t_guess;
 
             virtualPose = new Pose2d(
                 targetPose.getX() - dx,
@@ -156,7 +158,7 @@ public class SOTMCalculator {
 
         return new MoveSolution(
             sol.targetHoodAngle(),
-            TurretAngleCalculator.getPointAtTargetAngle(virtualTranslation, turretTranslation),
+            TurretAngleCalculator.getPointAtTargetAngle(virtualTranslation, turretTranslation, robotHeading),
             sol.targetRPM(),
             virtualPose,
             sol.flightTimeSeconds()
@@ -230,15 +232,36 @@ public class SOTMCalculator {
         );
 
         Transform2d robotToTurret = turretPose.minus(robotPose);
+        double omega = robotRelativeSpeeds.omegaRadiansPerSecond;
 
-        Pose2d futureTurretPose = robotPose.exp(
+        /*
+        There is a delay dt between the target turret angle and the actual turret angle. That is, by the time the
+        turret reaches its target angle, the robot would already be at a future position and rotation.
+        To account for this, we simply use the robot's pose and rotation dt time in the future instead of the current robot pose and rotation
+        to calculate the turret angle, shooter rpm, and hood angle.
+        That way, when we reach tolerance and fire at the future pose and rotation, the parameters will be correct.
+        */
+
+        Pose2d futureRobotPose = robotPose.exp(
             new Twist2d(
                 robotRelativeSpeeds.vxMetersPerSecond * Settings.Superstructure.SOTM.UPDATE_DELAY.doubleValue(),
                 robotRelativeSpeeds.vyMetersPerSecond * Settings.Superstructure.SOTM.UPDATE_DELAY.doubleValue(),
-                0
+                omega * Settings.Superstructure.SOTM.UPDATE_DELAY.doubleValue()
             )
-        ).transformBy(robotToTurret);
+        );
+        
+        Pose2d futureTurretPose = futureRobotPose.transformBy(robotToTurret);
 
+        // not only does the ball exit with the xy velocity of the turret, but also the tangential velocity from the robot's rotation (r * omega)
+        Translation2d r = turretPose.getTranslation().minus(robotPose.getTranslation());
+        double vTurretX = fieldRelativeSpeeds.vxMetersPerSecond - omega * r.getY();
+        double vTurretY = fieldRelativeSpeeds.vyMetersPerSecond + omega * r.getX();
+
+        /*
+        this part simply shifts where we're aiming from the hub's center to the corresponding rim of the hub
+        based on our field relative robot velocity.
+        i.e. if we are moving up torwards the hub, we shift our aim down to the bottom rim of the hub.
+        */
         
         // Vector2D oppositeDirection = new Vector2D(new Translation2d(
         //     -fieldRelativeSpeeds.vxMetersPerSecond,
@@ -252,18 +275,20 @@ public class SOTMCalculator {
         //     oppositeDirection = oppositeDirection.normalize();
         // }
 
-        // hubPose = hubPose.exp(
-        //     new Twist2d(
+        // hubPose = hubPose.plus(
+        //     new Transform2d(
         //         oppositeDirection.x * Field.HUB_RADIUS,
         //         oppositeDirection.y * Field.HUB_RADIUS,
-        //         0
+        //         Rotation2d.kZero
         //     )
         // );
 
         hubSol = solveSOTM(
             futureTurretPose,
             hubPose,
-            fieldRelativeSpeeds,
+            futureRobotPose.getRotation(),
+            vTurretX,
+            vTurretY,
             Settings.Superstructure.SOTM.MAX_ITERATIONS,
             Settings.Superstructure.SOTM.TIME_TOLERANCE
         );

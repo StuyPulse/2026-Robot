@@ -63,7 +63,6 @@ public abstract class Spindexer extends SubsystemBase {
     public void periodic() {
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putString("Spindexer/State", getState().name());
-            SmartDashboard.putString("States/Spindexer", getState().name());
 
             SmartDashboard.putNumber("Spindexer/Target RPM", getTargetRPM());
         }

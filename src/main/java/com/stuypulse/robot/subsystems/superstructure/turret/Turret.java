@@ -118,7 +118,6 @@ public abstract class Turret extends SubsystemBase {
     public abstract boolean isWrapping();
     public abstract double getCurrentDraw();
 
-   
     public void setState(TurretState state) {
         this.state = state;
     }
@@ -130,7 +129,6 @@ public abstract class Turret extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("Superstructure/Turret/State", state.name());
-        SmartDashboard.putString("States/Turret", state.name());
         
         SmartDashboard.putNumber("Superstructure/Turret/Target Angle", getTargetAngle().getDegrees());
         SmartDashboard.putNumber("Superstructure/Turret/Current Angle", getAngle().getDegrees());

@@ -30,10 +30,10 @@ import java.util.Optional;
 
 public class HoodImpl extends Hood {
     private final Motors.TalonFXConfig hoodConfig;
-    private final Motors.CANCoderConfig hoodEncoderConfig;
+    // private final Motors.CANCoderConfig hoodEncoderConfig;
 
     private final TalonFX hoodMotor;
-    private final CANcoder hoodEncoder;
+    // private final CANcoder hoodEncoder;
 
     private final PositionVoltage controller;
 
@@ -59,16 +59,16 @@ public class HoodImpl extends Hood {
                         Settings.Superstructure.Hood.FORWARD_SOFT_LIMIT.getRotations(),
                         Settings.Superstructure.Hood.REVERSE_SOFT_LIMIT.getRotations());
 
-        hoodEncoderConfig = new Motors.CANCoderConfig()
-                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
-                .withAbsoluteSensorDiscontinuityPoint(1.0)
-                .withMagnetOffset(Settings.Superstructure.Hood.ENCODER_OFFSET.getRotations());
+        // hoodEncoderConfig = new Motors.CANCoderConfig()
+        //         .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+        //         .withAbsoluteSensorDiscontinuityPoint(1.0)
+        //         .withMagnetOffset(Settings.Superstructure.Hood.ENCODER_OFFSET.getRotations());
 
         hoodMotor = new TalonFX(Ports.Superstructure.Hood.MOTOR, Ports.RIO);
-        hoodEncoder = new CANcoder(Ports.Superstructure.Hood.THROUGHBORE_ENCODER, Ports.RIO);
+        // hoodEncoder = new CANcoder(Ports.Superstructure.Hood.THROUGHBORE_ENCODER, Ports.RIO);
 
         hoodConfig.configure(hoodMotor);
-        hoodEncoderConfig.configure(hoodEncoder);
+        // hoodEncoderConfig.configure(hoodEncoder);
 
         controller = new PositionVoltage(getTargetAngle().getRotations())
                 .withEnableFOC(true);
@@ -96,7 +96,7 @@ public class HoodImpl extends Hood {
      */
     @Override
     public void seedHood() {
-        hoodMotor.setPosition(getAbsoluteHoodAngleDeg() / 360.0);
+        // hoodMotor.setPosition(getAbsoluteHoodAngleDeg() / 360.0);
     }
 
     @Override
@@ -105,7 +105,8 @@ public class HoodImpl extends Hood {
     }
 
     private double getAbsoluteHoodAngleDeg() {
-        return Settings.Superstructure.Hood.MIN_FROM_HORIZON.getDegrees() + hoodEncoder.getAbsolutePosition().getValueAsDouble() * 360.0 / Settings.Superstructure.Hood.ENCODER_TO_MECH;
+        return 0.0; //TODO:change back
+        // return Settings.Superstructure.Hood.MIN_FROM_HORIZON.getDegrees() + hoodEncoder.getAbsolutePosition().getValueAsDouble() * 360.0 / Settings.Superstructure.Hood.ENCODER_TO_MECH;
     }
 
     @Override
@@ -140,20 +141,20 @@ public class HoodImpl extends Hood {
         SmartDashboard.putBoolean("Robot/CAN/Main/Hood Motor Connected? (ID " + String.valueOf(hoodMotor.getDeviceID()) + ")", hoodMotor.isConnected());
         // SmartDashboard.putBoolean("Robot/CAN/Main/Hood Encoder Connected? (ID " + String.valueOf(hoodEncoder.getDeviceID()) + ")", hoodEncoder.isConnected());
 
+        SmartDashboard.putNumber("Superstructure/Hood/Correct Hood Angle (deg)", getAbsoluteHoodAngleDeg());
+        
+        SmartDashboard.putNumber("Superstructure/Hood/Applied Voltage (amps)", hoodMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Superstructure/Hood/Supply Current (amps)", hoodMotor.getSupplyCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Superstructure/Hood/Stator Current (amps)", hoodMotor.getStatorCurrent().getValueAsDouble());
+
+        SmartDashboard.putNumber("Superstructure/Hood/Closed Loop Error (deg)", hoodMotor.getClosedLoopError().getValueAsDouble() * 360.0);
+        SmartDashboard.putBoolean("Superstructure/Hood/Has Used Absolute Encoder", hasUsedAbsoluteEncoder);
+        
+        SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value", hoodMotor.getPosition().getValueAsDouble());
+        
+        SmartDashboard.putBoolean("Prematch Checks/Hood at Top?", getAngle().getDegrees() > 39.0);
+        
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("Superstructure/Hood/Correct Hood Angle (deg)", getAbsoluteHoodAngleDeg());
-
-            SmartDashboard.putNumber("Superstructure/Hood/Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Hood/Supply Current", hoodMotor.getSupplyCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Hood/Stator Current", hoodMotor.getStatorCurrent().getValueAsDouble());
-
-            SmartDashboard.putNumber("Superstructure/Hood/Closed Loop Error (deg)", hoodMotor.getClosedLoopError().getValueAsDouble() * 360.0);
-            SmartDashboard.putBoolean("Superstructure/Hood/Has Used Absolute Encoder", hasUsedAbsoluteEncoder);
-
-            SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value", hoodMotor.getPosition().getValueAsDouble());
-
-            SmartDashboard.putNumber("Current Draws/Hood (amps)", hoodMotor.getSupplyCurrent().getValueAsDouble());
-            SmartDashboard.putBoolean("Prematch Checks/Hood at Top?", getAngle().getDegrees() > 39.0);
 
         }
     }
@@ -181,33 +182,33 @@ public class HoodImpl extends Hood {
     // Should ONLY be called at the lower hardstop!
     @Override
     public void zeroHoodEncoderAtUpperHardstop() {
-        hoodEncoder.getConfigurator().refresh(hoodEncoderConfig.getConfiguration().MagnetSensor);
+        // hoodEncoder.getConfigurator().refresh(hoodEncoderConfig.getConfiguration().MagnetSensor);
 
-        double currentOffset = hoodEncoderConfig.getConfiguration().MagnetSensor.MagnetOffset;
+        // double currentOffset = hoodEncoderConfig.getConfiguration().MagnetSensor.MagnetOffset;
 
-        double positionWithCurrentOffset = hoodEncoder.getPosition().getValueAsDouble();
-        double newOffset = -((positionWithCurrentOffset - currentOffset) - Settings.Superstructure.Hood.Angles.MAX.getRotations());
+        // double positionWithCurrentOffset = hoodEncoder.getPosition().getValueAsDouble();
+        // double newOffset = -((positionWithCurrentOffset - currentOffset) - Settings.Superstructure.Hood.Angles.MAX.getRotations());
 
-        hoodEncoderConfig.withMagnetOffset(newOffset);
+        // hoodEncoderConfig.withMagnetOffset(newOffset);
 
-        hoodEncoderConfig.configure(hoodEncoder);
+        // hoodEncoderConfig.configure(hoodEncoder);
     }
 
     @Override
     public void zeroHoodEncodersAfterSeed() { //only use if you are seeded -> might add a boolean to double check that we are in seed at Upper Hardstop ^^
-        hoodEncoder.getConfigurator().refresh(hoodEncoderConfig.getConfiguration().MagnetSensor);
+        // hoodEncoder.getConfigurator().refresh(hoodEncoderConfig.getConfiguration().MagnetSensor);
 
-        double currentOffset = hoodEncoderConfig.getConfiguration().MagnetSensor.MagnetOffset;
+        // double currentOffset = hoodEncoderConfig.getConfiguration().MagnetSensor.MagnetOffset;
 
-        double encoderPositionWithCurrentOffset = hoodEncoder.getPosition().getValueAsDouble();
-        double encoderPositionWithOutOffset = encoderPositionWithCurrentOffset - currentOffset;
+        // double encoderPositionWithCurrentOffset = hoodEncoder.getPosition().getValueAsDouble();
+        // double encoderPositionWithOutOffset = encoderPositionWithCurrentOffset - currentOffset;
 
-        //double newOffset = -((positionWithCurrentOffset - currentOffset) - Settings.Superstructure.Hood.Angles.MAX.getRotations());
-        double newOffset =  encoderPositionWithOutOffset - hoodMotor.getPosition().getValueAsDouble(); 
+        // //double newOffset = -((positionWithCurrentOffset - currentOffset) - Settings.Superstructure.Hood.Angles.MAX.getRotations());
+        // double newOffset =  encoderPositionWithOutOffset - hoodMotor.getPosition().getValueAsDouble(); 
 
-        hoodEncoderConfig.withMagnetOffset(newOffset);
+        // hoodEncoderConfig.withMagnetOffset(newOffset);
 
-        hoodEncoderConfig.configure(hoodEncoder);
+        // hoodEncoderConfig.configure(hoodEncoder);
     }
 
     @Override

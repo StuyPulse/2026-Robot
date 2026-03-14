@@ -34,7 +34,7 @@ public class SpindexerImpl extends Spindexer {
     private final Motors.TalonFXConfig spindexerLeadConfig;
     private final Motors.TalonFXConfig spindexerFollowerConfig;
 
-    private final TalonFX leadMotor;
+    private final TalonFX leaderMotor;
     private final TalonFX followerMotor;
 
     private final VelocityVoltage controller;
@@ -70,16 +70,16 @@ public class SpindexerImpl extends Spindexer {
             
             .withSensorToMechanismRatio(Settings.Spindexer.GEAR_RATIO);
 
-        leadMotor = new TalonFX(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, Ports.CANIVORE);
+        leaderMotor = new TalonFX(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, Ports.CANIVORE);
         followerMotor = new TalonFX(Ports.Spindexer.SPINDEXER_FOLLOW_MOTOR, Ports.CANIVORE);
 
-        spindexerLeadConfig.configure(leadMotor);
+        spindexerLeadConfig.configure(leaderMotor);
         spindexerFollowerConfig.configure(followerMotor);
 
         controller = new VelocityVoltage(getTargetRPM()).withEnableFOC(true);
         follower = new Follower(Ports.Spindexer.SPINDEXER_LEAD_MOTOR, MotorAlignmentValue.Aligned);
 
-        isStalling = BStream.create(() -> leadMotor.getSupplyCurrent().getValueAsDouble() > Settings.Spindexer.STALL_CURRENT_LIMIT)
+        isStalling = BStream.create(() -> leaderMotor.getSupplyCurrent().getValueAsDouble() > Settings.Spindexer.STALL_CURRENT_LIMIT)
                 .filtered(new BDebounce.Both(Settings.Superstructure.Hood.STALL_DEBOUNCE));
 
         followerMotor.setControl(follower);
@@ -87,8 +87,8 @@ public class SpindexerImpl extends Spindexer {
         voltageOverride = Optional.empty();
     }
 
-    private double getCurrentLeadMotorRPM() {
-        return leadMotor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Spindexer.GEAR_RATIO;
+    private double getCurrentLeaderMotorRPM() {
+        return leaderMotor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Spindexer.GEAR_RATIO;
     }
 
     private double getCurrentFollowerMotorRPM() {
@@ -111,13 +111,13 @@ public class SpindexerImpl extends Spindexer {
 
     @Override
     public boolean atTolerance() {
-        double error = getCurrentLeadMotorRPM() - getTargetRPM();
+        double error = getCurrentLeaderMotorRPM() - getTargetRPM();
         return Math.abs(error) <= Settings.Spindexer.RPM_TOLERANCE;
     }
 
     @Override
     public boolean canStartIntakeRollers() {
-        double error = getCurrentLeadMotorRPM() - getTargetRPM();
+        double error = getCurrentLeaderMotorRPM() - getTargetRPM();
         return Math.abs(error) <= Settings.Spindexer.TOLERANCE_TO_START_INTAKE_ROLLERS_DURING_SCORING_ROUTINE;
     }
 
@@ -127,37 +127,38 @@ public class SpindexerImpl extends Spindexer {
 
         if (EnabledSubsystems.SPINDEXER.get()) {
             if (voltageOverride.isPresent()) {
-                leadMotor.setVoltage(voltageOverride.get());
+                leaderMotor.setVoltage(voltageOverride.get());
             } else {
                 if (shouldStop()) {
-                    leadMotor.stopMotor();
+                    leaderMotor.stopMotor();
                 } else {
-                    leadMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
+                    leaderMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
                 }
             }
         } else {
-            leadMotor.stopMotor();
+            leaderMotor.stopMotor();
         }
 
-        SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Leader Motor Connected? (ID " + String.valueOf(leadMotor.getDeviceID()) + ")", leadMotor.isConnected());
+        SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Leader Motor Connected? (ID " + String.valueOf(leaderMotor.getDeviceID()) + ")", leaderMotor.isConnected());
         SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Follower Motor Connected? (ID " + String.valueOf(followerMotor.getDeviceID()) + ")", followerMotor.isConnected());
 
+        SmartDashboard.putNumber("Spindexer/Leader Motor RPM", getCurrentLeaderMotorRPM());
+        SmartDashboard.putNumber("Spindexer/Follower Motor RPM", getCurrentFollowerMotorRPM());
+
+        SmartDashboard.putBoolean("Spindexer/At Tolerance", atTolerance());
+
+        SmartDashboard.putNumber("Spindexer/Leader Voltage (volts)", leaderMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Leader Supply Current (amps)", leaderMotor.getSupplyCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Leader Stator Current (amps)", leaderMotor.getStatorCurrent().getValueAsDouble());
+
+        SmartDashboard.putNumber("Spindexer/Follower Voltage (volts)", followerMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Follower Supply Current (amps)", followerMotor.getSupplyCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Follower Stator Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
+
+        SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
+
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("Spindexer/Lead Motor RPM", getCurrentLeadMotorRPM());
-            SmartDashboard.putNumber("Spindexer/Follower Motor RPM", getCurrentFollowerMotorRPM());
 
-            SmartDashboard.putBoolean("Spindexer/At Tolerance", atTolerance());
-
-            SmartDashboard.putNumber("Spindexer/Lead Voltage", leadMotor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Spindexer/Lead Stator Current", leadMotor.getStatorCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Spindexer/Lead Supply Current", leadMotor.getSupplyCurrent().getValueAsDouble());
-
-            SmartDashboard.putNumber("Spindexer/Follower Voltage", followerMotor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Spindexer/Follower Supply Current", followerMotor.getSupplyCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Spindexer/Follower Stator Current", followerMotor.getStatorCurrent().getValueAsDouble());
-
-            SmartDashboard.putNumber("Current Draws/Spindexer Leader (amps)", leadMotor.getSupplyCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Current Draws/Spindexer Follower (amps)", followerMotor.getSupplyCurrent().getValueAsDouble());
         }
     }
 
@@ -177,16 +178,16 @@ public class SpindexerImpl extends Spindexer {
             2,
             "Spindexer",
             voltage -> setVoltageOverride(Optional.of(voltage)),
-            () -> leadMotor.getPosition().getValueAsDouble(),
-            () -> leadMotor.getVelocity().getValueAsDouble(),
-            () -> leadMotor.getMotorVoltage().getValueAsDouble(),
+            () -> leaderMotor.getPosition().getValueAsDouble(),
+            () -> leaderMotor.getVelocity().getValueAsDouble(),
+            () -> leaderMotor.getMotorVoltage().getValueAsDouble(),
             getInstance()
         );
     }
 
     @Override
     public double getCurrentDraw() {
-        return  leadMotor.getSupplyCurrent().getValueAsDouble() + 
+        return  leaderMotor.getSupplyCurrent().getValueAsDouble() + 
                 followerMotor.getSupplyCurrent().getValueAsDouble();
     }
 }

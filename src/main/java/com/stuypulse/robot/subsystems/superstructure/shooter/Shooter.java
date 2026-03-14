@@ -100,9 +100,8 @@ public abstract class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("Superstructure/Shooter/State", state.name());
-        SmartDashboard.putString("States/Shooter", state.name());
 
-        SmartDashboard.putNumber("Superstructure/Shooter/Current RPM", getRPM());
+        SmartDashboard.putNumber("Superstructure/Shooter/Current RPM (Leader)", getRPM());
         SmartDashboard.putNumber("Superstructure/Shooter/Target RPM", getTargetRPM());
     }
 }

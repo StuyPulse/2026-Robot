@@ -397,6 +397,6 @@ public class RobotContainer {
                                     swerve.getTotalDriveSupplyCurrent() +
                                     swerve.getTotalSteerSupplyCurrent();
                                     
-        SmartDashboard.putNumber("Current Draws/Total", totalCurrentDraw);
+        SmartDashboard.putNumber("Robot/Total Current Draw", totalCurrentDraw);
     }
 }

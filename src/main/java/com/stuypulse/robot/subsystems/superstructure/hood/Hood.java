@@ -128,10 +128,9 @@ public abstract class Hood extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putString("Superstructure/Hood/State", state.name());
-        SmartDashboard.putString("States/Hood", state.name());
 
-        SmartDashboard.putNumber("Superstructure/Hood/Target Angle", getTargetAngle().getDegrees());
-        SmartDashboard.putNumber("Superstructure/Hood/Current Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("Superstructure/Hood/Target Angle (deg)", getTargetAngle().getDegrees());
+        SmartDashboard.putNumber("Superstructure/Hood/Current Angle (deg)", getAngle().getDegrees());
 
         if (Settings.DEBUG_MODE) {
             if (EnabledSubsystems.HOOD.get()) {

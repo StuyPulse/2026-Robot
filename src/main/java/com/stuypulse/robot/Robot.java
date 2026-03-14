@@ -5,14 +5,10 @@
 /***************************************************************/
 package com.stuypulse.robot;
 
-import com.stuypulse.robot.commands.intake.IntakeTeleopInit;
 import com.stuypulse.robot.commands.swerve.SwerveAutonInit;
-import com.stuypulse.robot.commands.swerve.SwerveTeleopInit;
-import com.stuypulse.robot.commands.turret.SeedTurret;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
-import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -20,7 +16,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 import com.ctre.phoenix6.SignalLogger;
 
@@ -29,6 +24,7 @@ public class Robot extends TimedRobot {
     private RobotContainer robot;
     private Command auto;
     private static Alliance alliance;
+    private int resetLoggingCounter = 0;
 
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
@@ -48,6 +44,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        if (resetLoggingCounter % 50 == 0) {
+            DataLogManager.getLog().resume();
+        }
+
+        resetLoggingCounter++;
+
+        
         CommandScheduler.getInstance().run();
         if (!Robot.isReal()) {
             SmartDashboard.putData(CommandScheduler.getInstance());
@@ -58,6 +61,8 @@ public class Robot extends TimedRobot {
         if (DriverStation.getAlliance().isPresent()) {
             alliance = DriverStation.getAlliance().get();
         }
+        
+
 
         robot.periodic();
     }

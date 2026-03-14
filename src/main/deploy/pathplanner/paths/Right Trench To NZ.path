@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.42896797153025,
-        "y": 0.5006049822064051
+        "x": 4.323708987161198,
+        "y": 0.5221540656205423
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.451141226818827,
-        "y": 0.5997860199714706
+        "x": 8.345882242449775,
+        "y": 0.6213351033856078
       },
       "isLocked": false,
       "linkedName": "Right Trench Start"
     },
     {
       "anchor": {
-        "x": 7.7653922967189715,
-        "y": 3.420413694721826
+        "x": 8.218245363766048,
+        "y": 3.0840085592011417
       },
       "prevControl": {
-        "x": 7.739514978601996,
-        "y": 1.1820256776034253
+        "x": 8.33469329529244,
+        "y": 0.43158345221112704
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,8 +47,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 7.5,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,

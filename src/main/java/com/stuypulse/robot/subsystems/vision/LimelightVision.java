@@ -13,6 +13,8 @@ import com.stuypulse.robot.util.vision.LimelightHelpers;
 import com.stuypulse.robot.util.vision.LimelightHelpers.IMUData;
 import com.stuypulse.robot.util.vision.LimelightHelpers.PoseEstimate;
 import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -44,6 +46,9 @@ public class LimelightVision extends SubsystemBase {
     private StructPublisher<Pose2d> leftLimelightPosePublisher;
     private StructPublisher<Pose2d> rightLimelightPosePublisher;
     private StructPublisher<Pose2d> backLimelightPosePublisher;
+
+    private boolean hasData;
+    private BStream debouncedHasData;
 
     public enum MegaTagMode {
         MEGATAG1,
@@ -83,6 +88,10 @@ public class LimelightVision extends SubsystemBase {
         enabled = new SmartBoolean("Vision/Is Enabled", true);
         megaTagMode = MegaTagMode.MEGATAG1;
         setIMUMode(1);
+
+        debouncedHasData = BStream.create(
+                () -> hasData)
+                .filtered(new BDebounce.Both(Settings.Vision.BUZZ_DEBOUNCE));
     }
 
     public void setTagWhitelist(int... ids) {
@@ -135,9 +144,15 @@ public class LimelightVision extends SubsystemBase {
         return data;
     }
 
+    public boolean hasData() {
+        return debouncedHasData.get();
+    }
+
     @Override
     public void periodic() {
         if (enabled.get()) {
+            hasData = false;
+
             for (int i = 0; i < names.length; i++) {
                 if (Cameras.LimelightCameras[i].isEnabled()) {
                     String limelightName = names[i];
@@ -190,8 +205,10 @@ public class LimelightVision extends SubsystemBase {
 
                         if (megaTagMode == MegaTagMode.MEGATAG1 && isAcceptablePose) {
                             CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT1_STDEVS);
+                            hasData = true;
                         } else if (megaTagMode == MegaTagMode.MEGATAG2 && isAcceptablePose) {
                             CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT2_STDEVS);
+                            hasData = true;
                         }
 
 
@@ -216,6 +233,7 @@ public class LimelightVision extends SubsystemBase {
                         }
 
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", true);
+                        
                     } else {
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
                     }
@@ -226,6 +244,7 @@ public class LimelightVision extends SubsystemBase {
                     // this is just the yaw of the internal imu 
                     SmartDashboard.putNumber("Vision/Limelight Yaw", LimelightHelpers.getIMUData(limelightName).Yaw);
                 }
+
                 if (Settings.DEBUG_MODE) {
                     String limelightName = names[i];
                     SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
@@ -236,6 +255,8 @@ public class LimelightVision extends SubsystemBase {
                     SmartDashboard.putNumber("Vision/Limelight Robot Yaw Passed in", (CommandSwerveDrivetrain.getInstance().getPose().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360);
                 }
             }
+
+            SmartDashboard.putBoolean("Vision/Has Data", hasData);
         }
     }
 }

@@ -12,8 +12,11 @@
       "/SmartDashboard/Robot/Ryan Testing Seed Hood Encoder (NEW)": "Command",
       "/SmartDashboard/Robot/Seed Hood Relative Encoder At Upper Hardstop": "Command",
       "/SmartDashboard/Robot/Seed Turret": "Command",
+      "/SmartDashboard/Robot/Set Back LL PF": "Command",
+      "/SmartDashboard/Robot/Set Left LL PF": "Command",
       "/SmartDashboard/Robot/Set Megatag 1": "Command",
       "/SmartDashboard/Robot/Set Megatag 2": "Command",
+      "/SmartDashboard/Robot/Set Right LL PF": "Command",
       "/SmartDashboard/Robot/Spindexer Reverse": "Command",
       "/SmartDashboard/Robot/Zero Hood Encoder": "Command",
       "/SmartDashboard/Robot/Zero Pivot Encoder at Lower Limit (Deployed)": "Command",
@@ -58,6 +61,9 @@
           "open": true
         },
         "States": {
+          "open": true
+        },
+        "Vision": {
           "open": true
         },
         "open": true

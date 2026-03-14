@@ -83,12 +83,6 @@ public class LimelightVision extends SubsystemBase {
             limelightPoseArray[i] = new Pose2d();
         }
 
-        // camerasEnabled = new SmartBoolean[Cameras.LimelightCameras.length];
-        // for (int i = 0; i < camerasEnabled.length; i++) {
-        //     camerasEnabled[i] = new SmartBoolean("Vision/" + names[i] + " Is Enabled", true);
-        //     LimelightHelpers.SetIMUMode(names[i], Settings.Vision.INTERNAL_EXTERNAL_ASSIST_INDEX);
-        //     SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
-        // }
         enabled = new SmartBoolean("Vision/Is Enabled", true);
         megaTagMode = MegaTagMode.MEGATAG1;
         setIMUMode(1);
@@ -96,13 +90,6 @@ public class LimelightVision extends SubsystemBase {
         debouncedHasData = BStream.create(
                 () -> hasData)
                 .filtered(new BDebounce.Both(Settings.Vision.BUZZ_DEBOUNCE));
-
-        // setTagBlacklist(null, getName());
-        // BlacklistAllTags
-        
-        setTagBlacklist(Field.ALL_TAGS, "limelight-back");
-        setTagBlacklist(Field.ALL_TAGS, "limelight-right");
-        setTagBlacklist(Field.ALL_TAGS, "limelight-left");
     }
 
     public void setAllLTagWhitelist(int... ids) {
@@ -170,6 +157,7 @@ public class LimelightVision extends SubsystemBase {
         }
 
         System.out.println(Arrays.toString(validTags));
+        SmartDashboard.putString("Allowlisted Tags for " + limelight, Arrays.toString(validTags));
 
         LimelightHelpers.SetFiducialIDFiltersOverride(limelight, validTags);
     }

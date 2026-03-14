@@ -8,6 +8,7 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.swerve.SwerveAutonInit;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
 import com.stuypulse.robot.commands.vision.WhitelistAllTags;
+import com.stuypulse.robot.commands.vision.WhitelistAllTagsForAllCameras;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineLeftSideAuto;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineRightSideAuto;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
@@ -86,13 +87,18 @@ public class Robot extends TimedRobot {
             selectedAuto = robot.getAutonomousCommand();
 
             switch (selectedAuto.getName()) {
-                case "Left Two Cycle":
+                case "LeftTwoCycle":
                     CommandScheduler.getInstance().schedule(new WhitelistRoutineLeftSideAuto());
-                    System.out.println("LEFT SCHEDULED");
-                case "Right Two Cycle":
+                    break;
+                case "RightTwoCycle":
                     CommandScheduler.getInstance().schedule(new WhitelistRoutineRightSideAuto());
-                    System.out.println("RIGHT SCHEDULED");
-        }
+                    break;
+                default:
+                    CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras());
+                    break;
+            }
+
+            System.out.println(selectedAuto.getName());
         }
     }
 

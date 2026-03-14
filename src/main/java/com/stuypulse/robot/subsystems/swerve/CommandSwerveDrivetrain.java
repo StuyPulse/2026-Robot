@@ -487,8 +487,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // Stop ferrying when in rectangle behind hub (in neutral zone)
     public boolean isBehindHub() {
         Translation2d turretTranslation = getTurretPose().getTranslation();
-        boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX() && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubTolerance;
-        boolean withinHubY = Field.hubFarRightCorner.getY() < getTurretPose().getY() && getTurretPose().getY() < Field.hubFarLeftCorner.getY();
+        boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX() && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX;
+        boolean withinHubY = Field.hubFarRightCorner.getY() + Field.hubToleranceY < getTurretPose().getY() && getTurretPose().getY() < Field.hubFarLeftCorner.getY() - Field.hubToleranceY;
 
         return behindHubX && withinHubY;
     }
@@ -503,7 +503,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             module.getDriveMotor().getConfigurator().refresh(newConfigs);
             newConfigs = newConfigs
                     .withCurrentLimits(new CurrentLimitsConfigs()
-                        .withStatorCurrentLimit(100)
+                        .withStatorCurrentLimit(80)
                         .withStatorCurrentLimitEnable(true));
                         
             module.getDriveMotor().getConfigurator().apply(newConfigs);

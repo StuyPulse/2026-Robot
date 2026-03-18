@@ -7,7 +7,7 @@ package com.stuypulse.robot.subsystems.superstructure.hood;
 
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
@@ -140,23 +140,22 @@ public class HoodImpl extends Hood {
 
         SmartDashboard.putBoolean("Robot/CAN/Main/Hood Motor Connected? (ID " + String.valueOf(hoodMotor.getDeviceID()) + ")", hoodMotor.isConnected());
         // SmartDashboard.putBoolean("Robot/CAN/Main/Hood Encoder Connected? (ID " + String.valueOf(hoodEncoder.getDeviceID()) + ")", hoodEncoder.isConnected());
-
-        SmartDashboard.putNumber("Superstructure/Hood/Correct Hood Angle (deg)", getAbsoluteHoodAngleDeg());
-        
-        SmartDashboard.putNumber("Superstructure/Hood/Applied Voltage (amps)", hoodMotor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Superstructure/Hood/Supply Current (amps)", hoodMotor.getSupplyCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Superstructure/Hood/Stator Current (amps)", hoodMotor.getStatorCurrent().getValueAsDouble());
-
-        SmartDashboard.putNumber("Superstructure/Hood/Closed Loop Error (deg)", hoodMotor.getClosedLoopError().getValueAsDouble() * 360.0);
         SmartDashboard.putBoolean("Superstructure/Hood/Has Used Absolute Encoder", hasUsedAbsoluteEncoder);
-        
-        SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value", hoodMotor.getPosition().getValueAsDouble());
+
         
         SmartDashboard.putBoolean("Prematch Checks/Hood at Top?", getAngle().getDegrees() > 39.0);
-        
-        if (Settings.DEBUG_MODE) {
+        SmartDashboard.putNumber("Superstructure/Hood/Correct Hood Angle (deg)", getAbsoluteHoodAngleDeg());
+        SmartDashboard.putNumber("Superstructure/Hood/Closed Loop Error (deg)", hoodMotor.getClosedLoopError().getValueAsDouble() * 360.0);
 
+        if (Settings.DEBUG_MODE.get()) {
+            SmartDashboard.putNumber("Superstructure/Hood/Applied Voltage (amps)", hoodMotor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Superstructure/Hood/Supply Current (amps)", hoodMotor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Superstructure/Hood/Stator Current (amps)", hoodMotor.getStatorCurrent().getValueAsDouble());            
+            SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value", hoodMotor.getPosition().getValueAsDouble());
         }
+
+        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
+
     }
 
     private void setVoltageOverride(Optional<Double> voltageOverride) {
@@ -213,6 +212,6 @@ public class HoodImpl extends Hood {
 
     @Override
     public double getCurrentDraw() {
-        return hoodMotor.getSupplyCurrent().getValueAsDouble();
+        return Math.abs(hoodMotor.getSupplyCurrent().getValueAsDouble());
     }
 }

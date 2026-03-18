@@ -7,7 +7,7 @@ package com.stuypulse.robot.subsystems.handoff;
 
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
@@ -95,14 +95,14 @@ public class HandoffImpl extends Handoff {
         }
         
         SmartDashboard.putBoolean("Robot/CAN/Main/Handoff Motor Connected? (ID " + String.valueOf(motor.getDeviceID()) + ")", motor.isConnected());
-        
-        SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Handoff/Stator Current", motor.getStatorCurrent().getValueAsDouble());
 
-        if (Settings.DEBUG_MODE) {
-
+        if (Settings.DEBUG_MODE.get()) {     
+            SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Stator Current", motor.getStatorCurrent().getValueAsDouble());
         }
+
+        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
     }
     
     @Override
@@ -125,6 +125,6 @@ public class HandoffImpl extends Handoff {
     
     @Override
     public double getCurrentDraw(){
-        return motor.getSupplyCurrent().getValueAsDouble();
+        return Math.abs(motor.getSupplyCurrent().getValueAsDouble());
     }
 }

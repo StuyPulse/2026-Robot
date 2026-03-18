@@ -13,9 +13,11 @@ import com.stuypulse.robot.commands.vision.WhitelistRoutineLeftSideAuto;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineRightSideAuto;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
+import com.stuypulse.robot.util.EnergyUtil;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,9 +33,14 @@ public class Robot extends TimedRobot {
     private static Alliance alliance;
     private static int periodicCounter = 0;
     private Command selectedAuto;
+    private static EnergyUtil energyUtil;
 
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
+    }
+
+    public static EnergyUtil getEnergyUtil() {
+        return energyUtil;
     }
 
     /*************************/
@@ -47,6 +54,7 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start();
         SignalLogger.start();
+        energyUtil = new EnergyUtil();
     }
     
     public static int getPeriodicCounter() {
@@ -61,6 +69,8 @@ public class Robot extends TimedRobot {
 
         periodicCounter++;
 
+        double batteryVoltage = RobotController.getBatteryVoltage();
+        energyUtil.setBatteryVoltage(batteryVoltage);
         
         CommandScheduler.getInstance().run();
         if (!Robot.isReal()) {
@@ -69,6 +79,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putNumber("Robot/Match Time", DriverStation.getMatchTime());
         SmartDashboard.putData("Robot/Scheduled Commands", CommandScheduler.getInstance());
+        SmartDashboard.putNumber("Robot/Battery Voltage", batteryVoltage);
         
         if (DriverStation.getAlliance().isPresent()) {
             alliance = DriverStation.getAlliance().get();
@@ -90,7 +101,6 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         if (periodicCounter % Settings.LOGGING_FREQUENCY == 0) {
             selectedAuto = robot.getAutonomousCommand();
-
             switch (selectedAuto.getName()) {
                 case "LeftTwoCycle":
                     CommandScheduler.getInstance().schedule(new WhitelistRoutineLeftSideAuto());

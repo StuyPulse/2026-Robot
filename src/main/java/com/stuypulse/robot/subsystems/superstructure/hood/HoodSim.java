@@ -111,7 +111,7 @@ public class HoodSim extends Hood {
 
         VisualizerHood.getInstance().update(getAngle(), atTolerance());
 
-        if (Settings.DEBUG_MODE) {
+        if (Settings.DEBUG_MODE.get()) {
             SmartDashboard.putNumber("Superstructure/Hood/Sim Height (m)", sim.getPositionMeters());
         }
     }

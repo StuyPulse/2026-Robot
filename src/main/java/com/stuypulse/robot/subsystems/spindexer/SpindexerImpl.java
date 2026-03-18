@@ -7,7 +7,7 @@ package com.stuypulse.robot.subsystems.spindexer;
 
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
@@ -133,9 +133,6 @@ public class SpindexerImpl extends Spindexer {
             leaderMotor.stopMotor();
         }
 
-        SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Leader Motor Connected? (ID " + String.valueOf(leaderMotor.getDeviceID()) + ")", leaderMotor.isConnected());
-        SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Follower Motor Connected? (ID " + String.valueOf(followerMotor.getDeviceID()) + ")", followerMotor.isConnected());
-
         SmartDashboard.putNumber("Spindexer/Leader Motor RPM", getCurrentLeaderMotorRPM());
         SmartDashboard.putNumber("Spindexer/Follower Motor RPM", getCurrentFollowerMotorRPM());
 
@@ -145,15 +142,18 @@ public class SpindexerImpl extends Spindexer {
         SmartDashboard.putNumber("Spindexer/Leader Supply Current (amps)", leaderMotor.getSupplyCurrent().getValueAsDouble());
         SmartDashboard.putNumber("Spindexer/Leader Stator Current (amps)", leaderMotor.getStatorCurrent().getValueAsDouble());
 
-        SmartDashboard.putNumber("Spindexer/Follower Voltage (volts)", followerMotor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Spindexer/Follower Supply Current (amps)", followerMotor.getSupplyCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Spindexer/Follower Stator Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
 
-        SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
 
-        if (Settings.DEBUG_MODE) {
-
+        if (Settings.DEBUG_MODE.get()) {
+            SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Leader Motor Connected? (ID " + String.valueOf(leaderMotor.getDeviceID()) + ")", leaderMotor.isConnected());
+            SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Follower Motor Connected? (ID " + String.valueOf(followerMotor.getDeviceID()) + ")", followerMotor.isConnected());
+            SmartDashboard.putNumber("Spindexer/Follower Voltage (volts)", followerMotor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Follower Supply Current (amps)", followerMotor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Follower Stator Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
+            SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
         }
+
+        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
     }
 
     public boolean isStalling() {
@@ -181,7 +181,7 @@ public class SpindexerImpl extends Spindexer {
 
     @Override
     public double getCurrentDraw() {
-        return  leaderMotor.getSupplyCurrent().getValueAsDouble() + 
-                followerMotor.getSupplyCurrent().getValueAsDouble();
+        return  Math.abs(leaderMotor.getSupplyCurrent().getValueAsDouble()) + 
+                Math.abs(followerMotor.getSupplyCurrent().getValueAsDouble());
     }
 }

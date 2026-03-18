@@ -132,7 +132,7 @@ public abstract class Hood extends SubsystemBase{
         SmartDashboard.putNumber("Superstructure/Hood/Target Angle (deg)", getTargetAngle().getDegrees());
         SmartDashboard.putNumber("Superstructure/Hood/Current Angle (deg)", getAngle().getDegrees());
 
-        if (Settings.DEBUG_MODE) {
+        if (Settings.DEBUG_MODE.get()) {
             if (EnabledSubsystems.HOOD.get()) {
                     VisualizerHood.getInstance().update(getAngle(), atTolerance());
             } else {

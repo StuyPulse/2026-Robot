@@ -412,13 +412,13 @@ public class RobotContainer {
     }
 
     public void periodic() {
+        //TODO: get from energy util after testing
         double totalCurrentDraw =   handoff.getCurrentDraw() +
                                     intake.getCurrentDraw() +
                                     spindexer.getCurrentDraw() +
                                     superstructure.getCurrentDraw() +
                                     swerve.getTotalDriveSupplyCurrent() +
-                                    swerve.getTotalSteerSupplyCurrent();
-                                    
+                                    swerve.getTotalSteerSupplyCurrent();      
         SmartDashboard.putNumber("Robot/Total Current Draw", totalCurrentDraw);
     }
 }

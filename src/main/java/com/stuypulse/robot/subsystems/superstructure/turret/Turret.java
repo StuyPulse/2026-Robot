@@ -133,7 +133,7 @@ public abstract class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Superstructure/Turret/Target Angle", getTargetAngle().getDegrees());
         SmartDashboard.putNumber("Superstructure/Turret/Current Angle", getAngle().getDegrees());
 
-        if (Settings.DEBUG_MODE) {
+        if (Settings.DEBUG_MODE.get()) {
             if (EnabledSubsystems.TURRET.get()) {
                 VisualizerTurret.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTolerance());
             }

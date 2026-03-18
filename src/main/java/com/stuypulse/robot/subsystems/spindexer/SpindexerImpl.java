@@ -179,7 +179,7 @@ public class SpindexerImpl extends Spindexer {
 
     @Override
     public double getCurrentDraw() {
-        return  leaderMotor.getSupplyCurrent().getValueAsDouble() + 
-                followerMotor.getSupplyCurrent().getValueAsDouble();
+        return  Math.abs(leaderMotor.getSupplyCurrent().getValueAsDouble()) + 
+                Math.abs(followerMotor.getSupplyCurrent().getValueAsDouble());
     }
 }

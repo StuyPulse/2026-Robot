@@ -221,6 +221,6 @@ public class TurretImpl extends Turret {
 
     @Override
     public double getCurrentDraw() {
-        return turretMotor.getSupplyCurrent().getValueAsDouble();
+        return Math.abs(turretMotor.getSupplyCurrent().getValueAsDouble());
     }
 }

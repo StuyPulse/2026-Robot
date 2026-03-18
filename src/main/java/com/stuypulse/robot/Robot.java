@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
                     CommandScheduler.getInstance().schedule(new WhitelistRoutineRightSideAuto());
                     break;
                 default:
-                    if (!CommandScheduler.getInstance().isScheduled(new WhitelistAllTagsForAllCameras())) { CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras()); }
+                    CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras());
                     break;
             }
         }

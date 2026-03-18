@@ -125,6 +125,6 @@ public class HandoffImpl extends Handoff {
     
     @Override
     public double getCurrentDraw(){
-        return motor.getSupplyCurrent().getValueAsDouble();
+        return Math.abs(motor.getSupplyCurrent().getValueAsDouble());
     }
 }

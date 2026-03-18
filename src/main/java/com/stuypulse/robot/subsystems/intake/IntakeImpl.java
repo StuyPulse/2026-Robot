@@ -243,8 +243,8 @@ public class IntakeImpl extends Intake {
 
     @Override
     public double getCurrentDraw() {
-        return pivot.getSupplyCurrent().getValueAsDouble() +
-                rollerFollower.getSupplyCurrent().getValueAsDouble() +
-                rollerLeader.getSupplyCurrent().getValueAsDouble();
+        return Math.abs(pivot.getSupplyCurrent().getValueAsDouble()) +
+                Math.abs(rollerFollower.getSupplyCurrent().getValueAsDouble()) +
+                Math.abs(rollerLeader.getSupplyCurrent().getValueAsDouble());
     }
 }

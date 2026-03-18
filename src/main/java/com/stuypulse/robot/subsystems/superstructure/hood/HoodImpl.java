@@ -154,8 +154,6 @@ public class HoodImpl extends Hood {
             SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value", hoodMotor.getPosition().getValueAsDouble());
         }
 
-        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
-
     }
 
     private void setVoltageOverride(Optional<Double> voltageOverride) {

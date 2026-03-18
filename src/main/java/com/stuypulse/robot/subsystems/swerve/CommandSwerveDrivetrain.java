@@ -576,8 +576,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 pose.getRotation().plus(Turret.getInstance().getAngle()));
 
         robotPose.set(pose);
-        Robot.getEnergyUtil().logEnergyUsage(this.getName() + " drive", getTotalDriveSupplyCurrent());
-        Robot.getEnergyUtil().logEnergyUsage(this.getName() + " turn", getTotalDriveSupplyCurrent());
 
         turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 

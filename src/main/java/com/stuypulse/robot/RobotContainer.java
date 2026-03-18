@@ -65,6 +65,7 @@ import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.subsystems.vision.LimelightVision.MegaTagMode;
+import com.stuypulse.robot.util.EnergyUtil;
 import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
@@ -124,6 +125,19 @@ public class RobotContainer {
         configureElasticButtons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
+    }
+
+    public void logEnergyForAllSubsystems(EnergyUtil energyUtil) {
+        energyUtil.logEnergyUsage(handoff.getName(), handoff.getCurrentDraw());
+        energyUtil.logEnergyUsage(intake.getName(), intake.getCurrentDraw());
+        energyUtil.logEnergyUsage(spindexer.getName(), spindexer.getCurrentDraw());
+        energyUtil.logEnergyUsage(swerve.getName() + " drive", swerve.getTotalDriveSupplyCurrent());
+        energyUtil.logEnergyUsage(swerve.getName() + " turn", swerve.getTotalSteerSupplyCurrent());
+        energyUtil.logEnergyUsage(turret.getName(), turret.getCurrentDraw());
+        energyUtil.logEnergyUsage(shooter.getName(), shooter.getCurrentDraw());
+        energyUtil.logEnergyUsage(hood.getName(), hood.getCurrentDraw());
+
+        energyUtil.periodic();
     }
 
     /****************/

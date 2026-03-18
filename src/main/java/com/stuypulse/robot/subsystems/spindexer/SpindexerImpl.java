@@ -152,8 +152,6 @@ public class SpindexerImpl extends Spindexer {
             SmartDashboard.putNumber("Spindexer/Follower Stator Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
         }
-
-        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
     }
 
     public boolean isStalling() {

@@ -202,8 +202,6 @@ public class TurretImpl extends Turret {
                 SmartDashboard.putNumber("Superstructure/Turret/Supply Curren (amps)", turretMotor.getSupplyCurrent().getValueAsDouble());
             }
         
-        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
-
     }
     
     private void setVoltageOverride(Optional<Double> volts) {

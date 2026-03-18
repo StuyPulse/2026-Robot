@@ -142,9 +142,7 @@ public class ShooterImpl extends Shooter {
             SmartDashboard.putNumber("Superstructure/Shooter/Follower Stator Current (amps)", shooterFollower.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putNumber("InterpolationTesting/Shooter Applied Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
         }
-        
-        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
-        
+                
         SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error (RPM)", shooterLeader.getClosedLoopError().getValueAsDouble() * 60.0);
     }
 

@@ -219,8 +219,6 @@ public class IntakeImpl extends Intake {
                 SmartDashboard.putNumber("Intake/Pivot Stator Current (amps)", pivot.getStatorCurrent().getValueAsDouble());
             }
         }
-
-        Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());
     }
 
     @Override

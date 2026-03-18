@@ -59,20 +59,23 @@ public class EnergyUtil {
     public void periodic() {
 
         SmartDashboard.putNumber("EnergyUtil/Total Supply Current Amps", totalCurrent);
+        totalCurrent = 0.0;
         SmartDashboard.putNumber("EnergyUtil/Total Supply Power Watts", totalPower);
+        totalPower = 0.0;
         SmartDashboard.putNumber("EnergyUtil/Total Used Energy Watt Hours", totalEnergy);
+        totalEnergy = 0.0;
 
         for (var entry : subsytemCurrents.entrySet()) {
-            SmartDashboard.putNumber("EnergyLogger/Supply Current Amps/" + entry.getKey(), entry.getValue());
+            SmartDashboard.putNumber("EnergyUtil/Supply Current Amps/" + entry.getKey(), entry.getValue());
             subsytemCurrents.put(entry.getKey(), 0.0);
         }
         for (var entry : subsytemPowers.entrySet()) {
-            SmartDashboard.putNumber("EnergyLogger/Power Watts/" + entry.getKey(), entry.getValue());
+            SmartDashboard.putNumber("EnergyUtil/Power Watts/" + entry.getKey(), entry.getValue());
             subsytemPowers.put(entry.getKey(), 0.0);
         }
         for (var entry : subsytemEnergies.entrySet()) {
             SmartDashboard.putNumber(
-                    "EnergyLogger/Energy watt hours/" + entry.getKey(),
+                    "EnergyUtil/Energy watt hours/" + entry.getKey(),
                     joulesToWattHours(entry.getValue()));
         }
     }

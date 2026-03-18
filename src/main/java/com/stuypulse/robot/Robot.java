@@ -71,7 +71,8 @@ public class Robot extends TimedRobot {
 
         double batteryVoltage = RobotController.getBatteryVoltage();
         energyUtil.setBatteryVoltage(batteryVoltage);
-        
+        energyUtil.periodic();
+
         CommandScheduler.getInstance().run();
         if (!Robot.isReal()) {
             SmartDashboard.putData(CommandScheduler.getInstance());
@@ -87,6 +88,7 @@ public class Robot extends TimedRobot {
 
         robot.periodic();
     }
+
 
     /*********************/
     /*** DISABLED MODE ***/

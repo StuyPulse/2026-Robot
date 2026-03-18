@@ -194,11 +194,11 @@ public class TurretImpl extends Turret {
             // SmartDashboard.putNumber("Superstructure/Turret/Vector Space Position (Deg)", getVectorSpaceAngle().getDegrees());
             
             SmartDashboard.putNumber("Superstructure/Turret/Voltage (volts)", turretMotor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Turret/Stator Current (amps)", turretMotor.getStatorCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Turret/Supply Curren (amps)", turretMotor.getSupplyCurrent().getValueAsDouble());
             
             SmartDashboard.putNumber("Superstructure/Turret/Wrapped Target Angle (deg)", actualTargetDeg);
-            if (Settings.DEBUG_MODE.get()) {
+            if (Settings.DEBUG_MODE.get()) {      
+                SmartDashboard.putNumber("Superstructure/Turret/Stator Current (amps)", turretMotor.getStatorCurrent().getValueAsDouble());
+                SmartDashboard.putNumber("Superstructure/Turret/Supply Curren (amps)", turretMotor.getSupplyCurrent().getValueAsDouble());
             }
     }
     

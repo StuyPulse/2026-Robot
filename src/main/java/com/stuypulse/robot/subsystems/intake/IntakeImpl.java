@@ -184,6 +184,13 @@ public class IntakeImpl extends Intake {
                     pivot.getClosedLoopError().getValueAsDouble() * 360.0);
 
 
+            SmartDashboard.putBoolean("Robot/CAN/Main/Intake Pivot Motor Connected? (ID " 
+                    + String.valueOf(pivot.getDeviceID()) + ")", pivot.isConnected());
+            SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Leader Motor Connected? (ID "
+                    + String.valueOf(rollerLeader.getDeviceID()) + ")", rollerLeader.isConnected());
+            SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Follower Motor Connected? (ID "
+                    + String.valueOf(rollerFollower.getDeviceID()) + ")", rollerFollower.isConnected());
+
             if (Settings.DEBUG_MODE.get()) {
                 SmartDashboard.putBoolean("Intake/Voltage Override", pivotVoltageOverride.isPresent());
                 SmartDashboard.putNumber("Intake/Pivot Temperature (C)", pivot.getDeviceTemp().getValueAsDouble());
@@ -210,14 +217,6 @@ public class IntakeImpl extends Intake {
                 SmartDashboard.putNumber("Intake/Pivot Voltage (volts)", pivot.getMotorVoltage().getValueAsDouble());
                 SmartDashboard.putNumber("Intake/Pivot Supply Current (amps)", pivot.getSupplyCurrent().getValueAsDouble());
                 SmartDashboard.putNumber("Intake/Pivot Stator Current (amps)", pivot.getStatorCurrent().getValueAsDouble());
-
-                SmartDashboard.putBoolean(
-                    "Robot/CAN/Main/Intake Pivot Motor Connected? (ID " + String.valueOf(pivot.getDeviceID()) + ")",
-                    pivot.isConnected());
-                SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Leader Motor Connected? (ID "
-                        + String.valueOf(rollerLeader.getDeviceID()) + ")", rollerLeader.isConnected());
-                SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Follower Motor Connected? (ID "
-                        + String.valueOf(rollerFollower.getDeviceID()) + ")", rollerFollower.isConnected());
             }
         }
 

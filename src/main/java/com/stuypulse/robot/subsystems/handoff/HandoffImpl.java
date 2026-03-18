@@ -95,13 +95,11 @@ public class HandoffImpl extends Handoff {
         }
         
         SmartDashboard.putBoolean("Robot/CAN/Main/Handoff Motor Connected? (ID " + String.valueOf(motor.getDeviceID()) + ")", motor.isConnected());
-        
-        SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Handoff/Stator Current", motor.getStatorCurrent().getValueAsDouble());
 
-        if (Settings.DEBUG_MODE.get()) {
-
+        if (Settings.DEBUG_MODE.get()) {     
+            SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Handoff/Stator Current", motor.getStatorCurrent().getValueAsDouble());
         }
     }
     

@@ -22,7 +22,6 @@ public class EnergyUtil {
     private double totalPowerWatts = 0.0;
     private double totalEnergyWattHours = 0.0;
     private double batteryVoltage = 12.6;
-    private double rioCurrent = 0.0;
 
     private Map<String, Double> subsytemCurrents = new HashMap<>();
     private Map<String, Double> subsytemPowers = new HashMap<>();
@@ -30,7 +29,7 @@ public class EnergyUtil {
 
     public void logEnergyUsage(String subsystem, double amps) {
         double powerWatts = amps * batteryVoltage; // Supply current draw of the subsystem
-        double energyWattHours = joulesToWattHours(powerWatts * Robot.getRobotTime());
+        double energyWattHours = powerWatts * Settings.DT;
 
         totalCurrent += amps;
         totalPowerWatts += powerWatts;
@@ -38,25 +37,23 @@ public class EnergyUtil {
 
         subsytemCurrents.put(subsystem, amps);
         subsytemPowers.put(subsystem, powerWatts);
-        subsytemEnergies.merge(subsystem, energyWattHours, (a, b) -> {
-            return a + b;
-        });
+        subsytemEnergies.merge(subsystem, energyWattHours, Double::sum);
 
-        // String[] keys = subsystem.split("/|-");
-        // if (keys.length < 2) {
-        //     return;
-        // }
+        String[] keys = subsystem.split("/|-");
+        if (keys.length < 2) {
+            return;
+        }
 
-        // String subkey = "";
-        // for (int i = 0; i < keys.length - 1; i++) {
-        //     subkey += keys[i];
-        //     if (i < keys.length - 2) {
-        //         subkey += "/";
-        //     }
-        //     subsytemCurrents.merge(subkey, amps, Double::sum);
-        //     subsytemPowers.merge(subkey, powerWatts, Double::sum);
-        //     subsytemEnergies.merge(subkey, energyWattHours, Double::sum);
-        // }
+        String subkey = "";
+        for (int i = 0; i < keys.length - 1; i++) {
+            subkey += keys[i];
+            if (i < keys.length - 2) {
+                subkey += "/";
+            }
+            subsytemCurrents.merge(subkey, amps, Double::sum);
+            subsytemPowers.merge(subkey, powerWatts, Double::sum);
+            subsytemEnergies.merge(subkey, energyWattHours, Double::sum);
+        }
     }
 
     public void periodic() {
@@ -65,7 +62,7 @@ public class EnergyUtil {
         totalCurrent = 0.0;
         SmartDashboard.putNumber("EnergyUtil/Total Supply Power Watts", totalPowerWatts);
         totalPowerWatts = 0.0;
-        SmartDashboard.putNumber("EnergyUtil/Total Used Energy Watt Hours", totalEnergyWattHours);
+        SmartDashboard.putNumber("EnergyUtil/Total Used Energy Watt Hours", joulesToWattHours(totalEnergyWattHours));
 
         for (var entry : subsytemCurrents.entrySet()) {
             SmartDashboard.putNumber("EnergyUtil/Supply Current Amps/" + entry.getKey(), entry.getValue());
@@ -76,7 +73,7 @@ public class EnergyUtil {
             subsytemPowers.put(entry.getKey(), 0.0);
         }
         for (var entry : subsytemEnergies.entrySet()) {
-            SmartDashboard.putNumber("EnergyUtil/Energy watt hours/" + entry.getKey(), entry.getValue());
+            SmartDashboard.putNumber("EnergyUtil/Energy watt hours/" + entry.getKey(), joulesToWattHours(entry.getValue()));
         }
     }
 
@@ -90,10 +87,6 @@ public class EnergyUtil {
 
     public void setBatteryVoltage(double voltage) {
         this.batteryVoltage = voltage;
-    }
-
-    public void setRioCurrent(double current) {
-        this.rioCurrent = current;
     }
 
 }

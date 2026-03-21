@@ -42,7 +42,6 @@ public class LimelightVision extends SubsystemBase {
 
     private String[] names;
     private SmartBoolean enabled;
-    // private SmartBoolean[] camerasEnabled;
     private MegaTagMode megaTagMode;
 
     private Pose2d[] limelightPoseArray;
@@ -221,7 +220,6 @@ public class LimelightVision extends SubsystemBase {
                     }
 
                     // Adding to pose estimator
-
                     boolean notNull = false;
                     boolean withinAngularVelocityTolerance = false;
                     boolean withinInvalidPositionTolerance = false;
@@ -249,7 +247,6 @@ public class LimelightVision extends SubsystemBase {
                             CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT2_STDEVS);
                             hasData = true;
                         }
-
 
                         SmartDashboard.putBoolean("Vision/Within Invalid Position Tolerance", withinInvalidPositionTolerance);
                         SmartDashboard.putBoolean("Vision/Within Angular Velocity Tolerance", withinAngularVelocityTolerance);

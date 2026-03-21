@@ -212,7 +212,8 @@ public interface Settings {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
-            public final Rotation2d SOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
+            public final Rotation2d SOTM_TOLERANCE = Rotation2d.fromDegrees(3.0);
+            public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
             public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(-233.0);

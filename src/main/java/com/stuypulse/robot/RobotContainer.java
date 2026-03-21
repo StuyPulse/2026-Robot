@@ -141,16 +141,18 @@ public class RobotContainer {
         // Scoring Routine 
         driver.getTopButton()
             .whileTrue(new SwerveXMode())
-            .whileTrue(new RepeatCommand(new BuzzController(driver).onlyWhile(() -> !vision.hasData())))
-            // .onTrue(new WaitUntilCommand(() -> spindexer.canStartIntakeRollers()).andThen(new IntakeRunRollers()))
-            .whileTrue(new SuperstructureInterpolation()
-                    .alongWith(new WaitUntilCommand(() -> superstructure.getState() == SuperstructureState.INTERPOLATION && superstructure.atTolerance()))
-                        .andThen(new HandoffRun())
-                        .alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance()))
+            .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
+            .whileTrue(
+                new SuperstructureInterpolation()
+                    .andThen(new WaitUntilCommand(() -> superstructure.getState() == SuperstructureState.INTERPOLATION && superstructure.atTolerance())
+                        .andThen(new HandoffRun().alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance()))
                             .andThen(new SpindexerRun()))
-            .onFalse(new SpindexerStop()
-                    .alongWith(new SuperstructureStow())
-                    .alongWith(new HandoffStop()));
+                    .repeatedly()
+                )
+            )
+        .onFalse(new SpindexerStop()
+            .alongWith(new SuperstructureStow())
+            .alongWith(new HandoffStop()));
 
         // Intake Stow
         // driver.getLeftTriggerButton()
@@ -195,7 +197,7 @@ public class RobotContainer {
         //         .alongWith(new HandoffStop()));
         
         // SOTM
-        driver.getRightMenuButton()
+        driver.getBottomButton()
             .whileTrue(new RepeatCommand(new BuzzController(driver).onlyWhile(() -> !vision.hasData())))
             .onTrue(new IntakeRunRollers())
             .onTrue(new ConditionalCommand(
@@ -205,10 +207,12 @@ public class RobotContainer {
                     new HandoffStop()
                 ),
                 new ParallelCommandGroup(
-                    new SuperstructureSOTM().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-                        .andThen(new HandoffRun())
-                    .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
-                        .andThen(new SpindexerRun()),
+                    new SuperstructureSOTM()
+                        .andThen(new WaitUntilCommand(() -> superstructure.getState() == SuperstructureState.SOTM && superstructure.atTolerance())
+                            .andThen(new HandoffRun().alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance()))
+                                .andThen(new SpindexerRun()))
+                            .repeatedly()
+                        ),
                     new SwerveDriveSOTM(driver)
                 ),
                 () -> superstructure.getState() == SuperstructureState.SOTM
@@ -257,13 +261,13 @@ public class RobotContainer {
             .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
 
         // Manual KB Distance Scoring
-        driver.getBottomButton()
-            .whileTrue(new SwerveXMode())
-            .onTrue(new IntakeRunRollers())
-            .whileTrue(new SuperstructureKB().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance())
-                .andThen(new SpindexerRun())))
-            .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
+        // driver.getBottomButton()
+        //     .whileTrue(new SwerveXMode())
+        //     .onTrue(new IntakeRunRollers())
+        //     .whileTrue(new SuperstructureKB().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
+        //         .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance())
+        //         .andThen(new SpindexerRun())))
+        //     .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
     }
 
     /***************/

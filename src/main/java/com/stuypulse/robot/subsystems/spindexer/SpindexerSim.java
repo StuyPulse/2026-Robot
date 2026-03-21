@@ -3,7 +3,7 @@
 /* Use of this source code is governed by an MIT-style license */
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
-package com.stuypulse.robot.subsystems.handoff;
+package com.stuypulse.robot.subsystems.spindexer;
 
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Settings;
@@ -24,30 +24,30 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.Optional;
 
-public class HandoffSim extends Handoff {
+public class SpindexerSim extends Spindexer {
 
     private LinearSystemSim<N1, N1, N1> sim;
     private final LinearSystemLoop<N1, N1, N1> controller;
 
     private Optional<Double> voltageOverride;
 
-    public HandoffSim() {
+    public SpindexerSim() {
         LinearSystem<N1, N1, N1> flywheel = LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX44(1), 0.01, 1.0);
 
         sim = new LinearSystemSim<>(flywheel);
-        
-        LinearQuadraticRegulator<N1, N1, N1> lqr = new LinearQuadraticRegulator<N1, N1, N1>(
-            flywheel, 
-            VecBuilder.fill(8.0), 
+
+        LinearQuadraticRegulator<N1, N1, N1> lqr = new LinearQuadraticRegulator<>(
+            flywheel,
+            VecBuilder.fill(8.0),
             VecBuilder.fill(12.0),
             Settings.DT);
 
         KalmanFilter<N1, N1, N1> kalmanFilter = new KalmanFilter<>(
-            Nat.N1(), 
-            Nat.N1(), 
-            flywheel, 
-            VecBuilder.fill(3.0), 
-            VecBuilder.fill(0.01), 
+            Nat.N1(),
+            Nat.N1(),
+            flywheel,
+            VecBuilder.fill(3.0),
+            VecBuilder.fill(0.01),
             Settings.DT);
 
         controller = new LinearSystemLoop<>(flywheel, lqr, kalmanFilter, 12.0, Settings.DT);
@@ -55,9 +55,8 @@ public class HandoffSim extends Handoff {
         voltageOverride = Optional.empty();
     }
 
-    @Override
     public double getCurrentRPM() {
-        return sim.getOutput(0) * 60.0 / (2.0 * Math.PI); // convert to RPM
+        return sim.getOutput(0) * 60.0 / (2.0 * Math.PI);
     }
 
     @Override
@@ -68,19 +67,21 @@ public class HandoffSim extends Handoff {
         controller.correct(VecBuilder.fill(sim.getOutput(0)));
         controller.predict(Settings.DT);
 
-        if (EnabledSubsystems.HANDOFF.get()) {
+        if (EnabledSubsystems.SHOOTER.get()) {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
-                SmartDashboard.putNumber("Handoff/Input Voltage", voltageOverride.get());
+                SmartDashboard.putNumber("Spindexer/Input Voltage", voltageOverride.get());
             } else {
-                SmartDashboard.putNumber("Handoff/Input Voltage", controller.getU(0));
+                SmartDashboard.putNumber("Spindexer/Input Voltage", controller.getU(0));
                 sim.setInput(controller.getU(0));
             }
         } else {
             sim.setInput(0);
-            SmartDashboard.putNumber("Handoff/Input Voltage", 0.0);
+            SmartDashboard.putNumber("Spindexer/Input Voltage", 0.0);
         }
 
+        SmartDashboard.putNumber("Spindexer/Current RPM", getCurrentRPM());
+        
         sim.update(Settings.DT);
     }
 
@@ -94,7 +95,7 @@ public class HandoffSim extends Handoff {
         return SysId.getRoutine(
                 2,
                 6,
-                "Handoff",
+                "Spindexer",
                 voltage -> setVoltageOverride(Optional.of(voltage)),
                 () -> 0.0,
                 () -> 0.0,
@@ -103,8 +104,15 @@ public class HandoffSim extends Handoff {
     }
 
     @Override
-    public boolean isHandoffStalling() {
-        return false;
+    public boolean atTolerance() {
+        double error = getCurrentRPM() - getTargetRPM();
+        return Math.abs(error) <= Settings.Spindexer.RPM_TOLERANCE;
+    }
+
+    @Override
+    public boolean canStartIntakeRollers() {
+        double error = getCurrentRPM() - getTargetRPM();
+        return Math.abs(error) <= Settings.Spindexer.TOLERANCE_TO_START_INTAKE_ROLLERS_DURING_SCORING_ROUTINE;
     }
 
     @Override

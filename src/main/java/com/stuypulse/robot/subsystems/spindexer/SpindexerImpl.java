@@ -142,8 +142,6 @@ public class SpindexerImpl extends Spindexer {
         SmartDashboard.putNumber("Spindexer/Leader Supply Current (amps)", leaderMotor.getSupplyCurrent().getValueAsDouble());
         SmartDashboard.putNumber("Spindexer/Leader Stator Current (amps)", leaderMotor.getStatorCurrent().getValueAsDouble());
 
-
-
         if (Settings.DEBUG_MODE.get()) {
             SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Leader Motor Connected? (ID " + String.valueOf(leaderMotor.getDeviceID()) + ")", leaderMotor.isConnected());
             SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Follower Motor Connected? (ID " + String.valueOf(followerMotor.getDeviceID()) + ")", followerMotor.isConnected());

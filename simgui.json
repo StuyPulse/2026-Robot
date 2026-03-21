@@ -60,20 +60,13 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
-        "FieldPositions": {
-          "open": true
-        },
-        "Handoff": {
-          "open": true
-        },
-        "Intake": {
-          "open": true
-        },
         "States": {
-          "open": true
+          "open": false
         },
-        "Vision": {
-          "open": true
+        "Superstructure": {
+          "Shooter": {
+            "open": false
+          }
         },
         "open": true
       }

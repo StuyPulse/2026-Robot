@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.spindexer;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +19,11 @@ public abstract class Spindexer extends SubsystemBase {
     private SpindexerState spindexerState;
 
     static {
-        instance = new SpindexerImpl();
+        if (Robot.isReal()) {
+            instance = new SpindexerImpl();
+        } else {
+            instance = new SpindexerSim();
+        }
     }
 
     public static Spindexer getInstance() {
@@ -63,8 +68,6 @@ public abstract class Spindexer extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putString("Spindexer/State", getState().name());
         SmartDashboard.putNumber("Spindexer/Target RPM", getTargetRPM());
-        if (Settings.DEBUG_MODE.get()) {
-
-        }
+        SmartDashboard.putBoolean("Spindexer/At Tolerance?", atTolerance());
     }
 }

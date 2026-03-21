@@ -82,13 +82,13 @@ public abstract class Shooter extends SubsystemBase {
     public boolean atTolerance() {
         double error = Math.abs(getTargetRPM() - getRPM());
 
-        if (state == ShooterState.SOTM) {
-            return error < Settings.Superstructure.SHOOTER_SOTM_TOLERANCE_RPM;
-        } else if (state == ShooterState.FOTM) {
-            return error < Settings.Superstructure.SHOOTER_FOTM_TOLERANCE_RPM;
-        } else {
-            return error < Settings.Superstructure.SHOOTER_TOLERANCE_RPM;
-        }
+        double tolerance = switch (state) {
+            case SOTM -> Settings.Superstructure.SHOOTER_SOTM_TOLERANCE_RPM;
+            case FOTM -> Settings.Superstructure.SHOOTER_FOTM_TOLERANCE_RPM;
+            default  -> Settings.Superstructure.SHOOTER_TOLERANCE_RPM;
+        };
+
+        return Math.abs(error) < tolerance;
     }
 
     public abstract double getRPM();

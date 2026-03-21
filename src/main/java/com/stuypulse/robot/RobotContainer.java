@@ -145,7 +145,7 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
             .whileTrue(
-                new SuperstructureInterpolation()
+                new SuperstructureShoot()
                     .andThen(
                         Commands.parallel(
                             new StartEndCommand(
@@ -158,12 +158,24 @@ public class RobotContainer {
                                 spindexer)
                         )
                         .onlyWhile(superstructure::isReadyToShoot)
-                        .repeatedly()
+                        // .repeatedly()
                     )
             )
             .onFalse(new SpindexerStop()
                 .alongWith(new SuperstructureStow())
                 .alongWith(new HandoffStop()));
+
+        // driver.getTopButton()
+        //     .whileTrue(new SwerveXMode())
+        //     .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
+        //     .whileTrue(
+        //         new SuperstructureShoot()
+        //             .andThen(new WaitUntilCommand(() -> superstructure.atTolerance()))
+        //                 .andThen(new HandoffRun().alongWith(new SpindexerRun()))
+        //     )
+        //     .onFalse(new SpindexerStop()
+        //         .alongWith(new SuperstructureStow())
+        //         .alongWith(new HandoffStop()));
 
         // Intake Stow
         // driver.getLeftTriggerButton()
@@ -250,7 +262,6 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                     new SuperstructureFOTM().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
                         .andThen(new HandoffRun())
-                    .alongWith(new WaitUntilCommand(() -> handoff.atTolerance()))
                         .andThen(new SpindexerRun()),
                     new SwerveDriveFOTM(driver)
                 ),
@@ -267,7 +278,7 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
             .whileTrue(new SuperstructureLeftCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance())
+                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD)
                 .andThen(new SpindexerRun())))
             .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
 
@@ -276,7 +287,7 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
             .whileTrue(new SuperstructureRightCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance())
+                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD)
                 .andThen(new SpindexerRun())))
             .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
 
@@ -285,7 +296,7 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
             .whileTrue(new SuperstructureKB().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance())
+                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD)
                 .andThen(new SpindexerRun())))
             .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
     }

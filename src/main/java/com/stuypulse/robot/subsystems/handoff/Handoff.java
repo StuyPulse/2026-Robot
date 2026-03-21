@@ -42,11 +42,13 @@ public abstract class Handoff extends SubsystemBase {
         state = HandoffState.STOP;
     }
 
-    public double getTargetRPM() {
+    public double getTargetDutyCycle() {
         return switch (getState()) {
             case STOP -> 0;
-            case FORWARD -> Settings.Handoff.HANDOFF_RPM.get();
-            case REVERSE -> Settings.Handoff.HANDOFF_REVERSE;
+            // case FORWARD -> Settings.Handoff.HANDOFF_RPM.get();
+            // case REVERSE -> Settings.Handoff.HANDOFF_REVERSE;
+            case FORWARD -> Settings.Handoff.FORWARD_DUTY_CYCLE;
+            case REVERSE -> Settings.Handoff.REVERSE_DUTY_CYCLE;
         };
     }
 
@@ -58,14 +60,14 @@ public abstract class Handoff extends SubsystemBase {
         this.state = state;
     }
 
-    public boolean atTolerance() {
-        double error = Math.abs(getTargetRPM() - getCurrentRPM());
-        SuperstructureState superstructureState = Superstructure.getInstance().getState();
-        if (superstructureState == SuperstructureState.SOTM || superstructureState == SuperstructureState.FOTM) {
-            return error < Settings.Handoff.RPM_TOLERANCE;
-        }
-        return error < Settings.Handoff.RPM_TOLERANCE;
-    }
+    // public boolean atTolerance() {
+    //     double error = Math.abs(getTargetRPM() - getCurrentRPM());
+    //     SuperstructureState superstructureState = Superstructure.getInstance().getState();
+    //     if (superstructureState == SuperstructureState.SOTM || superstructureState == SuperstructureState.FOTM) {
+    //         return error < Settings.Handoff.RPM_TOLERANCE;
+    //     }
+    //     return error < Settings.Handoff.RPM_TOLERANCE;
+    // }
 
     public abstract double getCurrentRPM();
 
@@ -80,8 +82,8 @@ public abstract class Handoff extends SubsystemBase {
         super.periodic();
         SmartDashboard.putString("Handoff/State", getState().toString());
 
-        SmartDashboard.putNumber("Handoff/Target RPM", getTargetRPM());
+        // SmartDashboard.putNumber("Handoff/Target RPM", getTargetRPM());
         SmartDashboard.putNumber("Handoff/Current RPM", getCurrentRPM());
-        SmartDashboard.putBoolean("Handoff/At Tolerance?", atTolerance());
+        // SmartDashboard.putBoolean("Handoff/At Tolerance?", atTolerance());
     }
 }

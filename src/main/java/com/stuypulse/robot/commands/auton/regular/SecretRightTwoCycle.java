@@ -43,7 +43,7 @@ public class SecretRightTwoCycle extends SequentialCommandGroup {
             ),
             new SuperstructureInterpolation(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
-            new HandoffRun().alongWith(new WaitUntilCommand(() -> Handoff.getInstance().atTolerance())).andThen(
+            new HandoffRun().andThen(
                 new SpindexerRun()
             ).andThen(new WaitCommand(4.5)),
             new SuperstructureAutoInterpolation(),
@@ -60,7 +60,7 @@ public class SecretRightTwoCycle extends SequentialCommandGroup {
                 new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance())
                 // new SwerveClimbAlign()
             ),
-            new HandoffRun().alongWith(new WaitUntilCommand(() -> Handoff.getInstance().atTolerance())).andThen(
+            new HandoffRun().andThen(
                 new SpindexerRun()
             )
             // .until(() -> DriverStation.getMatchTime() < 2).andThen(

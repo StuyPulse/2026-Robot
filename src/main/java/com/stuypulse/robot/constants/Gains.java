@@ -14,21 +14,21 @@ public class Gains {
     public interface Superstructure {
         public interface Shooter {
             // VTC PID
-            SmartNumber kP = new SmartNumber("Superstructure/Shooter/Gains/kP", 10.0);
+            SmartNumber kP = new SmartNumber("Superstructure/Shooter/Gains/kP", 0.0);//10.0);
             SmartNumber kI = new SmartNumber("Superstructure/Shooter/Gains/kI", 0.0);
             SmartNumber kD = new SmartNumber("Superstructure/Shooter/Gains/kD", 0.0);
 
-            SmartNumber kS = new SmartNumber("Superstructure/Shooter/Gains/kS", 1.86743089);
-            SmartNumber kV = new SmartNumber("Superstructure/Shooter/Gains/kV", 0.0503);
+            SmartNumber kS = new SmartNumber("Superstructure/Shooter/Gains/kS", 1.86743089);//1.86743089);
+            SmartNumber kV = new SmartNumber("Superstructure/Shooter/Gains/kV", 0.0503);//0.0503);
             SmartNumber kA = new SmartNumber("Superstructure/Shooter/Gains/kA", 0.0);
 
             // VOLTAGE PID
-            // SmartNumber kP = new SmartNumber("Superstructure/Shooter/Gains/kP", 0.45);
+            // SmartNumber kP = new SmartNumber("Superstructure/Shooter/Gains/kP", 0.5);
             // SmartNumber kI = new SmartNumber("Superstructure/Shooter/Gains/kI", 0.0);
             // SmartNumber kD = new SmartNumber("Superstructure/Shooter/Gains/kD", 0.0);
 
             // SmartNumber kS = new SmartNumber("Superstructure/Shooter/Gains/kS", 0.0);
-            // SmartNumber kV = new SmartNumber("Superstructure/Shooter/Gains/kV", 0.1228);
+            // SmartNumber kV = new SmartNumber("Superstructure/Shooter/Gains/kV", 0.1235);
             // SmartNumber kA = new SmartNumber("Superstructure/Shooter/Gains/kA", 0.0);
         }
 

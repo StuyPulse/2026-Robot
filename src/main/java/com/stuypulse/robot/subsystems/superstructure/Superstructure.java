@@ -47,7 +47,7 @@ public class Superstructure extends SubsystemBase {
         turret = Turret.getInstance();
 
         readyToShoot = BStream.create(this::atTolerance)
-            .filtered(new BDebounce.Falling(0.1));
+            .filtered(new BDebounce.Both(0.05));
     }
     
     public enum SuperstructureState {

@@ -22,6 +22,7 @@ import com.stuypulse.robot.util.SysId;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -32,7 +33,8 @@ public class HandoffImpl extends Handoff {
     private final Motors.TalonFXConfig handoffConfig;
 
     private final TalonFX motor;
-    private final VelocityVoltage controller;
+    // private final VelocityVoltage controller;
+    private final DutyCycleOut controller;
 
     private Optional<Double> voltageOverride;
     private BStream isStalling;
@@ -54,7 +56,8 @@ public class HandoffImpl extends Handoff {
         motor = new TalonFX(Ports.Handoff.HANDOFF, Ports.RIO);
         handoffConfig.configure(motor);
 
-        controller = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
+        // controller = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
+        controller = new DutyCycleOut(getTargetDutyCycle());
         voltageOverride = Optional.empty();
 
         isStalling = BStream.create(() -> motor.getSupplyCurrent().getValueAsDouble() > Settings.Handoff.HANDOFF_STALL_CURRENT.getAsDouble())
@@ -88,7 +91,8 @@ public class HandoffImpl extends Handoff {
             } else if (shouldStop()) {
                 motor.stopMotor();
             } else {
-                motor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
+                // motor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
+                motor.setControl(controller.withOutput(getTargetDutyCycle()));
             }
         } else {
             motor.stopMotor();

@@ -16,6 +16,7 @@ import com.stuypulse.robot.util.SysId;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -34,6 +35,7 @@ public class ShooterImpl extends Shooter {
     // private final VelocityVoltage shooterController;
     private final VelocityTorqueCurrentFOC shooterController;
     private final Follower follower;
+    private final DutyCycleOut bangBang;
 
     private Optional<Double> voltageOverride;
 
@@ -68,6 +70,7 @@ public class ShooterImpl extends Shooter {
         follower = new Follower(Ports.Superstructure.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed);
 
         shooterFollower.setControl(follower);
+        bangBang = new DutyCycleOut(0.0); // this code MUST be below motor initializations or there will be a null pointer error
 
         voltageOverride = Optional.empty();
     }
@@ -83,6 +86,10 @@ public class ShooterImpl extends Shooter {
 
     private double getFollowerRPM() {
         return shooterFollower.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE;
+    }
+
+    public double getBangBangOutput(double mesurement, double setpoint) {
+        return mesurement < setpoint ? 1.0 : -1.0;
     }
 
     @Override
@@ -114,7 +121,11 @@ public class ShooterImpl extends Shooter {
         if (EnabledSubsystems.SHOOTER.get() || getState() == ShooterState.STOP) {
             if (voltageOverride.isPresent()) {
                 shooterLeader.setVoltage(voltageOverride.get());
-            } else {
+            } 
+            // else if (!atTolerance()) {
+            //     shooterLeader.setControl(bangBang.withOutput(getBangBangOutput(getRPM(), getTargetRPM())));
+            // }
+             else {
                 shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
             }
         } else {
@@ -127,7 +138,6 @@ public class ShooterImpl extends Shooter {
         if (Robot.getPeriodicCounter() % Settings.LOGGING_FREQUENCY == 0) {
             SmartDashboard.putBoolean("Robot/CAN/Main/Shooter Leader Motor Connected? (ID " + String.valueOf(shooterLeader.getDeviceID()) + ")", shooterLeader.isConnected());
             SmartDashboard.putBoolean("Robot/CAN/Main/Shooter Follower Motor Connected? (ID " + String.valueOf(shooterFollower.getDeviceID()) + ")", shooterFollower.isConnected());
-
         }
         
         SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error (RPM)", shooterLeader.getClosedLoopError().getValueAsDouble() * 60.0);

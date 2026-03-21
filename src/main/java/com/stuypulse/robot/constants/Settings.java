@@ -43,6 +43,9 @@ public interface Settings {
         double RPM_SOTM_TOLERANCE = 700.0;
         SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/Target RPM", HANDOFF_MAX);
 
+        double FORWARD_DUTY_CYCLE = 1.0;
+        double REVERSE_DUTY_CYCLE = -1.0;
+
         SmartNumber HANDOFF_STALL_CURRENT = new SmartNumber("Handoff/Stall Current Limit for Reverse", 30.0);
     }
 
@@ -82,11 +85,14 @@ public interface Settings {
     }
     
     public interface Superstructure {
-        public final double SHOOTER_TOLERANCE_RPM = 100.0;
-        public final Rotation2d HOOD_TOLERANCE = Rotation2d.fromDegrees(0.2);
-
-        public final double SHOOTER_SOTM_TOLERANCE_RPM = 350.0;
-        public final double SHOOTER_FOTM_TOLERANCE_RPM = 250.0;
+        public final double SHOOTER_TOLERANCE_RPM_HIGH = 15.0;
+        public final double SHOOTER_TOLERANCE_RPM_LOW = 25.0;        
+        public final double SHOOTER_SOTM_TOLERANCE_RPM_HIGH = 250.0;
+        public final double SHOOTER_SOTM_TOLERANCE_RPM_LOW = 350.0;
+        public final double SHOOTER_FOTM_TOLERANCE_RPM_HIGH = 150.0;
+        public final double SHOOTER_FOTM_TOLERANCE_RPM_LOW = 250.0;
+        
+        public final Rotation2d HOOD_TOLERANCE = Rotation2d.fromDegrees(0.5);
         public final Rotation2d HOOD_SOTM_TOLERANCE = Rotation2d.fromDegrees(3.0);
 
         public interface AngleInterpolation {
@@ -101,10 +107,10 @@ public interface Settings {
 
         public interface RPMInterpolation{
             double[][] distanceRPMInterpolationValues = {
-                {1.22, 2670.0},                                         //BLAY-APPROVED, LOCKED IN
+                {1.22, 2800.0},                                         //BLAY-APPROVED, LOCKED IN
                 {2.15, 2880.0},                                         //BLAY-APPROVED
-                {3.38, 3200},                                           //BLAY-APPROVED
-                {4.43, 3500.0},                                         //BLAY-APPROVED
+                {3.38, 3300},                                           //BLAY-APPROVED
+                {4.43, 3725.0},                                         //BLAY-APPROVED
                 {5.66, 3900.0}                                          //KEVIN-APPROVED
             };
         }
@@ -114,7 +120,7 @@ public interface Settings {
                 {1.22, 0.965}, // seconds
                 // {2.15, },
                 {3.38, 1.32},  
-                {4.43, 1.125},
+                {4.43, 1.1067},
                 {5.66, 1.29}
             };
         }

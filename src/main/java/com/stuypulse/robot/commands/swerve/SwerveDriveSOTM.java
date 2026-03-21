@@ -16,6 +16,9 @@ import com.stuypulse.stuylib.streams.vectors.VStream;
 import com.stuypulse.stuylib.streams.vectors.filters.VDeadZone;
 import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.stuypulse.robot.constants.DriverConstants.Driver.Drive;
 import com.stuypulse.robot.constants.DriverConstants.Driver.Turn;
@@ -25,6 +28,7 @@ import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SwerveDriveSOTM extends Command {
@@ -86,6 +90,8 @@ public class SwerveDriveSOTM extends Command {
                 .withVelocityY(velocity.y)
                 .withRotationalRate(-turn.get()));
         }
+
+        SmartDashboard.putBoolean("Swerve/SOTM/Idle?", isIdle.get());
     }
 
     @Override 

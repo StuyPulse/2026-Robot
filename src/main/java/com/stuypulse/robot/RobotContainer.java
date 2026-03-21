@@ -74,9 +74,11 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 public class RobotContainer {
@@ -144,15 +146,24 @@ public class RobotContainer {
             .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
             .whileTrue(
                 new SuperstructureInterpolation()
-                    .andThen(new WaitUntilCommand(() -> superstructure.getState() == SuperstructureState.INTERPOLATION && superstructure.atTolerance())
-                        .andThen(new HandoffRun().alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance()))
-                            .andThen(new SpindexerRun()))
-                    .repeatedly()
-                )
+                    .andThen(
+                        Commands.parallel(
+                            new StartEndCommand(
+                                () -> handoff.setState(HandoffState.FORWARD),
+                                () -> handoff.setState(HandoffState.STOP),
+                                handoff),
+                            new StartEndCommand(
+                                () -> spindexer.setState(SpindexerState.FORWARD),
+                                () -> spindexer.setState(SpindexerState.STOP),
+                                spindexer)
+                        )
+                        .onlyWhile(superstructure::isReadyToShoot)
+                        .repeatedly()
+                    )
             )
-        .onFalse(new SpindexerStop()
-            .alongWith(new SuperstructureStow())
-            .alongWith(new HandoffStop()));
+            .onFalse(new SpindexerStop()
+                .alongWith(new SuperstructureStow())
+                .alongWith(new HandoffStop()));
 
         // Intake Stow
         // driver.getLeftTriggerButton()
@@ -197,7 +208,7 @@ public class RobotContainer {
         //         .alongWith(new HandoffStop()));
         
         // SOTM
-        driver.getBottomButton()
+        driver.getRightMenuButton()
             .whileTrue(new RepeatCommand(new BuzzController(driver).onlyWhile(() -> !vision.hasData())))
             .onTrue(new IntakeRunRollers())
             .onTrue(new ConditionalCommand(
@@ -208,9 +219,18 @@ public class RobotContainer {
                 ),
                 new ParallelCommandGroup(
                     new SuperstructureSOTM()
-                        .andThen(new WaitUntilCommand(() -> superstructure.getState() == SuperstructureState.SOTM && superstructure.atTolerance())
-                            .andThen(new HandoffRun().alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance()))
-                                .andThen(new SpindexerRun()))
+                        .andThen(
+                            Commands.parallel(
+                                new StartEndCommand(
+                                    () -> handoff.setState(HandoffState.FORWARD),
+                                    () -> handoff.setState(HandoffState.STOP),
+                                    handoff),
+                                new StartEndCommand(
+                                    () -> spindexer.setState(SpindexerState.FORWARD),
+                                    () -> spindexer.setState(SpindexerState.STOP),
+                                    spindexer)
+                            )
+                            .onlyWhile(superstructure::isReadyToShoot)
                             .repeatedly()
                         ),
                     new SwerveDriveSOTM(driver)
@@ -261,13 +281,13 @@ public class RobotContainer {
             .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
 
         // Manual KB Distance Scoring
-        // driver.getBottomButton()
-        //     .whileTrue(new SwerveXMode())
-        //     .onTrue(new IntakeRunRollers())
-        //     .whileTrue(new SuperstructureKB().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-        //         .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance())
-        //         .andThen(new SpindexerRun())))
-        //     .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
+        driver.getBottomButton()
+            .whileTrue(new SwerveXMode())
+            .onTrue(new IntakeRunRollers())
+            .whileTrue(new SuperstructureKB().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
+                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD && handoff.atTolerance())
+                .andThen(new SpindexerRun())))
+            .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
     }
 
     /***************/

@@ -13,6 +13,8 @@ import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
 import com.stuypulse.robot.subsystems.superstructure.turret.Turret.TurretState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,11 +38,16 @@ public class Superstructure extends SubsystemBase {
     private final Shooter shooter;
     private final Turret turret;
 
+    private final BStream readyToShoot;
+
     public Superstructure() {
         state = SuperstructureState.INTERPOLATION;
         hood = Hood.getInstance();
         shooter = Shooter.getInstance();
         turret = Turret.getInstance();
+
+        readyToShoot = BStream.create(this::atTolerance)
+            .filtered(new BDebounce.Falling(0.1));
     }
     
     public enum SuperstructureState {
@@ -88,6 +95,10 @@ public class Superstructure extends SubsystemBase {
 
     public SuperstructureState getState(){
         return state;
+    }
+
+    public boolean isReadyToShoot() {
+        return readyToShoot.get();
     }
 
     public boolean atTolerance() {

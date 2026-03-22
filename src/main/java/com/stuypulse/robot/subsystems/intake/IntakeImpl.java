@@ -8,6 +8,7 @@ package com.stuypulse.robot.subsystems.intake;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
@@ -17,6 +18,7 @@ import com.stuypulse.robot.util.SettableNumber;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -183,14 +185,6 @@ public class IntakeImpl extends Intake {
             SmartDashboard.putNumber("Intake/Pivot Closed Loop Error (deg)",
                     pivot.getClosedLoopError().getValueAsDouble() * 360.0);
 
-
-            SmartDashboard.putBoolean("Robot/CAN/Main/Intake Pivot Motor Connected? (ID " 
-                    + String.valueOf(pivot.getDeviceID()) + ")", pivot.isConnected());
-            SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Leader Motor Connected? (ID "
-                    + String.valueOf(rollerLeader.getDeviceID()) + ")", rollerLeader.isConnected());
-            SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Follower Motor Connected? (ID "
-                    + String.valueOf(rollerFollower.getDeviceID()) + ")", rollerFollower.isConnected());
-
             if (Settings.DEBUG_MODE.get()) {
                 SmartDashboard.putBoolean("Intake/Voltage Override", pivotVoltageOverride.isPresent());
                 SmartDashboard.putNumber("Intake/Pivot Temperature (C)", pivot.getDeviceTemp().getValueAsDouble());
@@ -217,6 +211,15 @@ public class IntakeImpl extends Intake {
                 SmartDashboard.putNumber("Intake/Pivot Voltage (volts)", pivot.getMotorVoltage().getValueAsDouble());
                 SmartDashboard.putNumber("Intake/Pivot Supply Current (amps)", pivot.getSupplyCurrent().getValueAsDouble());
                 SmartDashboard.putNumber("Intake/Pivot Stator Current (amps)", pivot.getStatorCurrent().getValueAsDouble());
+
+                if(Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+                    SmartDashboard.putBoolean("Robot/CAN/Main/Intake Pivot Motor Connected? (ID " 
+                            + String.valueOf(pivot.getDeviceID()) + ")", pivot.isConnected());
+                    SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Leader Motor Connected? (ID "
+                            + String.valueOf(rollerLeader.getDeviceID()) + ")", rollerLeader.isConnected());
+                    SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Follower Motor Connected? (ID "
+                            + String.valueOf(rollerFollower.getDeviceID()) + ")", rollerFollower.isConnected());
+                }
             }
         }
     }

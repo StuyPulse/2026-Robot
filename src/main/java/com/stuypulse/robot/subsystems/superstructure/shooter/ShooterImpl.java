@@ -6,6 +6,7 @@
 package com.stuypulse.robot.subsystems.superstructure.shooter;
 
 import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
@@ -13,6 +14,7 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.SysId;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -135,11 +137,6 @@ public class ShooterImpl extends Shooter {
         SmartDashboard.putNumber("Superstructure/Shooter/Leader RPM", getLeaderRPM());
         SmartDashboard.putNumber("Superstructure/Shooter/Follower RPM", getFollowerRPM());
 
-        if (Robot.getPeriodicCounter() % Settings.LOGGING_FREQUENCY == 0) {
-            SmartDashboard.putBoolean("Robot/CAN/Main/Shooter Leader Motor Connected? (ID " + String.valueOf(shooterLeader.getDeviceID()) + ")", shooterLeader.isConnected());
-            SmartDashboard.putBoolean("Robot/CAN/Main/Shooter Follower Motor Connected? (ID " + String.valueOf(shooterFollower.getDeviceID()) + ")", shooterFollower.isConnected());
-        }
-        
         SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error (RPM)", shooterLeader.getClosedLoopError().getValueAsDouble() * 60.0);
 
         if (Settings.DEBUG_MODE.get()) {
@@ -153,6 +150,11 @@ public class ShooterImpl extends Shooter {
             SmartDashboard.putNumber("Superstructure/Shooter/Follower Supply Current (amps)", shooterFollower.getSupplyCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Superstructure/Shooter/Follower Stator Current (amps)", shooterFollower.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putNumber("InterpolationTesting/Shooter Applied Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
+
+            if(Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+                SmartDashboard.putBoolean("Robot/CAN/Main/Shooter Leader Motor Connected? (ID " + String.valueOf(shooterLeader.getDeviceID()) + ")", shooterLeader.isConnected());
+                SmartDashboard.putBoolean("Robot/CAN/Main/Shooter Follower Motor Connected? (ID " + String.valueOf(shooterFollower.getDeviceID()) + ")", shooterFollower.isConnected());
+            }
         }
                 
         SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error (RPM)", shooterLeader.getClosedLoopError().getValueAsDouble() * 60.0);

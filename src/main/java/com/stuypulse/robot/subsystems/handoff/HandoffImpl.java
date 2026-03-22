@@ -8,6 +8,7 @@ package com.stuypulse.robot.subsystems.handoff;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
@@ -17,8 +18,10 @@ import com.stuypulse.robot.subsystems.spindexer.Spindexer.SpindexerState;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.util.FMSUtil;
 import com.stuypulse.robot.util.SysId;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -98,12 +101,15 @@ public class HandoffImpl extends Handoff {
             motor.stopMotor();
         }
         
-        SmartDashboard.putBoolean("Robot/CAN/Main/Handoff Motor Connected? (ID " + String.valueOf(motor.getDeviceID()) + ")", motor.isConnected());
-
+        
         if (Settings.DEBUG_MODE.get()) {     
             SmartDashboard.putNumber("Handoff/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Handoff/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Handoff/Stator Current", motor.getStatorCurrent().getValueAsDouble());
+            
+            if(Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+                SmartDashboard.putBoolean("Robot/CAN/Main/Handoff Motor Connected? (ID " + String.valueOf(motor.getDeviceID()) + ")", motor.isConnected());
+            }
         }
 
         Robot.getEnergyUtil().logEnergyUsage(getSubsystem(), getCurrentDraw());

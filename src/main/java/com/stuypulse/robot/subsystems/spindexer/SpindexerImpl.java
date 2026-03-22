@@ -8,6 +8,7 @@ package com.stuypulse.robot.subsystems.spindexer;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
@@ -19,6 +20,7 @@ import com.stuypulse.robot.subsystems.superstructure.Superstructure.Superstructu
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SysId;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -143,12 +145,15 @@ public class SpindexerImpl extends Spindexer {
         SmartDashboard.putNumber("Spindexer/Leader Stator Current (amps)", leaderMotor.getStatorCurrent().getValueAsDouble());
 
         if (Settings.DEBUG_MODE.get()) {
-            SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Leader Motor Connected? (ID " + String.valueOf(leaderMotor.getDeviceID()) + ")", leaderMotor.isConnected());
-            SmartDashboard.putBoolean("Robot/CAN/Main/Spindexer Follower Motor Connected? (ID " + String.valueOf(followerMotor.getDeviceID()) + ")", followerMotor.isConnected());
             SmartDashboard.putNumber("Spindexer/Follower Voltage (volts)", followerMotor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Supply Current (amps)", followerMotor.getSupplyCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Stator Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
+            
+            if(Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+                SmartDashboard.putBoolean("Robot/CAN/Canivore/Spindexer Leader Motor Connected? (ID " + String.valueOf(leaderMotor.getDeviceID()) + ")", leaderMotor.isConnected());
+                SmartDashboard.putBoolean("Robot/CAN/Canivore/Spindexer Follower Motor Connected? (ID " + String.valueOf(followerMotor.getDeviceID()) + ")", followerMotor.isConnected());
+            }
         }
     }
 

@@ -132,7 +132,7 @@ public interface Settings {
             double[][] distanceTOFInterpolationValues = {
                 {1.22, 0.965}, // seconds
                 // {2.15, },
-                {3.38, 1.32},  
+                {3.38, 1.11},  
                 {4.43, 1.1067},
                 {5.66, 1.29}
             };
@@ -242,7 +242,7 @@ public interface Settings {
             double WRAP_DEBOUNCE = 0.5;
             Rotation2d MAX_THEORETICAL_ROTATION = Rotation2d.fromDegrees(612);
             Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
-            double MIN_DEGREE_CHANGE_PER_SECOND = 0.2; 
+            double MIN_DEGREE_CHANGE_PER_SECOND = 2.0; 
             
             /* CONSTANTS */
             public final double RANGE_LEFT = -360.0;
@@ -359,7 +359,7 @@ public interface Settings {
         LEDPattern DISABLED_ALIGNED = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kWhite).scrollAtRelativeSpeed(Percent.per(Second).of(25));
 
         public final int DESIRED_TAGS_WHEN_DISABLED = 2;
-        public final int LED_LENGTH = 50; // TBA
+        public final int LED_LENGTH = 20; // TBA
 
     }
 

@@ -26,12 +26,11 @@ public class RightBumpTwoCycle extends SequentialCommandGroup {
 
             // NZ Trip 1
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]).alongWith(
-                new WaitCommand(0.5).andThen(new IntakeDeploy())
+                new WaitCommand(0.5).andThen(new IntakeDeploy().alongWith(new SuperstructureAutoInterpolationSOTM()))
             ),      
             
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new WaitCommand(0.5).andThen(new SuperstructureAutoInterpolationSOTM())
-            ),
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]),
+            new WaitCommand(0.25),
 
             // SOTM 1
             new ParallelCommandGroup(
@@ -50,6 +49,7 @@ public class RightBumpTwoCycle extends SequentialCommandGroup {
                 new HandoffStop(),
                 new SpindexerStop()
             ),
+            new WaitCommand(0.25),
             
             // SOTM 2
             new ParallelCommandGroup(

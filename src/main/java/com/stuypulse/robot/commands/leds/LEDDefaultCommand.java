@@ -27,6 +27,7 @@ import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class LEDDefaultCommand extends Command{
@@ -63,7 +64,7 @@ public class LEDDefaultCommand extends Command{
                 leds.applyPattern(Settings.LED.DISABLED_ALIGNED);
             }
             else {
-                leds.applyPattern(LEDPattern.kOff);
+                leds.applyPattern(LEDPattern.solid(Color.kRed));
             }
         }
 
@@ -99,6 +100,9 @@ public class LEDDefaultCommand extends Command{
             }
             else if (intake.getPivotState() == PivotState.DEPLOY) {
                 leds.applyPattern(Settings.LED.INTAKE_DEPLOYED);
+            }
+            else {
+                leds.applyPattern(LEDPattern.solid(Color.kRed));
             }
         }
     }

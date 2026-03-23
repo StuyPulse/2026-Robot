@@ -93,12 +93,12 @@ public class RobotContainer {
 
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
-        SmartBoolean HANDOFF = new SmartBoolean("Enabled Subsystems/Handoff Is Enabled", true);
-        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", true);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
-        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
-        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
-        SmartBoolean LEDS = new SmartBoolean("Enabled Subsystems/LEDs Is Enabled", true);
+        SmartBoolean HANDOFF = new SmartBoolean("Enabled Subsystems/Handoff Is Enabled", false);
+        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
+        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
+        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", false);
+        SmartBoolean LEDS = new SmartBoolean("Enabled Subsystems/LEDs Is Enabled", false);
 
         SmartBoolean BACK_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Back Limelight Is Enabled", true);
         SmartBoolean LEFT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Left Limelight Is Enabled", true);
@@ -158,7 +158,7 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
             .whileTrue(
-                new SuperstructureShoot()
+                new SuperstructureInterpolation()
                     .andThen(
                         Commands.parallel(
                             new StartEndCommand(
@@ -353,11 +353,11 @@ public class RobotContainer {
 
         // TWO CYCLES (BUMP)
         AutonConfig LEFT_BUMP_TWO_CYCLE = new AutonConfig("Left Bump Two Cycle", LeftBumpTwoCycle::new,
-            "Left Trench To NZ", "Left NZ To Score (B)", "Left Bump To Trench", "Left Trench TO NZ (B)", "Left Bump To Trench", "Left Trench To NZ (F)");
+            "Left Trench To NZ", "Left NZ To Score (B)", "Left Bump To Trench", "Left Trench To NZ (B)", "Left Bump To Trench", "Left Trench To NZ (F)");
         LEFT_BUMP_TWO_CYCLE.register(autonChooser);
 
         AutonConfig RIGHT_BUMP_TWO_CYCLE = new AutonConfig("Right Bump Two Cycle", RightBumpTwoCycle::new,
-            "Right Trench To NZ", "Right NZ To Score (B)", "Right Bump To Trench", "Right Trench TO NZ (B)", "Right Bump To Trench", "Right Trench To NZ (F)");
+            "Right Trench To NZ", "Right NZ To Score (B)", "Right Bump To Trench", "Right Trench To NZ (B)", "Right Bump To Trench", "Right Trench To NZ (F)");
         RIGHT_BUMP_TWO_CYCLE.register(autonChooser);
 
         SmartDashboard.putData("Autonomous", autonChooser);

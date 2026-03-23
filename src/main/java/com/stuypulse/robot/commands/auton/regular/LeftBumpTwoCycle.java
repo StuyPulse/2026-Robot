@@ -30,8 +30,9 @@ public class LeftBumpTwoCycle extends SequentialCommandGroup {
             ),      
             
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new WaitCommand(0.5).andThen(new SuperstructureAutoInterpolationSOTM())
+                new SuperstructureAutoInterpolationSOTM()
             ),
+            new WaitCommand(0.75),
 
             // SOTM 1
             new ParallelCommandGroup(
@@ -50,6 +51,7 @@ public class LeftBumpTwoCycle extends SequentialCommandGroup {
                 new HandoffStop(),
                 new SpindexerStop()
             ),
+            new WaitCommand(0.75),
             
             // SOTM 2
             new ParallelCommandGroup(

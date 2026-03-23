@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.218245363766048,
-        "y": 3.0840085592011417
+        "x": 8.282938659058486,
+        "y": 3.0063766048502147
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.215599051008305,
-        "y": 0.8341399762752064
+        "x": 7.280292346300743,
+        "y": 0.7565080219242795
       },
       "isLocked": false,
       "linkedName": "Right Center NZ"
@@ -67,7 +67,7 @@
   "folder": "To Score",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 77.0217658620465
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

@@ -27,6 +27,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 public class Robot extends TimedRobot {
 
@@ -76,6 +79,8 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         SignalLogger.start();
         energyUtil = new EnergyUtil();
+        FollowPathCommand.warmupCommand().schedule();
+        PathfindingCommand.warmupCommand().schedule();
     }
     
     public static int getPeriodicCounter() {

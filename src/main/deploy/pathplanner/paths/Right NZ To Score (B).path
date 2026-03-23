@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.218245363766048,
-        "y": 3.0840085592011417
+        "x": 8.282938659058486,
+        "y": 3.0063766048502147
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.2897034400948995,
-        "y": 2.3619454329774614
+        "x": 5.354396735387337,
+        "y": 2.2843134786265344
       },
       "isLocked": false,
       "linkedName": "Right Center NZ"
@@ -34,7 +34,21 @@
       "rotationDegrees": 180.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.42138765117759275,
+      "maxWaypointRelativePos": 0.8338637810311925,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 300.0,
+        "maxAngularAcceleration": 900.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -53,7 +67,7 @@
   "folder": "Right Bump",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 77.0217658620465
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

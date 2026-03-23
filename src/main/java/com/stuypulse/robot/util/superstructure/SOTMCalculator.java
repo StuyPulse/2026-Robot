@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class SOTMCalculator {
-    public static SmartBoolean accountForAccel = new SmartBoolean("Superstructure/SOTM/account for accel", true);
+    public static SmartBoolean accountForAccel = new SmartBoolean("Superstructure/SOTM/account for accel", false);
 
     public static final double g = 9.81;
 

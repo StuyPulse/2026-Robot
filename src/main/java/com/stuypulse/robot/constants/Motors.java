@@ -328,9 +328,9 @@ public interface Motors {
 
         // CURRENT LIMIT CONFIGS
 
-        public TalonFXConfig withLowerLimitSupplyCurrent(double currentLowerLimitAmps) {
+        public TalonFXConfig withLowerLimitSupplyCurrent(double currentLowerLimitAmps, double time) {
             currentLimitsConfigs.SupplyCurrentLowerLimit = currentLowerLimitAmps;
-            currentLimitsConfigs.StatorCurrentLimitEnable = true;
+            currentLimitsConfigs.SupplyCurrentLowerTime = time;
 
             configuration.withCurrentLimits(currentLimitsConfigs);
 

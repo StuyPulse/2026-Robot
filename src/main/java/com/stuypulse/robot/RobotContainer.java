@@ -158,7 +158,7 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
             .whileTrue(
-                new SuperstructureInterpolation()
+                new SuperstructureShoot()
                     .andThen(
                         Commands.parallel(
                             new StartEndCommand(

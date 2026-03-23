@@ -34,8 +34,8 @@ public class ShooterImpl extends Shooter {
     private final TalonFX shooterLeader;
     private final TalonFX shooterFollower;
 
-    private final VelocityVoltage shooterController;
-    // private final VelocityTorqueCurrentFOC shooterController;
+    // private final VelocityVoltage shooterController;
+    private final VelocityTorqueCurrentFOC shooterController;
     private final Follower follower;
     private final DutyCycleOut bangBang;
 
@@ -52,7 +52,12 @@ public class ShooterImpl extends Shooter {
             .withPIDConstants(Gains.Superstructure.Shooter.kP.get(), Gains.Superstructure.Shooter.kI.get(), Gains.Superstructure.Shooter.kD.get(), 0)
             .withFFConstants(Gains.Superstructure.Shooter.kS.get(), Gains.Superstructure.Shooter.kV.get(), Gains.Superstructure.Shooter.kA.get(), 0)
                              
-            .withSensorToMechanismRatio(Settings.Superstructure.Shooter.GEAR_RATIO);
+            .withSensorToMechanismRatio(Settings.Superstructure.Shooter.GEAR_RATIO)
+            .withStatorCurrentLimitAmps(140)
+            .withStatorCurrentLimitEnabled(false)
+            .withSupplyCurrentLimitAmps(100)
+            .withSupplyCurrentLimitEnabled(true)
+            .withLowerLimitSupplyCurrent(60, 1);
             // .withTorqueCurrentLimits(40, 5, 0);
             // .withVelocityTimeFilter(0.1);
 
@@ -67,8 +72,8 @@ public class ShooterImpl extends Shooter {
         shooterConfig.configure(shooterLeader);
         shooterConfig.configure(shooterFollower);
 
-        shooterController = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
-        // shooterController = new VelocityTorqueCurrentFOC(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE);
+        // shooterController = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
+        shooterController = new VelocityTorqueCurrentFOC(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE);
         follower = new Follower(Ports.Superstructure.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed);
 
         shooterFollower.setControl(follower);

@@ -98,8 +98,8 @@ public interface Settings {
     }
     
     public interface Superstructure {
-        public final double SHOOTER_TOLERANCE_RPM_HIGH = 15.0;
-        public final double SHOOTER_TOLERANCE_RPM_LOW = 25.0;        
+        public final double SHOOTER_TOLERANCE_RPM_HIGH = 25.0;
+        public final double SHOOTER_TOLERANCE_RPM_LOW = 50.0;        
         public final double SHOOTER_SOTM_TOLERANCE_RPM_HIGH = 250.0;
         public final double SHOOTER_SOTM_TOLERANCE_RPM_LOW = 350.0;
         public final double SHOOTER_FOTM_TOLERANCE_RPM_HIGH = 150.0;

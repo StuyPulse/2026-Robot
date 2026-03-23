@@ -93,8 +93,8 @@ public abstract class Intake extends SubsystemBase {
     public abstract SysIdRoutine getPivotSysIdRoutine();
     public abstract boolean pivotStalling();
 
-    public abstract void zeroPivotDeployed();
-    public abstract void zeroPivotStowed();
+    public abstract void seedPivotDeployed();
+    public abstract void seedPivotStowed();
 
     public abstract double getCurrentDraw();
 

@@ -114,12 +114,12 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
-    public void zeroPivotStowed() {
+    public void seedPivotStowed() {
         pivot.setPosition(Settings.Intake.PIVOT_MAX_ANGLE.getRotations());
     }
 
     @Override
-    public void zeroPivotDeployed() {
+    public void seedPivotDeployed() {
         pivot.setPosition(Settings.Intake.PIVOT_MIN_ANGLE.getRotations());
     }
 
@@ -166,7 +166,7 @@ public class IntakeImpl extends Intake {
             }
 
             if (pivotState == PivotState.HOMING && pivotStalling()) {
-                zeroPivotDeployed();
+                seedPivotDeployed();
             }
         } else {
             pivot.stopMotor();

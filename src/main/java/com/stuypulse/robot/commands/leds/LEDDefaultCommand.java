@@ -58,7 +58,7 @@ public class LEDDefaultCommand extends Command{
 
     @Override
     public void execute() {
-        if(Robot.getMode() == RobotMode.DISABLED) {
+        if (Robot.getMode() == RobotMode.DISABLED) {
             if (LimelightVision.getInstance().getMaxTagCount() >= Settings.LED.DESIRED_TAGS_WHEN_DISABLED) {
                 leds.applyPattern(Settings.LED.DISABLED_ALIGNED);
             }
@@ -66,6 +66,7 @@ public class LEDDefaultCommand extends Command{
                 leds.applyPattern(LEDPattern.kOff);
             }
         }
+
         else {
             if (swerve.isUnderTrench()) {
                 leds.applyPattern(Settings.LED.PASSING_TRENCH);
@@ -100,5 +101,10 @@ public class LEDDefaultCommand extends Command{
                 leds.applyPattern(Settings.LED.INTAKE_DEPLOYED);
             }
         }
+    }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return true;
     }
 }

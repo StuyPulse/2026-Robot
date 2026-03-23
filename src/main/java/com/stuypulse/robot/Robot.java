@@ -6,10 +6,6 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.Robot.RobotMode;
-import com.stuypulse.robot.Robot.RobotMode;
-import com.stuypulse.robot.Robot.RobotMode;
-import com.stuypulse.robot.Robot.RobotMode;
-import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.commands.swerve.SwerveAutonInit;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
 import com.stuypulse.robot.commands.vision.WhitelistAllTags;
@@ -96,7 +92,7 @@ public class Robot extends TimedRobot {
 
         double batteryVoltage = RobotController.getBatteryVoltage();
         energyUtil.setBatteryVoltage(batteryVoltage);
-        robot.logEnergyForAllSubsystems(energyUtil);
+        // robot.logEnergyForAllSubsystems(energyUtil);
         CommandScheduler.getInstance().run();
         if (!Robot.isReal()) {
             SmartDashboard.putData(CommandScheduler.getInstance());

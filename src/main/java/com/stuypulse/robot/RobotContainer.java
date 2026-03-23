@@ -70,7 +70,6 @@ import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.subsystems.vision.LimelightVision.MegaTagMode;
-import com.stuypulse.robot.util.EnergyUtil;
 import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
@@ -83,6 +82,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -158,19 +158,17 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
             .whileTrue(
-                new SuperstructureShoot()
+                new SuperstructureInterpolation()
+                    .andThen(new WaitUntilCommand(superstructure::isReadyToShoot))
                     .andThen(
                         Commands.parallel(
-                            new StartEndCommand(
+                            new RunCommand(
                                 () -> handoff.setState(HandoffState.FORWARD),
-                                () -> handoff.setState(HandoffState.STOP),
                                 handoff),
-                            new StartEndCommand(
+                            new RunCommand(
                                 () -> spindexer.setState(SpindexerState.FORWARD),
-                                () -> spindexer.setState(SpindexerState.STOP),
                                 spindexer)
                         )
-                        .onlyWhile(superstructure::isReadyToShoot)
                         .repeatedly()
                     )
             )

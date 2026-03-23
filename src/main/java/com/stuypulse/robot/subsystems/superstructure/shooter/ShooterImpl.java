@@ -64,10 +64,14 @@ public class ShooterImpl extends Shooter {
         shooterLeader = new TalonFX(Ports.Superstructure.Shooter.MOTOR_LEAD, Ports.RIO);
         shooterLeader.getVelocity().setUpdateFrequency(1000.0);
         shooterLeader.getTorqueCurrent().setUpdateFrequency(1000.0);
+        shooterLeader.getStatorCurrent().setUpdateFrequency(1000.0);
+        shooterLeader.getSupplyCurrent().setUpdateFrequency(1000.0);
 
         shooterFollower = new TalonFX(Ports.Superstructure.Shooter.MOTOR_FOLLOW, Ports.RIO);
         shooterFollower.getVelocity().setUpdateFrequency(1000.0);
         shooterFollower.getTorqueCurrent().setUpdateFrequency(1000.0);
+        shooterFollower.getStatorCurrent().setUpdateFrequency(1000.0);
+        shooterFollower.getSupplyCurrent().setUpdateFrequency(1000.0);
 
         shooterConfig.configure(shooterLeader);
         shooterConfig.configure(shooterFollower);

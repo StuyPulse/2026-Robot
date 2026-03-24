@@ -54,7 +54,7 @@ public class LEDController extends SubsystemBase {
     @Override
     public void periodic() {
         if (RobotContainer.EnabledSubsystems.LEDS.get()) {
-            leds.start();
+            // leds.start();
             leds.setData(ledsBuffer);
         }
         else {

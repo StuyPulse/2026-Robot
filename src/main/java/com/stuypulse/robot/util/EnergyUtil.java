@@ -3,11 +3,8 @@ package com.stuypulse.robot.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Settings;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -73,7 +70,7 @@ public class EnergyUtil {
             subsytemPowers.put(entry.getKey(), 0.0);
         }
         for (var entry : subsytemEnergies.entrySet()) {
-            SmartDashboard.putNumber("EnergyUtil/Energy watt hours/" + entry.getKey(), joulesToWattHours(entry.getValue()));
+            SmartDashboard.putNumber("EnergyUtil/Energy Watt Hours/" + entry.getKey(), joulesToWattHours(entry.getValue()));
         }
     }
 

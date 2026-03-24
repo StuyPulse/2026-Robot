@@ -1,7 +1,7 @@
 # StuyPulse 2026 Robot Code: _TribecBot_
 
 ### Link
-https://github.com/StuyPulse/Tribecbot/tree/main/src/main/java/com/stuypulse/robot
+[Robot Code](./src/main/java/com/stuypulse/robot)
 
 ### Mechanisms
 

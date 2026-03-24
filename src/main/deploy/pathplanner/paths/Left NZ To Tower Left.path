@@ -69,7 +69,7 @@
   "folder": "To Tower",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": -111.25050550713327
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

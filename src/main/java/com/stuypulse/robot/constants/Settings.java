@@ -43,8 +43,9 @@ public interface Settings {
     public final double DT = 0.020;
     public final int LOGGING_FREQUENCY = 2;
     public final double SECONDS_IN_A_MINUTE = 60.0;
-    public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", true);
+    public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", false);
     public final CANBus CANIVORE = new CANBus("canivore", "./logs/example.hoot");
+    public final double LOOP_OVERRUN_WARNING_TIME_SEC = 0.2; 
 
     public interface Handoff {
         public final double GEAR_RATIO = 3.0 / 1.0;
@@ -99,9 +100,9 @@ public interface Settings {
     
     public interface Superstructure {
         public final double SHOOTER_TOLERANCE_RPM_HIGH = 25.0;
-        public final double SHOOTER_TOLERANCE_RPM_LOW = 50.0;        
-        public final double SHOOTER_SOTM_TOLERANCE_RPM_HIGH = 250.0;
-        public final double SHOOTER_SOTM_TOLERANCE_RPM_LOW = 350.0;
+        public final double SHOOTER_TOLERANCE_RPM_LOW = 40.0;        
+        public final double SHOOTER_SOTM_TOLERANCE_RPM_HIGH = 50.0;
+        public final double SHOOTER_SOTM_TOLERANCE_RPM_LOW = 80.0;
         public final double SHOOTER_FOTM_TOLERANCE_RPM_HIGH = 150.0;
         public final double SHOOTER_FOTM_TOLERANCE_RPM_LOW = 250.0;
         
@@ -279,7 +280,7 @@ public interface Settings {
         public interface SOTM {
             public final int MAX_ITERATIONS = 10;
             double TIME_TOLERANCE = 1e-5;
-            SmartNumber UPDATE_DELAY = new SmartNumber("Superstructure/SOTM/update delay", 0.15);
+            SmartNumber UPDATE_DELAY = new SmartNumber("Superstructure/SOTM/update delay", 0.12);
         }
     }
     

@@ -16,12 +16,16 @@ import com.stuypulse.robot.util.EnergyUtil;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import java.lang.reflect.Field;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -69,6 +73,16 @@ public class Robot extends TimedRobot {
         robot = new RobotContainer();
         mode = RobotMode.DISABLED;
         energyUtil = new EnergyUtil();
+
+        // try {
+        //     Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");
+        //     watchdogField.setAccessible(true);
+        //     Watchdog watchdog = (Watchdog) watchdogField.get(this);
+        //     watchdog.setTimeout(Settings.LOOP_OVERRUN_WARNING_TIME_SEC);
+        // } catch (Exception e) {
+        //     DriverStation.reportError("Failed to disable loop overrun warnings.", e.getStackTrace());
+        // }
+
 
         DataLogManager.start();
         SignalLogger.start();

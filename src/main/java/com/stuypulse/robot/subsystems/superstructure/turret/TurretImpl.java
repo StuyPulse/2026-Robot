@@ -265,9 +265,9 @@ public class TurretImpl extends Turret {
         }
 
         SmartDashboard.putNumber("Superstructure/Turret/Relative Encoder Position (Rot)",
-                turretMotor.getPosition().getValueAsDouble() * 360.0);
+                turretMotorPos.getValueAsDouble() * 360.0);
         SmartDashboard.putNumber("Superstructure/Turret/Closed Loop Error (deg)",
-                turretMotor.getClosedLoopError().getValueAsDouble() * 360.0);
+                turretMotorClosedLoopError.getValueAsDouble() * 360.0);
 
         SmartDashboard.putNumber("Superstructure/Turret/Encoder18t Abs Position (Rot)",
                 encoder18tPos.getValueAsDouble());
@@ -275,24 +275,24 @@ public class TurretImpl extends Turret {
                 encoder17tPos.getValueAsDouble());
 
         SmartDashboard.putNumber("Superstructure/Turret/Voltage (volts)",
-                turretMotor.getMotorVoltage().getValueAsDouble());
+                turretMotorVoltage.getValueAsDouble());
 
         SmartDashboard.putNumber("Superstructure/Turret/Wrapped Target Angle (deg)", prevActualTargetAngle);
 
         if (Settings.DEBUG_MODE.get()) {
             SmartDashboard.putNumber("Superstructure/Turret/Stator Current (amps)",
-                    turretMotor.getStatorCurrent().getValueAsDouble());
+                    turretMotorStatorCurrent.getValueAsDouble());
             SmartDashboard.putNumber("Superstructure/Turret/Supply Curren (amps)",
-                    turretMotor.getSupplyCurrent().getValueAsDouble());
+                    turretMotorSupplyCurrent.getValueAsDouble());
 
             if (Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
                 SmartDashboard.putBoolean(
-                        "Robot/CAN/Main/Turret Motor Connected? (ID " + String.valueOf(turretMotor.getDeviceID()) + ")",
+                        "Robot/CAN/Main/Turret Motor Connected? (ID " + String.valueOf(Ports.Superstructure.Turret.MOTOR) + ")",
                         turretMotor.isConnected());
                 SmartDashboard.putBoolean("Robot/CAN/Main/Turret 17t Encoder Connected? (ID "
-                        + String.valueOf(encoder17t.getDeviceID()) + ")", encoder17t.isConnected());
+                        + String.valueOf(Ports.Superstructure.Turret.ENCODER17T) + ")", encoder17t.isConnected());
                 SmartDashboard.putBoolean("Robot/CAN/Main/Turret 18t Encoder Connected? (ID "
-                        + String.valueOf(encoder18t.getDeviceID()) + ")", encoder18t.isConnected());
+                        + String.valueOf(Ports.Superstructure.Turret.ENCODER18T) + ")", encoder18t.isConnected());
             }
         }
     }

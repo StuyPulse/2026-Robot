@@ -15,6 +15,7 @@ import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
+import com.stuypulse.robot.commands.hood.HomingRoutine;
 import com.stuypulse.robot.commands.hood.SeedHoodRelativeEncoderAtUpperHardstop;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeOuttake;
@@ -90,11 +91,10 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class RobotContainer {
     public interface EnabledSubsystems {
-
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
         SmartBoolean HANDOFF = new SmartBoolean("Enabled Subsystems/Handoff Is Enabled", true);
-        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", true);
+        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
         SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
@@ -103,7 +103,6 @@ public class RobotContainer {
         SmartBoolean BACK_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Back Limelight Is Enabled", true);
         SmartBoolean LEFT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Left Limelight Is Enabled", true);
         SmartBoolean RIGHT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Right Limelight Is Enabled", true);
-
     }
 
     // Gamepads
@@ -178,10 +177,12 @@ public class RobotContainer {
 
         // Intake Stow
         // driver.getLeftTriggerButton()
+                // .onTrue(new HomingRoutine());
         //     .onTrue(new IntakeStow());
 
         // Intake Deploy
         driver.getRightTriggerButton()
+            // .onTrue(new LEDApplyPattern(Settings.LED.INTAKE_DEPLOYED))
             .onTrue(new IntakeDeploy());
             // .onTrue(new SuperstructureStow()                    
             //         .alongWith(new SpindexerStop()) //TODO: test this logic
@@ -191,7 +192,7 @@ public class RobotContainer {
         driver.getDPadUp()
             .onTrue(new SwerveResetHeading())
             .onTrue(new ResetLimelightIMU())
-            .onTrue(new LEDApplyPattern(Settings.LED.RESET_HEADING))
+            // .onTrue(new LEDApplyPattern(Settings.LED.RESET_HEADING))
             .onFalse(new SetIMUMode(0));   
 
         // Stop Rollers
@@ -201,11 +202,13 @@ public class RobotContainer {
 
         // Outtake
         driver.getRightBumper()
+            // .whileTrue(new LEDApplyPattern(Settings.LED.REVERSE))
             .whileTrue(new IntakeOuttake())
             .onFalse(new IntakeRunRollers());
         
         // SOTM (BR)
         driver.getRightMenuButton()
+            // .onTrue(new LEDApplyPattern(Settings.LED.SOTM_ON))
             .whileTrue(new RepeatCommand(new BuzzController(driver).onlyWhile(() -> !vision.hasData())))
             .onTrue(new IntakeRunRollers())
             .onTrue(new ConditionalCommand(
@@ -225,6 +228,7 @@ public class RobotContainer {
 
         // FOTM
         driver.getLeftMenuButton()
+            // .onTrue(new LEDApplyPattern(Settings.LED.FOTM_ON))
             .onTrue(new IntakeRunRollers())
             .onTrue(new ConditionalCommand(
                 new ParallelCommandGroup(
@@ -249,6 +253,7 @@ public class RobotContainer {
 
         // Manual Left Corner Scoring
         driver.getLeftButton()
+            // .whileTrue(new LEDApplyPattern(Settings.LED.LEFT_CORNER))
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
             .whileTrue(new SuperstructureLeftCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
@@ -258,6 +263,7 @@ public class RobotContainer {
 
         // Manual Right Corner Scoring
         driver.getRightButton()
+            // .whileTrue(new LEDApplyPattern(Settings.LED.RIGHT_CORNER))
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
             .whileTrue(new SuperstructureRightCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
@@ -267,6 +273,7 @@ public class RobotContainer {
 
         // Manual KB Distance Scoring
         driver.getBottomButton()
+            // .whileTrue(new LEDApplyPattern(Settings.LED.KB_DISTANCE))
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
             .whileTrue(new SuperstructureKB().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
@@ -304,20 +311,20 @@ public class RobotContainer {
             new ConditionalCommand(
                 new HandoffReverse().andThen(new WaitCommand(0.25)).andThen(new HandoffRun()), 
                 new HandoffReverse().andThen(new WaitCommand(0.25).andThen(new HandoffStop())),
-                () -> handoff.getState() == HandoffState.FORWARD));
+                () -> handoff.getState() == HandoffState.FORWARD).alongWith(new LEDApplyPattern(Settings.LED.REVERSE)));
 
-        SmartDashboard.putData("Robot/Intake Reverse", new IntakeSetState(RollerState.OUTTAKE));
+        SmartDashboard.putData("Robot/Intake Reverse", new IntakeSetState(RollerState.OUTTAKE).alongWith(new LEDApplyPattern(Settings.LED.REVERSE)));
 
         SmartDashboard.putData("Robot/Spindexer Reverse", 
             new ConditionalCommand(
                 new SpindexerReverse().andThen(new WaitCommand(1)).andThen(new SpindexerRun()), 
                 new SpindexerReverse().andThen(new WaitCommand(1).andThen(new SpindexerStop())),
-                () -> spindexer.getState() == SpindexerState.FORWARD));
+                () -> spindexer.getState() == SpindexerState.FORWARD).alongWith(new LEDApplyPattern(Settings.LED.REVERSE)));
     }
 
-    /*********************/
-    /*** UpdateSignals ***/
-    /*********************/
+    /*****************************/
+    /*** UPDATE STATUS SIGNALS ***/
+    /*****************************/
 
     public void refreshAllStatusSignals() {
         turret.refreshStatusSignals();

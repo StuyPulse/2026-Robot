@@ -14,6 +14,8 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -153,7 +155,7 @@ public class HoodImpl extends Hood {
 
         if (isStalling() && getState() == HoodState.HOMING) {
             seedHoodAtUpperHardStop();
-            setState(HoodState.IDLE);
+            setState(Superstructure.getInstance().getState().getHoodState());
             SmartDashboard.putBoolean("Superstructure/Hood/SUCCESFULLY HOMED", true);
         }
 

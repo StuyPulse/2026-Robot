@@ -82,7 +82,7 @@ public class TurretImpl extends Turret {
                         Gains.Superstructure.Turret.slot0.kA, 0)
                 .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign, 0)
 
-                .withPIDConstants(0, 0, 0, 2)
+                .withPIDConstants(0, 0, 10.0, 2)
                 .withFFConstants(Gains.Superstructure.Turret.slot0.kS, Gains.Superstructure.Turret.slot0.kV,
                         Gains.Superstructure.Turret.slot0.kA, 2)
                 .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign, 2)

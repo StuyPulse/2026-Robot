@@ -77,14 +77,16 @@ public class Robot extends TimedRobot {
         mode = RobotMode.DISABLED;
         energyUtil = new EnergyUtil();
 
-        // try {
-        //     Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");
-        //     watchdogField.setAccessible(true);
-        //     Watchdog watchdog = (Watchdog) watchdogField.get(this);
-        //     watchdog.setTimeout(Settings.LOOP_OVERRUN_WARNING_TIME_SEC);
-        // } catch (Exception e) {
-        //     DriverStation.reportError("Failed to disable loop overrun warnings.", e.getStackTrace());
-        // }
+
+        try {
+            Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");
+            watchdogField.setAccessible(true);
+            Watchdog watchdog = (Watchdog) watchdogField.get(this);
+            watchdog.setTimeout(Settings.LOOP_OVERRUN_WARNING_TIME_SEC);
+        } catch (Exception e) {
+            DriverStation.reportError("Failed to disable loop overrun warnings.", e.getStackTrace());
+        }
+        //this doesnt seem to work? 3/25 11:46AM
 
 
         DataLogManager.start();
@@ -95,6 +97,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        robot.refreshAllStatusSignals();
+
         if (periodicCounter % 50 == 0) {
             DataLogManager.getLog().resume();
         }
@@ -124,8 +128,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Robot/Match Time", DriverStation.getMatchTime());
         SmartDashboard.putData("Robot/Scheduled Commands", CommandScheduler.getInstance());
         SmartDashboard.putNumber("Robot/Battery Voltage", batteryVoltage);
-
-        robot.refreshAllStatusSignals();
     
         robot.periodic();
     }

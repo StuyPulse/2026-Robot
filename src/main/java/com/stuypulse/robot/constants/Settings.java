@@ -45,7 +45,7 @@ public interface Settings {
     public final double SECONDS_IN_A_MINUTE = 60.0;
     public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", false);
     public final CANBus CANIVORE = new CANBus("canivore", "./logs/example.hoot");
-    public final double LOOP_OVERRUN_WARNING_TIME_SEC = 0.2; 
+    public final double LOOP_OVERRUN_WARNING_TIME_SEC = 1; 
 
     public interface Handoff {
         public final double GEAR_RATIO = 3.0 / 1.0;
@@ -334,7 +334,7 @@ public interface Settings {
 
     public interface LED {
 
-        LEDPattern PASSING_TRENCH = LEDPattern.solid(Color.kGreen);
+        LEDPattern PASSING_TRENCH = LEDPattern.solid(Color.kRed);
 
         // LEDPattern CLIMB_ALIGNING = LEDPattern.solid(Color.kYellow);
         // LEDPattern CLIMB_ALIGNED = LEDPattern.solid(Color.kGreen);
@@ -355,8 +355,8 @@ public interface Settings {
 
         LEDPattern RESET_HEADING = LEDPattern.solid(Color.kYellow);
         LEDPattern X_WHEELS = LEDPattern.solid(Color.kRed);
-        LEDPattern INTAKE_STOW = LEDPattern.solid(Color.kBrown);
-        LEDPattern INTAKE_DEPLOYED = LEDPattern.solid(Color.kOrange);
+        LEDPattern INTAKE_STOW = LEDPattern.solid(Color.kBrown);        //broken
+        LEDPattern INTAKE_DEPLOYED = LEDPattern.solid(Color.kOrange);   //broken
 
         LEDPattern DISABLED_ALIGNED = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kWhite).scrollAtRelativeSpeed(Percent.per(Second).of(25));
 

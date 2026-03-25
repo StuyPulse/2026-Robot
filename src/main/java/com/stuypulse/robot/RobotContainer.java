@@ -215,7 +215,7 @@ public class RobotContainer {
                     new HandoffStop()
                 ),
                 new ParallelCommandGroup(
-                    new SuperstructureSOTM().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
+                    new SuperstructureSOTM().alongWith(new WaitUntilCommand(() -> superstructure.isReadyToShoot()))
                         .andThen(new HandoffRun())
                         .andThen(new SpindexerRun()),
                     new SwerveDriveSOTM(driver)

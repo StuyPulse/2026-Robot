@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.swerve.SwerveAutonInit;
+import com.stuypulse.robot.commands.swerve.SwerveTeleopInit;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
 import com.stuypulse.robot.commands.vision.WhitelistAllTagsForAllCameras;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineLeftSideAuto;
@@ -86,9 +87,9 @@ public class Robot extends TimedRobot {
         //     DriverStation.reportError("Failed to disable loop overrun warnings.", e.getStackTrace());
         // }
 
-
         DataLogManager.start();
         SignalLogger.start();
+        CommandScheduler.getInstance().schedule(new SwerveAutonInit());
         FollowPathCommand.warmupCommand().schedule();
         PathfindingCommand.warmupCommand().schedule();
     }
@@ -169,7 +170,6 @@ public class Robot extends TimedRobot {
         mode = RobotMode.AUTON;
 
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
-        CommandScheduler.getInstance().schedule(new SwerveAutonInit());
         CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras());
 
         auto = robot.getAutonomousCommand();
@@ -183,7 +183,9 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit() {
+        CommandScheduler.getInstance().schedule(new SwerveTeleopInit());
+    }
 
     /*******************/
     /*** TELEOP MODE ***/

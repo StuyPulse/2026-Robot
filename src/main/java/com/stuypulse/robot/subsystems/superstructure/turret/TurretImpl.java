@@ -125,6 +125,8 @@ public class TurretImpl extends Turret {
 
         controller = new PositionVoltage(getTargetAngle().getRotations()).withEnableFOC(true);
 
+        turretMotor.getClosedLoopError().setUpdateFrequency(1000.0);
+
         encoder18tPos = encoder18t.getAbsolutePosition();
         encoder17tPos = encoder17t.getAbsolutePosition();
         turretMotorPos = turretMotor.getPosition();
@@ -236,8 +238,9 @@ public class TurretImpl extends Turret {
             hasInitializedFilter = true;
         }
 
-        boolean deltaIsSignificant = Math.abs(actualTargetAngle
-                - prevActualTargetAngle) >= Settings.Superstructure.Turret.SETPOINT_FILTER_THRESHOLD_DEG;
+        double delta = actualTargetAngle - prevActualTargetAngle;
+
+        boolean deltaIsSignificant = Math.abs(delta)  >= Settings.Superstructure.Turret.SETPOINT_FILTER_THRESHOLD_DEG;
 
         boolean driverIsMoving = Math.abs(RobotContainer.driver.getLeftX()) > DriverConstants.Driver.Drive.DEADBAND ||
                 Math.abs(RobotContainer.driver.getLeftY()) > DriverConstants.Driver.Drive.DEADBAND ||
@@ -253,15 +256,17 @@ public class TurretImpl extends Turret {
 
         if (isWrapping) {
             slot = 1;
-        } else if (atTolerance()) {
-            slot = 2;
         }
+        // else if (!deltaIsSignificant) {
+        //     slot = 2;
+        // }
 
         if (EnabledSubsystems.TURRET.get()) {
             if (voltageOverride.isPresent()) {
                 turretMotor.setVoltage(voltageOverride.get());
             } else {
-                turretMotor.setControl(controller.withPosition(prevActualTargetAngle / 360.0).withSlot(slot));
+                turretMotor.setControl(controller.withPosition(prevActualTargetAngle / 360.0).withSlot(slot).
+                withFeedForward(delta * Settings.Superstructure.Turret.ARBITRARY_kA_TERM.get())); // accounting for this kA term
             }
         } else {
             turretMotor.stopMotor();

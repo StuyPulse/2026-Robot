@@ -13,7 +13,9 @@ import com.stuypulse.robot.commands.intake.IntakeStopRollers;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.superstructure.SuperstructureAutoInterpolation;
+import com.stuypulse.robot.commands.superstructure.SuperstructureAutoInterpolationSOTM;
 import com.stuypulse.robot.commands.superstructure.SuperstructureInterpolation;
+import com.stuypulse.robot.commands.superstructure.SuperstructureSOTM;
 import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -38,9 +40,9 @@ public class LeftTwoCycle extends SequentialCommandGroup {
 
             // Trip 1 To Score
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new WaitCommand(0.5).andThen(new SuperstructureAutoInterpolation())
+                new SuperstructureAutoInterpolation()
             ),
-            new SuperstructureInterpolation(),
+            new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().andThen(
                 new SpindexerRun()
@@ -53,7 +55,7 @@ public class LeftTwoCycle extends SequentialCommandGroup {
                 new HandoffStop(),
                 new SpindexerStop()
             ),
-            new SuperstructureInterpolation(),
+            new SuperstructureSOTM(),
 
             new ParallelCommandGroup(
                 new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance())
@@ -61,7 +63,8 @@ public class LeftTwoCycle extends SequentialCommandGroup {
             ),
             new HandoffRun().andThen(
                 new SpindexerRun()
-            )
+            ),
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3])
             // .until(() -> DriverStation.getMatchTime() < 2).andThen(
             //     new ParallelCommandGroup(
             //         new HandoffStop(),

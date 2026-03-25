@@ -84,7 +84,7 @@ public abstract class Turret extends SubsystemBase {
         double error = getAngle().minus(getTargetAngle()).getRotations();
 
         double tolerance = switch (state) {
-            case SOTM -> Settings.Superstructure.Turret.SOTM_TOLERANCE.getRotations();
+            case SOTM -> Settings.Superstructure.Turret.SOTM_TOLERANCE.get() / 360.0;
             case FOTM -> Settings.Superstructure.Turret.FOTM_TOLERANCE.getRotations();
             default  -> Settings.Superstructure.Turret.TOLERANCE.getRotations();
         };

@@ -183,9 +183,6 @@ public class RobotContainer {
         // Intake Deploy
         driver.getRightTriggerButton()
             .onTrue(new IntakeDeploy());
-            // .onTrue(new SuperstructureStow()                    
-            //         .alongWith(new SpindexerStop()) //TODO: test this logic
-            //         .alongWith(new HandoffStop())); // TURNS OFF SOTM
         
         // Reset Heading
         driver.getDPadUp()
@@ -244,6 +241,12 @@ public class RobotContainer {
         driver.getDPadDown()
             .whileTrue(new SwerveXMode())
             .onTrue(new LEDApplyPattern(Settings.LED.X_WHEELS));
+
+        // Reset (TL)
+        driver.getDPadRight()
+            .onTrue(new SuperstructureStow()
+                        .alongWith(new HandoffStop())
+                        .alongWith(new SpindexerStop()));
 
 //--------------------------------------------------------------------------------------------------------------------------\\
 
@@ -344,11 +347,11 @@ public class RobotContainer {
 
         // TWO CYCLES (TRENCH)
         AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  
-        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score");
+        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Score To NZ (F)");
         LEFT_TWO_CYCLE.register(autonChooser);
 
         AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,  
-        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score");
+        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)");
         RIGHT_TWO_CYCLE.register(autonChooser);
 
         // TWO CYCLES (BUMP)

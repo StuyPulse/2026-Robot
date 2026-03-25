@@ -147,11 +147,6 @@ public class Superstructure extends SubsystemBase {
     @Override
     public void periodic() {
         SuperstructureState state = getState();
-        if (state == SuperstructureState.SOTM) {
-            SOTMCalculator.updateSOTMSolution();
-        } else if (state == SuperstructureState.FOTM){
-            SOTMCalculator.updateFOTMSolution();
-        }
         
         if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && state == SuperstructureState.SOTM &&
             Robot.getMode() != RobotMode.AUTON) { // allows us to start SOTM earlier in auto, but currently not desired in teleop

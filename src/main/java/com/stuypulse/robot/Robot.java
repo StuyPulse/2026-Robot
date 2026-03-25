@@ -11,8 +11,11 @@ import com.stuypulse.robot.commands.vision.WhitelistAllTagsForAllCameras;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineLeftSideAuto;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineRightSideAuto;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.util.EnergyUtil;
+import com.stuypulse.robot.util.superstructure.SOTMCalculator;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -100,6 +103,14 @@ public class Robot extends TimedRobot {
 
         double batteryVoltage = RobotController.getBatteryVoltage();
         energyUtil.setBatteryVoltage(batteryVoltage);
+
+        SuperstructureState state = Superstructure.getInstance().getState();
+        if (state == SuperstructureState.SOTM) {
+            SOTMCalculator.updateSOTMSolution();
+        }
+        else if (state == SuperstructureState.FOTM) {
+            SOTMCalculator.updateFOTMSolution();
+        }
 
         CommandScheduler.getInstance().run();
         if (!Robot.isReal()) {

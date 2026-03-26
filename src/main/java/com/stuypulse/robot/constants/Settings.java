@@ -363,7 +363,8 @@ public interface Settings {
         LEDPattern INTAKE_STOW = LEDPattern.solid(Color.kBrown);
         LEDPattern INTAKE_DEPLOYED = LEDPattern.solid(Color.kOrange);
 
-        LEDPattern DISABLED_ALIGNED = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kWhite).scrollAtRelativeSpeed(Percent.per(Second).of(25));
+        LEDPattern DISABLED_ALIGNED = LEDPattern.solid(Color.kGreen);
+        // LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kWhite).scrollAtRelativeSpeed(Percent.per(Second).of(25));
 
         public final int DESIRED_TAGS_WHEN_DISABLED = 2;
         public final int LED_LENGTH = 9; // TBA

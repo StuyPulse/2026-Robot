@@ -90,7 +90,7 @@ public class HandoffImpl extends Handoff {
     }
 
     public double getCurrentRPM() {
-        return motorVelocity.getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO;
+        return motor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO;
     }
 
     public boolean shouldStop() {
@@ -136,7 +136,6 @@ public class HandoffImpl extends Handoff {
             } else if (shouldStop()) {
                 motor.stopMotor();
             } else {
-                // motor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
                 motor.setControl(controller.withOutput(getTargetDutyCycle()));
             }
         } else {
@@ -144,6 +143,7 @@ public class HandoffImpl extends Handoff {
         }
         
         
+        SmartDashboard.putBoolean("Handoff/ShouldStop?", shouldStop());
         if (Settings.DEBUG_MODE.get()) {     
             SmartDashboard.putNumber("Handoff/Voltage", motorVoltage.getValueAsDouble());
             SmartDashboard.putNumber("Handoff/Supply Current", motorSupplyCurrent.getValueAsDouble());

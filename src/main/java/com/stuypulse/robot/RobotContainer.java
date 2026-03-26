@@ -258,11 +258,15 @@ public class RobotContainer {
 
         // Manual Left Corner Scoring
         driver.getLeftButton()
-            .whileTrue(new SwerveXMode())
-            .onTrue(new IntakeRunRollers())
-            .whileTrue(new SuperstructureLeftCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD)
-                .andThen(new SpindexerRun())))
+            .onTrue(
+                new ParallelCommandGroup(
+                    new IntakeRunRollers(),
+                    new SuperstructureLeftCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
+                        .andThen(new HandoffRun())
+                        .andThen(new SpindexerRun()),
+                    new SwerveXMode()
+                )
+                    )
             .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
 
         // Manual Right Corner Scoring

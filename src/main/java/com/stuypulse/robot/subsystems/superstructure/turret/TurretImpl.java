@@ -14,6 +14,7 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SysId;
 import com.stuypulse.robot.util.superstructure.TurretAngleCalculator;
 
@@ -124,6 +125,8 @@ public class TurretImpl extends Turret {
         prevActualTargetAngle = getTargetAngle().getDegrees();
 
         controller = new PositionVoltage(getTargetAngle().getRotations()).withEnableFOC(true);
+
+        turretMotor.getClosedLoopError().setUpdateFrequency(1000.0);
 
         encoder18tPos = encoder18t.getAbsolutePosition();
         encoder17tPos = encoder17t.getAbsolutePosition();
@@ -236,8 +239,9 @@ public class TurretImpl extends Turret {
             hasInitializedFilter = true;
         }
 
-        boolean deltaIsSignificant = Math.abs(actualTargetAngle
-                - prevActualTargetAngle) >= Settings.Superstructure.Turret.SETPOINT_FILTER_THRESHOLD_DEG;
+        double delta = actualTargetAngle - prevActualTargetAngle;
+
+        boolean deltaIsSignificant = Math.abs(delta)  >= Settings.Superstructure.Turret.SETPOINT_FILTER_THRESHOLD_DEG;
 
         boolean driverIsMoving = Math.abs(RobotContainer.driver.getLeftX()) > DriverConstants.Driver.Drive.DEADBAND ||
                 Math.abs(RobotContainer.driver.getLeftY()) > DriverConstants.Driver.Drive.DEADBAND ||
@@ -253,15 +257,24 @@ public class TurretImpl extends Turret {
 
         if (isWrapping) {
             slot = 1;
-        } else if (atTolerance()) {
-            slot = 2;
         }
+        // else if (!deltaIsSignificant) {
+        //     slot = 2;
+        // }
 
         if (EnabledSubsystems.TURRET.get()) {
             if (voltageOverride.isPresent()) {
                 turretMotor.setVoltage(voltageOverride.get());
-            } else {
-                turretMotor.setControl(controller.withPosition(prevActualTargetAngle / 360.0).withSlot(slot));
+            } 
+            else {
+                double omega = CommandSwerveDrivetrain.getInstance().getChassisSpeeds().omegaRadiansPerSecond;
+                double omegaFF = Gains.Superstructure.Turret.kOmega.get() * -omega;
+
+                turretMotor.setControl(controller
+                    .withPosition(prevActualTargetAngle / 360.0)
+                    .withSlot(slot)
+                    .withFeedForward(omegaFF)
+                );
             }
         } else {
             turretMotor.stopMotor();

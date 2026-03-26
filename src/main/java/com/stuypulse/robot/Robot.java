@@ -89,9 +89,9 @@ public class Robot extends TimedRobot {
         }
         //this doesnt seem to work? 3/25 11:46AM
 
-
         DataLogManager.start();
         SignalLogger.start();
+        CommandScheduler.getInstance().schedule(new SwerveAutonInit());
         FollowPathCommand.warmupCommand().schedule();
         PathfindingCommand.warmupCommand().schedule();
         energyUtil = new EnergyUtil();

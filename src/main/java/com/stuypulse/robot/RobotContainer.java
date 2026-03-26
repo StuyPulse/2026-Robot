@@ -15,7 +15,8 @@ import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
-import com.stuypulse.robot.commands.hood.HomingRoutine;
+import com.stuypulse.robot.commands.hood.HomingRoutineLower;
+import com.stuypulse.robot.commands.hood.HomingRoutineUpper;
 import com.stuypulse.robot.commands.hood.SeedHoodRelativeEncoderAtUpperHardstop;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeOuttake;
@@ -158,7 +159,7 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
             .whileTrue(
-                new SuperstructureInterpolation()
+                new SuperstructureShoot() //TODO: change back to interpolation
                     .andThen(new WaitUntilCommand(superstructure::isReadyToShoot))
                     .andThen(
                         Commands.parallel(
@@ -171,10 +172,10 @@ public class RobotContainer {
                         )
                         .repeatedly()
                     )
-            )
-            .onFalse(new SpindexerStop()
-                .alongWith(new SuperstructureStow())
-                .alongWith(new HandoffStop()));
+            ); //TODO: uncomment ??
+            // .onFalse(new SpindexerStop()
+            //     .alongWith(new SuperstructureStow())
+            //     .alongWith(new HandoffStop()));
 
         // Intake Stow
         // driver.getLeftTriggerButton()
@@ -185,9 +186,10 @@ public class RobotContainer {
         driver.getRightTriggerButton()
             .onTrue(new LEDApplyPattern(Settings.LED.INTAKE_DEPLOYED))
             .onTrue(new IntakeDeploy());
-            // .onTrue(new SuperstructureStow()                    
-            //         .alongWith(new SpindexerStop()) //TODO: test this logic
-            //         .alongWith(new HandoffStop())); // TURNS OFF SOTM
+
+        // driver.getDPadLeft() //TODO: remove, button normally not binded
+        //     .whileTrue(new HomingRoutineUpper())
+        //     .onFalse(new HomingRoutineLower());
         
         // Reset Heading
         driver.getDPadUp()
@@ -220,7 +222,7 @@ public class RobotContainer {
                     new HandoffStop()
                 ),
                 new ParallelCommandGroup(
-                    new SuperstructureSOTM().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
+                    new SuperstructureSOTM().alongWith(new WaitUntilCommand(() -> superstructure.isReadyToShoot()))
                         .andThen(new HandoffRun())
                         .andThen(new SpindexerRun()),
                     new SwerveDriveSOTM(driver)
@@ -251,16 +253,25 @@ public class RobotContainer {
             .whileTrue(new SwerveXMode())
             .onTrue(new LEDApplyPattern(Settings.LED.X_WHEELS));
 
+        // Reset (TL)
+        driver.getDPadRight()
+            .onTrue(new SuperstructureStow()
+                        .alongWith(new HandoffStop())
+                        .alongWith(new SpindexerStop()));
+
 //--------------------------------------------------------------------------------------------------------------------------\\
 
         // Manual Left Corner Scoring
         driver.getLeftButton()
-            .whileTrue(new LEDApplyPattern(Settings.LED.LEFT_CORNER))
-            .whileTrue(new SwerveXMode())
-            .onTrue(new IntakeRunRollers())
-            .whileTrue(new SuperstructureLeftCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
-                .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD)
-                .andThen(new SpindexerRun())))
+            .onTrue(
+                new ParallelCommandGroup(
+                    new IntakeRunRollers(),
+                    new SuperstructureLeftCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
+                        .andThen(new HandoffRun())
+                        .andThen(new SpindexerRun()),
+                    new SwerveXMode()
+                )
+                    )
             .onFalse(new SuperstructureStow().alongWith(new SpindexerStop()).alongWith(new HandoffStop()));
 
         // Manual Right Corner Scoring
@@ -353,11 +364,11 @@ public class RobotContainer {
 
         // TWO CYCLES (TRENCH)
         AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  
-        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score");
+        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Score To NZ (F)");
         LEFT_TWO_CYCLE.register(autonChooser);
 
         AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,  
-        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score");
+        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)");
         RIGHT_TWO_CYCLE.register(autonChooser);
 
         // TWO CYCLES (BUMP)

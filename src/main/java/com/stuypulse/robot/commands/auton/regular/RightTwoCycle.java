@@ -40,14 +40,14 @@ public class RightTwoCycle extends SequentialCommandGroup {
 
             // Trip 1 To Score
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new WaitCommand(0.5).andThen(new SuperstructureAutoInterpolationSOTM())
+                new SuperstructureAutoInterpolation()
             ),
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().andThen(
                 new SpindexerRun()
             ).andThen(new WaitCommand(4.5)),
-            new SuperstructureAutoInterpolationSOTM(),
+            new SuperstructureAutoInterpolation(),
 
             // NZ Trip 2
             new ParallelCommandGroup(
@@ -63,7 +63,8 @@ public class RightTwoCycle extends SequentialCommandGroup {
             ),
             new HandoffRun().andThen(
                 new SpindexerRun()
-            )
+            ),
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3])
             // .until(() -> DriverStation.getMatchTime() < 2).andThen(
             //     new ParallelCommandGroup(
             //         new HandoffStop(),

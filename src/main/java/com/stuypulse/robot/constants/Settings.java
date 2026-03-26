@@ -30,6 +30,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import edu.wpi.first.units.TimeUnit;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 /*-
@@ -123,7 +124,7 @@ public interface Settings {
             double[][] distanceRPMInterpolationValues = {
                 {1.22, 2800.0},                                         //BLAY-APPROVED, LOCKED IN
                 {2.15, 2880.0},                                         //BLAY-APPROVED
-                {3.38, 3300},                                           //BLAY-APPROVED
+                {3.38, 3250},                                           //BLAY-APPROVED
                 {4.43, 3725.0},                                         //BLAY-APPROVED
                 {5.66, 3900.0}                                          //KEVIN-APPROVED
             };
@@ -232,7 +233,7 @@ public interface Settings {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
-            public final Rotation2d SOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
+            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 12.5);//Rotation2d.fromDegrees(10.0);
             public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
@@ -256,6 +257,8 @@ public interface Settings {
             public final double TURRET_HEIGHT = Units.inchesToMeters(0.0);
         
             public final double GEAR_RATIO_MOTOR_TO_MECH = (60.0 / 9.0) * (95.0 / 12.0); //1425.0 / 36.0;
+
+            // public final SmartNumber ARBITRARY_kA_TERM = new SmartNumber("Superstructure/Turret/Gains/arbitrary kA", 1.5);
         
             public interface BigGear {
                 public final int TEETH = 95;
@@ -280,7 +283,7 @@ public interface Settings {
         public interface SOTM {
             public final int MAX_ITERATIONS = 10;
             double TIME_TOLERANCE = 1e-3;
-            SmartNumber UPDATE_DELAY = new SmartNumber("Superstructure/SOTM/update delay", 0.12);
+            SmartNumber UPDATE_DELAY = new SmartNumber("Superstructure/SOTM/update delay", 0.05);
         }
     }
     
@@ -345,6 +348,7 @@ public interface Settings {
         LEDPattern RIGHT_WARNING = LEDPattern.solid(Color.kBlack); // TBD
 
         LEDPattern SHOOT_IN_PLACE = LEDPattern.solid(Color.kPurple);
+
         LEDPattern SOTM_ON = LEDPattern.solid(Color.kCyan);
         LEDPattern FOTM_ON = LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(MetersPerSecond.of(1), Meters.of(1 / 120.0));
 
@@ -361,11 +365,11 @@ public interface Settings {
         LEDPattern INTAKE_STOW = LEDPattern.solid(Color.kBrown);        //broken
         LEDPattern INTAKE_DEPLOYED = LEDPattern.solid(Color.kOrange);   //broken
 
-        LEDPattern DISABLED_ALIGNED = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kWhite).scrollAtRelativeSpeed(Percent.per(Second).of(25));
-        LEDPattern IS_BEHIND_HUB = LEDPattern.solid(Color.kBlue);
+        LEDPattern DISABLED_ALIGNED = LEDPattern.solid(Color.kGreen);
+        // LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kWhite).scrollAtRelativeSpeed(Percent.per(Second).of(25));
 
         public final int DESIRED_TAGS_WHEN_DISABLED = 2;
-        public final int LED_LENGTH = 20; // TBA
+        public final int LED_LENGTH = 9; // TBA
 
     }
 

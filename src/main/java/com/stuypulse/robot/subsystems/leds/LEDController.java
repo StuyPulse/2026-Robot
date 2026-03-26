@@ -61,5 +61,6 @@ public class LEDController extends SubsystemBase {
             LEDPattern.kOff.applyTo(ledsBuffer);
             leds.setData(ledsBuffer);
         }
+        // SmartDashboard.putString("Leds/Color", ledsBuffer.getLED(1).toString());
     }
 }

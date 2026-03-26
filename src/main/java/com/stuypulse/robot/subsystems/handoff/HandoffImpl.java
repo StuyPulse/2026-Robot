@@ -90,15 +90,35 @@ public class HandoffImpl extends Handoff {
     }
 
     public double getCurrentRPM() {
-        return motorVelocity.getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO;
+        return motor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO;
     }
 
     public boolean shouldStop() {
-        boolean isStopState = getState() == HandoffState.STOP;
-        boolean isTurretWrapping = Superstructure.getInstance().isTurretWrapping();
-        boolean isBehindHubWhileFerrying = Superstructure.getInstance().getState() == SuperstructureState.FOTM && CommandSwerveDrivetrain.getInstance().isBehindHub();
+        Superstructure superstructure = Superstructure.getInstance();
+        SuperstructureState superstructureState = superstructure.getState();
 
-        return isStopState || isTurretWrapping || isBehindHubWhileFerrying;
+        boolean isStopState = getState() == HandoffState.STOP;
+        boolean isTurretWrapping = superstructure.isTurretWrapping();
+        boolean isBehindHubWhileFerrying = superstructureState == SuperstructureState.FOTM
+                && CommandSwerveDrivetrain.getInstance().isBehindHub();
+        boolean isOutsideAllianceZone = 
+            CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && 
+            superstructureState != superstructureState.FOTM;
+        boolean isUnderTrench = CommandSwerveDrivetrain.getInstance().isUnderTrench() 
+            && superstructureState != SuperstructureState.FOTM;
+        boolean inManualState =       
+            superstructureState == superstructureState.LEFT_CORNER &&
+            superstructureState == superstructureState.RIGHT_CORNER &&
+            superstructureState == superstructureState.KB;
+
+        boolean turretLaggingSOTM = !superstructure.isTurretAtTolerance() && superstructureState == SuperstructureState.SOTM;
+
+        return isStopState || 
+        isTurretWrapping || 
+        (isBehindHubWhileFerrying && !inManualState) || 
+        turretLaggingSOTM || 
+        (isOutsideAllianceZone  && !inManualState) || 
+        (isUnderTrench && !inManualState);
     }
 
     @Override
@@ -116,7 +136,6 @@ public class HandoffImpl extends Handoff {
             } else if (shouldStop()) {
                 motor.stopMotor();
             } else {
-                // motor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
                 motor.setControl(controller.withOutput(getTargetDutyCycle()));
             }
         } else {
@@ -124,6 +143,7 @@ public class HandoffImpl extends Handoff {
         }
         
         
+        SmartDashboard.putBoolean("Handoff/ShouldStop?", shouldStop());
         if (Settings.DEBUG_MODE.get()) {     
             SmartDashboard.putNumber("Handoff/Voltage", motorVoltage.getValueAsDouble());
             SmartDashboard.putNumber("Handoff/Supply Current", motorSupplyCurrent.getValueAsDouble());

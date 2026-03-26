@@ -64,16 +64,16 @@
     },
     {
       "anchor": {
-        "x": 4.418208778173192,
-        "y": 7.408007117437722
+        "x": 4.000242510699001,
+        "y": 7.496091298145506
       },
       "prevControl": {
-        "x": 6.07435713765964,
-        "y": 7.366704707560627
+        "x": 5.65639087018545,
+        "y": 7.4547888882684115
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Center NZ (2)"
+      "linkedName": "Left Score (F)"
     }
   ],
   "rotationTargets": [
@@ -99,7 +99,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "To Score",

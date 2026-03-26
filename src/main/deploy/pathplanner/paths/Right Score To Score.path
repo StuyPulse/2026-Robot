@@ -36,38 +36,42 @@
         "y": 2.035977175463623
       },
       "prevControl": {
-        "x": 7.087852695246994,
-        "y": 2.5095036993097204
+        "x": 7.0667047075606275,
+        "y": 2.669971469329529
       },
       "nextControl": {
-        "x": 7.28666191155492,
-        "y": 0.2504422253922973
+        "x": 7.306267655261932,
+        "y": 0.2522762138451302
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.9555634638196917,
-        "y": 0.6404744958481603
+        "x": 4.051997146932953,
+        "y": 0.5868473609129818
       },
       "prevControl": {
-        "x": 6.32258600237248,
-        "y": 0.7050296559905087
+        "x": 6.4190196854857415,
+        "y": 0.6514025210553303
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Center NZ (2)"
+      "linkedName": "Right Score (F)"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9449378330372995,
+      "waypointRelativePos": 0.7599186164801673,
       "rotationDegrees": 90.0
     },
     {
       "waypointRelativePos": 2.1,
       "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.4323499491352996,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -83,7 +87,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "To Score",

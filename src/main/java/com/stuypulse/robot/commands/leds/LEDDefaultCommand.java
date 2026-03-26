@@ -61,6 +61,7 @@ public class LEDDefaultCommand extends Command{
     @Override
     public void execute() {
         String state = "NONE";
+
         if (Robot.getMode() == RobotMode.DISABLED) {
             if (LimelightVision.getInstance().getMaxTagCount() >= Settings.LED.DESIRED_TAGS_WHEN_DISABLED) {
                 leds.applyPattern(Settings.LED.DISABLED_ALIGNED);

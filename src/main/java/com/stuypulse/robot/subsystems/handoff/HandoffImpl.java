@@ -144,6 +144,7 @@ public class HandoffImpl extends Handoff {
         
         
         SmartDashboard.putBoolean("Handoff/ShouldStop?", shouldStop());
+        SmartDashboard.putNumber("Handoff/Signal Velocity", motorVelocity.getValueAsDouble()  * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO);
         if (Settings.DEBUG_MODE.get()) {     
             SmartDashboard.putNumber("Handoff/Voltage", motorVoltage.getValueAsDouble());
             SmartDashboard.putNumber("Handoff/Supply Current", motorSupplyCurrent.getValueAsDouble());

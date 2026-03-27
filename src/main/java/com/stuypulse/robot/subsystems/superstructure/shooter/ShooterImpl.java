@@ -102,7 +102,7 @@ public class ShooterImpl extends Shooter {
         shooterLeaderVoltage = shooterLeader.getMotorVoltage();
         shooterFollowerVoltage = shooterLeader.getMotorVoltage();
         shooterLeaderClosedLoopError = shooterLeader.getClosedLoopError();
-        PhoenixUtil.registerSignals(shooterLeaderSpeed, shooterFollowerSpeed, shooterFollowSupplyCurrent, 
+        PhoenixUtil.registerToRio(shooterLeaderSpeed, shooterFollowerSpeed, shooterFollowSupplyCurrent, 
                 shooterFollowStatorCurrent, shooterLeadSupplyCurrent, shooterLeadStatorCurrent, 
                 shooterLeaderVoltage, shooterFollowerVoltage, shooterLeaderClosedLoopError);
         voltageOverride = Optional.empty();

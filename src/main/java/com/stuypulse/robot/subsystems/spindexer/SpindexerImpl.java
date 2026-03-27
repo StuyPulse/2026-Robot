@@ -106,7 +106,7 @@ public class SpindexerImpl extends Spindexer {
         followerVelocity = followerMotor.getVelocity();
         leaderMotorVoltage = leaderMotor.getMotorVoltage();
         followerMotorVoltage = followerMotor.getMotorVoltage();
-        PhoenixUtil.registerSignals(leaderSupplyCurrent, leaderStatorCurrent, followerSupplyCurrent,
+        PhoenixUtil.registerToCanivore(leaderSupplyCurrent, leaderStatorCurrent, followerSupplyCurrent,
                 followerStatorCurrent, leaderVelocity, followerVelocity, leaderMotorVoltage, followerMotorVoltage);
 
         isStalling = BStream.create( () -> leaderSupplyCurrent.getValueAsDouble() > Settings.Spindexer.STALL_CURRENT_LIMIT)

@@ -104,7 +104,7 @@ public class HoodImpl extends Hood {
         hoodMotorSupplyCurrent = hoodMotor.getSupplyCurrent();
         hoodMotorStatorCurrent = hoodMotor.getStatorCurrent();
         hoodMotorClosedLoopError = hoodMotor.getClosedLoopError();
-        PhoenixUtil.registerSignals(hoodMotorPosition, hoodMotorVoltage, hoodMotorSupplyCurrent,
+        PhoenixUtil.registerToRio(hoodMotorPosition, hoodMotorVoltage, hoodMotorSupplyCurrent,
                 hoodMotorStatorCurrent, hoodMotorClosedLoopError);
     }
 

@@ -126,7 +126,7 @@ public class IntakeImpl extends Intake {
         pivotMotorVoltage = pivot.getMotorVoltage();
         rollerLeaderVoltage = rollerLeader.getMotorVoltage();
         rollerFollowerVoltage = rollerFollower.getMotorVoltage();
-        PhoenixUtil.registerSignals(pivotStatorCurrent, rollerLeaderSupplyCurrent,
+        PhoenixUtil.registerToRio(pivotStatorCurrent, rollerLeaderSupplyCurrent,
                 rollerLeaderStatorCurrent, rollerFollowerSupplyCurrent, rollerFollowerStatorCurrent,
                 rollerLeaderTemperature, rollerFollowerTemperature, pivotTemperature, pivotMotorVoltage,
                 rollerLeaderVoltage, rollerFollowerVoltage, pivotMotorPosition );

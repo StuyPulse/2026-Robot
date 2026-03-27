@@ -6,16 +6,21 @@ import java.util.Arrays;
 import com.ctre.phoenix6.BaseStatusSignal;
 
 public class PhoenixUtil {
-    public static ArrayList<BaseStatusSignal> allSignals = new ArrayList<BaseStatusSignal>();
+    public static ArrayList<BaseStatusSignal> rioSignals, canivoreSignals = new ArrayList<BaseStatusSignal>();
 
     public PhoenixUtil() {}
 
-    public static void registerSignals(BaseStatusSignal... signals) {
-        allSignals.addAll(Arrays.asList(signals));
+    public static void registerToRio(BaseStatusSignal... signals) {
+        rioSignals.addAll(Arrays.asList(signals));
+    }
+
+    public static void registerToCanivore(BaseStatusSignal... signals) {
+        canivoreSignals.addAll(Arrays.asList(signals));
     }
 
 
     public static void refreshAll() {
-        BaseStatusSignal.refreshAll(allSignals);
+        BaseStatusSignal.refreshAll(rioSignals);
+        BaseStatusSignal.refreshAll(canivoreSignals);
     }
 }

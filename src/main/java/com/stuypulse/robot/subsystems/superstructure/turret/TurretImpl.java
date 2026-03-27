@@ -135,7 +135,7 @@ public class TurretImpl extends Turret {
         turretMotorStatorCurrent = turretMotor.getStatorCurrent();
         turretMotorClosedLoopError = turretMotor.getClosedLoopError();
         turretMotorVoltage = turretMotor.getMotorVoltage();
-        PhoenixUtil.registerSignals(encoder18tPos, encoder17tPos, turretMotorPos, 
+        PhoenixUtil.registerToRio(encoder18tPos, encoder17tPos, turretMotorPos, 
             turretMotorSupplyCurrent, turretMotorStatorCurrent, turretMotorClosedLoopError, turretMotorVoltage);
     }
 

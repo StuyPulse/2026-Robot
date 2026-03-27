@@ -78,7 +78,7 @@ public class HandoffImpl extends Handoff {
         motorStatorCurrent = motor.getStatorCurrent();
         motorVelocity = motor.getVelocity();
         motorVoltage = motor.getMotorVoltage();
-        PhoenixUtil.registerSignals(motorSupplyCurrent, motorStatorCurrent, motorVelocity, motorVoltage);
+        PhoenixUtil.registerToRio(motorSupplyCurrent, motorStatorCurrent, motorVelocity, motorVoltage);
 
         isStalling = BStream.create(() -> motorSupplyCurrent.getValueAsDouble() > Settings.Handoff.HANDOFF_STALL_CURRENT.getAsDouble())
             .filtered(new BDebounce.Both(0.5));

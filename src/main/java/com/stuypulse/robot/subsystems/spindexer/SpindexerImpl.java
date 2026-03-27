@@ -180,11 +180,13 @@ public class SpindexerImpl extends Spindexer {
         SmartDashboard.putNumber("Spindexer/Leader Supply Current (amps)", leaderSupplyCurrent.getValueAsDouble());
         SmartDashboard.putNumber("Spindexer/Leader Stator Current (amps)", leaderStatorCurrent.getValueAsDouble());
 
+        SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
+
+
         if (Settings.DEBUG_MODE.get()) {
             SmartDashboard.putNumber("Spindexer/Follower Voltage (volts)", followerMotorVoltage.getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Supply Current (amps)", followerSupplyCurrent.getValueAsDouble());
             SmartDashboard.putNumber("Spindexer/Follower Stator Current (amps)", followerStatorCurrent.getValueAsDouble());
-            SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
 
             if (Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
                 SmartDashboard.putBoolean(

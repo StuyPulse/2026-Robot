@@ -90,7 +90,7 @@ public class HandoffImpl extends Handoff {
     }
 
     public double getCurrentRPM() {
-        return motor.getVelocity().getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO;
+        return motorVelocity.getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Handoff.GEAR_RATIO;
     }
 
     public boolean shouldStop() {

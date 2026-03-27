@@ -233,7 +233,7 @@ public interface Settings {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
-            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 12.5);//Rotation2d.fromDegrees(10.0);
+            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 5);//Rotation2d.fromDegrees(10.0);
             public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);

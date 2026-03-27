@@ -104,8 +104,7 @@ public abstract class Shooter extends SubsystemBase {
     public abstract double getCurrentDraw();
     public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Superstructure/Shooter/State", state.name());
 
         SmartDashboard.putNumber("Superstructure/Shooter/Current RPM (Leader)", getRPM());

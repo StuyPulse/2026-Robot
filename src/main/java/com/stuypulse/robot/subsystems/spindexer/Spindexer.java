@@ -65,8 +65,7 @@ public abstract class Spindexer extends SubsystemBase {
     public abstract double getCurrentDraw();
     public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Spindexer/State", getState().name());
         SmartDashboard.putNumber("Spindexer/Target RPM", getTargetRPM());
         SmartDashboard.putBoolean("Spindexer/At Tolerance?", atTolerance());

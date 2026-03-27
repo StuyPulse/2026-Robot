@@ -193,8 +193,7 @@ public class LimelightVision extends SubsystemBase {
         return debouncedHasData.get();
     }
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         if (enabled.get()) {
             hasData = false;
 

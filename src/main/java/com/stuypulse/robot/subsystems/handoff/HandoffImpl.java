@@ -127,8 +127,8 @@ public class HandoffImpl extends Handoff {
     }
     
     @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
 
         boolean shouldNotShootIntoHub = (Superstructure.getInstance().superstructureInShootIntoHubMode()) ? 
             !CommandSwerveDrivetrain.getInstance().canShootIntoHub() 

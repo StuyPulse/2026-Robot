@@ -78,9 +78,7 @@ public abstract class Handoff extends SubsystemBase {
     public abstract double getCurrentDraw();
     public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Handoff/State", getState().toString());
 
         // SmartDashboard.putNumber("Handoff/Target RPM", getTargetRPM());

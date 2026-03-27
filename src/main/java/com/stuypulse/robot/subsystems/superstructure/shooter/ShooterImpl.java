@@ -131,8 +131,8 @@ public class ShooterImpl extends Shooter {
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
 
         shooterConfig.updateGainsConfig(
                 shooterLeader,

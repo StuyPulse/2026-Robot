@@ -214,9 +214,9 @@ public class TurretImpl extends Turret {
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
-
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
+        
         turretConfig.updateGainsConfig(
                 turretMotor, 1,
                 Gains.Superstructure.Turret.slot1.kP,

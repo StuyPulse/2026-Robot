@@ -100,8 +100,7 @@ public abstract class Intake extends SubsystemBase {
 
     public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Intake/Pivot State", getPivotState().toString());
         SmartDashboard.putString("Intake/Roller State", getRollerState().toString());
 

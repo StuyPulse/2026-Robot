@@ -579,8 +579,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		return !isOutsideAllianceZone() || (state == SuperstructureState.KB || state == SuperstructureState.LEFT_CORNER || state == SuperstructureState.RIGHT_CORNER); 
 	}
 
-	@Override
-	public void periodic() {
+	public void periodicAfterScheduler() {
 		Pose2d pose = getPose();
 		turretPose = new Pose2d(
 				pose.getTranslation().plus(

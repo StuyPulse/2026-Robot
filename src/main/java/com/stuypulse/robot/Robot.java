@@ -124,6 +124,9 @@ public class Robot extends TimedRobot {
         }
 
         CommandScheduler.getInstance().run();
+
+        robot.periodicAfterScheduler();
+
         if (!Robot.isReal()) {
             SmartDashboard.putData(CommandScheduler.getInstance());
         }
@@ -136,7 +139,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Robot/Scheduled Commands", CommandScheduler.getInstance());
         SmartDashboard.putNumber("Robot/Battery Voltage", batteryVoltage);
 
-        robot.periodic();
         gcStatsCollector.update();
     }
 

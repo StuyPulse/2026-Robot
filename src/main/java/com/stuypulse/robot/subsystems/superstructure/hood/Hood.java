@@ -130,8 +130,7 @@ public abstract class Hood extends SubsystemBase{
 
     public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Superstructure/Hood/State", state.name());
 
         SmartDashboard.putNumber("Superstructure/Hood/Target Angle (deg)", getTargetAngle().getDegrees());

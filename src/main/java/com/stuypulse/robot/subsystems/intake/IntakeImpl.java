@@ -169,8 +169,8 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
 
         PivotState pivotState = getPivotState();
 

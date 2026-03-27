@@ -131,8 +131,7 @@ public abstract class Turret extends SubsystemBase {
         return this.state;
     }
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Superstructure/Turret/State", state.name());
         
         SmartDashboard.putNumber("Superstructure/Turret/Target Angle", getTargetAngle().getDegrees());

@@ -155,8 +155,7 @@ public class Superstructure extends SubsystemBase {
                 state == SuperstructureState.RIGHT_CORNER);
     }
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SuperstructureState state = getState();
         
         if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && state == SuperstructureState.SOTM &&

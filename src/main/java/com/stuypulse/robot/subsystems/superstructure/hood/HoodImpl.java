@@ -149,8 +149,8 @@ public class HoodImpl extends Hood {
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
 
         if (!hasUsedAbsoluteEncoder) {
             // seedHood();

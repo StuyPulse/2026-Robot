@@ -154,8 +154,8 @@ public class SpindexerImpl extends Spindexer {
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
 
         boolean shouldNotShootIntoHub = (Superstructure.getInstance().superstructureInShootIntoHubMode()) ? 
             !CommandSwerveDrivetrain.getInstance().canShootIntoHub() 

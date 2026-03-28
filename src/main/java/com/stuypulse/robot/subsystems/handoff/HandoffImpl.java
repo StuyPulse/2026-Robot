@@ -93,10 +93,10 @@ public class HandoffImpl extends Handoff {
         motorLeadStatorCurrent = motorLead.getStatorCurrent();
         motorLeadVelocity = motorLead.getVelocity();
         motorLeadVoltage = motorLead.getMotorVoltage();
-        motorFollowSupplyCurrent = motorLead.getSupplyCurrent();
-        motorFollowStatorCurrent = motorLead.getStatorCurrent();
-        motorFollowVelocity = motorLead.getVelocity();
-        motorFollowVoltage = motorLead.getMotorVoltage();
+        motorFollowSupplyCurrent = motorFollow.getSupplyCurrent();
+        motorFollowStatorCurrent = motorFollow.getStatorCurrent();
+        motorFollowVelocity = motorFollow.getVelocity();
+        motorFollowVoltage = motorFollow.getMotorVoltage();
         signals = new BaseStatusSignal[]{motorLeadSupplyCurrent, motorLeadStatorCurrent, motorLeadVelocity, motorLeadVoltage, motorFollowSupplyCurrent, motorFollowStatorCurrent, motorFollowVelocity, motorFollowVoltage};
 
         isStalling = BStream.create(() -> motorLeadSupplyCurrent.getValueAsDouble() > Settings.Handoff.HANDOFF_STALL_CURRENT.getAsDouble())

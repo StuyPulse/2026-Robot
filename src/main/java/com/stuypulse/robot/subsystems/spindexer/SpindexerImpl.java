@@ -230,7 +230,7 @@ public class SpindexerImpl extends Spindexer {
 
     @Override
     public double getCurrentDraw() {
-        return Math.abs(leaderSupplyCurrent.getValueAsDouble()) +
-                Math.abs(followerSupplyCurrent.getValueAsDouble());
+        return Double.max(0, leaderSupplyCurrent.getValueAsDouble()) +
+                Double.max(0, followerSupplyCurrent.getValueAsDouble());
     }
 }

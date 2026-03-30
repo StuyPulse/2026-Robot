@@ -185,7 +185,6 @@ public class SpindexerImpl extends Spindexer {
             : false;
     
         boolean unJamming = spindexerUnjam();
-        setState(SpindexerState.REVERSE);
 
         if (EnabledSubsystems.SPINDEXER.get()) {
             if (voltageOverride.isPresent()) {

@@ -189,11 +189,11 @@ public class TurretImpl extends Turret {
             delta += 360;
         }
 
-        if (current + delta < Settings.Superstructure.Turret.RANGE_LEFT) {
-            return delta + 360;
-        }
-        if (current + delta > Settings.Superstructure.Turret.RANGE_RIGHT) {
+        if (current + delta > Settings.Superstructure.Turret.RANGE_CW) {
             return delta - 360;
+        }
+        if (current + delta < Settings.Superstructure.Turret.RANGE_CCW) {
+            return delta + 360;
         }
 
         return delta;
@@ -272,7 +272,7 @@ public class TurretImpl extends Turret {
             turretMotor.stopMotor();
         }
 
-        SmartDashboard.putNumber("Superstructure/Turret/Relative Encoder Position (Rot)",
+        SmartDashboard.putNumber("Superstructure/Turret/Relative Encoder Position (deg)",
                 turretMotorPos.getValueAsDouble() * 360.0);
         SmartDashboard.putNumber("Superstructure/Turret/Closed Loop Error (deg)",
                 turretMotorClosedLoopError.getValueAsDouble() * 360.0);

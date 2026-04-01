@@ -171,8 +171,10 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Robot/Match Time", DriverStation.getMatchTime());
         SmartDashboard.putData("Robot/Scheduled Commands", CommandScheduler.getInstance());
         SmartDashboard.putNumber("Robot/Battery Voltage", batteryVoltage);
+        SmartDashboard.putNumber("Robot/CPU Temperature (C)", RobotController.getCPUTemp());
     
         robot.periodicAfterScheduler();
+        energyUtil.periodic();
     }
 
     /*********************/

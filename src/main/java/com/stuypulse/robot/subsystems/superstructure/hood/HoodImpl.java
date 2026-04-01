@@ -56,7 +56,7 @@ public class HoodImpl extends Hood {
 
     public HoodImpl() {
         hoodConfig = new Motors.TalonFXConfig()
-                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withSupplyCurrentLimitAmps(80.0)
                 .withStatorCurrentLimitEnabled(false)

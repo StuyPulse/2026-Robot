@@ -197,7 +197,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 					this));
 
 	/* The SysId routine to test */
-	private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineChassisTranslation;
+	private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineModuleTranslation;
 
 	/**
 	 * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -469,7 +469,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 	public double[] getWheelDrivePositionsRadians() {
 		double[] positions = new double[4];
-		double kDriveGearRatio = 6.48;
+		double kDriveGearRatio = 7.67;
 		for (int i = 0; i < 4; i++) {
 			positions[i] = getModule(i).getDriveMotor().getPosition().getValueAsDouble() * 2 * Math.PI
 					/ kDriveGearRatio;

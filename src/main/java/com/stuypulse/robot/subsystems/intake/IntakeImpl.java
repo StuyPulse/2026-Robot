@@ -87,7 +87,7 @@ public class IntakeImpl extends Intake {
                 .withSensorToMechanismRatio(Settings.Intake.GEAR_RATIO);
 
         rollerConfig = new Motors.TalonFXConfig()
-                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withSupplyCurrentLimitAmps(30.0)
                 .withStatorCurrentLimitEnabled(false)
@@ -103,7 +103,7 @@ public class IntakeImpl extends Intake {
         rollerConfig.configure(rollerFollower);
 
         rollerController = new DutyCycleOut(getRollerState().getTargetDutyCycle()).withEnableFOC(true);
-        follower = new Follower(Ports.Intake.ROLLER_LEADER, MotorAlignmentValue.Aligned);
+        follower = new Follower(Ports.Intake.ROLLER_LEADER, MotorAlignmentValue.Opposed);
 
         rollerFollower.setControl(follower);
 

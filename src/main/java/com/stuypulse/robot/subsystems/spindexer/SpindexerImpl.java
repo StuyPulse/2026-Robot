@@ -140,13 +140,13 @@ public class SpindexerImpl extends Spindexer {
             !CommandSwerveDrivetrain.getInstance().canShootIntoHub() 
             : false;
     
-        boolean unJamming = spindexerUnjam();
+        // boolean unJamming = spindexerUnjam();
 
         if (EnabledSubsystems.SPINDEXER.get()) {
             if (voltageOverride.isPresent()) {
                 leaderMotor.setVoltage(voltageOverride.get());
             } else {
-                if ((shouldStop() || shouldNotShootIntoHub) && !unJamming) {
+                if ((shouldStop() || shouldNotShootIntoHub)) {
                     leaderMotor.stopMotor();
                 }             
                 else {
@@ -158,7 +158,7 @@ public class SpindexerImpl extends Spindexer {
         }
 
         SmartDashboard.putNumber("Spindexer/Leader Motor RPM", getMotorRPM());
-        SmartDashboard.putBoolean("Spindexer/Unjamming", unJamming);
+        // SmartDashboard.putBoolean("Spindexer/Unjamming", unJamming);
 
         SmartDashboard.putBoolean("Spindexer/At Tolerance", atTolerance());
 

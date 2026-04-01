@@ -35,7 +35,7 @@ public interface Settings {
     public final double DT = 0.020;
     public final int LOGGING_FREQUENCY = 2;
     public final double SECONDS_IN_A_MINUTE = 60.0;
-    public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", false);
+    public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", true);
     public final CANBus CANIVORE = new CANBus("canivore", "./logs/example.hoot");
     public final double LOOP_OVERRUN_WARNING_TIME_SEC = 1; 
 
@@ -58,8 +58,9 @@ public interface Settings {
     }
 
     public interface Intake {
-        Rotation2d PIVOT_STOW_ANGLE = Rotation2d.fromDegrees(90.0); 
-        Rotation2d PIVOT_DEPLOY_ANGLE = Rotation2d.fromDegrees(0.0);
+        Rotation2d PIVOT_ZERO_STOW_ANGLE = Rotation2d.fromDegrees(90.0);
+        Rotation2d PIVOT_STOW_ANGLE = Rotation2d.fromDegrees(80.0); 
+        Rotation2d PIVOT_DEPLOY_ANGLE = Rotation2d.fromDegrees(-10.0);
 
         Rotation2d PIVOT_ANGLE_TOLERANCE = Rotation2d.fromDegrees(5.0); 
 
@@ -106,7 +107,7 @@ public interface Settings {
 
         public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
-                {1.22, Units.degreesToRadians(22.5)},
+                {1.22, Units.degreesToRadians(20)},
                 {2.15, Units.degreesToRadians(27)},
                 {3.38, Units.degreesToRadians(37)},
                 {4.43, Units.degreesToRadians(39)},
@@ -116,11 +117,11 @@ public interface Settings {
 
         public interface RPMInterpolation{
             double[][] distanceRPMInterpolationValues = {
-                {1.22, 2800.0},
-                {2.15, 2880.0},
-                {3.38, 3250},
-                {4.43, 3725.0},
-                {5.66, 3900.0}
+                {1.22, 2600.0},
+                {2.15, 2855.0},
+                {3.38, 3000},
+                {4.43, 3525.0},
+                {5.66, 3600.0}
             };
         }
 
@@ -235,8 +236,8 @@ public interface Settings {
             Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
             
             /* CONSTANTS */
-            public final double RANGE_LEFT = -360.0;
-            public final double RANGE_RIGHT = 85.0;
+            public final double RANGE_CW = 90.0;//-360.0;
+            public final double RANGE_CCW = -360.0;//85.0; // -397.0 is further
         
             public final Rotation2d GAIN_SWITCHING_THRESHOLD = Rotation2d.fromDegrees(30);
         
@@ -253,12 +254,12 @@ public interface Settings {
         
             public interface Encoder17t {
                 public final int TEETH = 17;
-                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.716);
+                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.185);
             }
-        
+            
             public interface Encoder18t {
                 public final int TEETH = 18;
-                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.559);
+                public final Rotation2d OFFSET = Rotation2d.fromRotations(-0.814);
             }
         
             public interface SoftwareLimit {
@@ -342,6 +343,7 @@ public interface Settings {
 
         LEDPattern LEFT_CORNER = LEDPattern.solid(Color.kPurple);
         LEDPattern RIGHT_CORNER = LEDPattern.solid(Color.kBlue);
+        
         LEDPattern KB_DISTANCE = LEDPattern.solid(Color.kPink);
 
         LEDPattern REVERSE = LEDPattern.solid(Color.kWhite);

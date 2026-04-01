@@ -122,8 +122,8 @@ public class TurretSim extends Turret {
         if (delta > 180.0) delta -= 360;
         else if (delta < -180) delta += 360;
 
-        if (current + delta < Settings.Superstructure.Turret.RANGE_LEFT) return delta + 360;
-        if (current + delta > Settings.Superstructure.Turret.RANGE_RIGHT) return delta - 360;
+        if (current + delta < Settings.Superstructure.Turret.RANGE_CW) return delta + 360;
+        if (current + delta > Settings.Superstructure.Turret.RANGE_CCW) return delta - 360;
 
         return delta;
     }

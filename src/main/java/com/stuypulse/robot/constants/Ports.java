@@ -26,7 +26,7 @@ public interface Ports {
 
     public interface Handoff {
         int MOTOR_LEAD = 43;
-        int MOTOR_FOLLOW = 44;
+        int MOTOR_FOLLOW = 48;
     }
 
     public interface Superstructure {
@@ -54,6 +54,6 @@ public interface Ports {
     }
 
     public interface Spindexer {
-        int MOTOR = 30; //TODO: VERIFY ID
+        int MOTOR = 30;
     }
 }

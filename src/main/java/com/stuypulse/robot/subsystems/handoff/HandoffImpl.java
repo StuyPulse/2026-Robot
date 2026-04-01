@@ -47,6 +47,7 @@ public class HandoffImpl extends Handoff {
 
     private Optional<Double> voltageOverride;
     private BStream isStalling;
+    private final Follower follower;
 
     private StatusSignal<Current> motorLeadSupplyCurrent;
     private StatusSignal<Current> motorLeadStatorCurrent;
@@ -61,7 +62,7 @@ public class HandoffImpl extends Handoff {
 
     public HandoffImpl() {
         handoffConfig = new Motors.TalonFXConfig()
-            .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+            .withInvertedValue(InvertedValue.Clockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake)
             
             .withSupplyCurrentLimitAmps(80.0)
@@ -80,7 +81,7 @@ public class HandoffImpl extends Handoff {
 
         // controller = new VelocityVoltage(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE).withEnableFOC(true);
         controller = new DutyCycleOut(getTargetDutyCycle());
-        motorFollow.setControl(new Follower(Ports.Handoff.MOTOR_LEAD, MotorAlignmentValue.Opposed));
+        follower = new Follower(Ports.Handoff.MOTOR_LEAD, MotorAlignmentValue.Opposed);
         voltageOverride = Optional.empty();
 
         motorLeadSupplyCurrent = motorLead.getSupplyCurrent();
@@ -155,6 +156,7 @@ public class HandoffImpl extends Handoff {
                 motorFollow.stopMotor();
             } else {
                 motorLead.setControl(controller.withOutput(getTargetDutyCycle()));
+                motorFollow.setControl(follower);
             }
         } else {
             motorLead.stopMotor();

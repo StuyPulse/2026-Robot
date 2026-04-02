@@ -103,7 +103,7 @@ public class SpindexerSim extends Spindexer {
     public void periodic() {
         super.periodic();
 
-        controller.setNextR(VecBuilder.fill(getTargetRPM() * 2.0 * Math.PI / 60.0));
+        controller.setNextR(VecBuilder.fill(getTargetDutyCycle() * 2.0 * Math.PI / 60.0));
         controller.correct(VecBuilder.fill(sim.getOutput(0)));
         controller.predict(Settings.DT);
 
@@ -152,18 +152,6 @@ public class SpindexerSim extends Spindexer {
                 () -> 0.0,
                 () -> sim.getInput(0),
                 getInstance());
-    }
-
-    @Override
-    public boolean atTolerance() {
-        double error = getCurrentRPM() - getTargetRPM();
-        return Math.abs(error) <= Settings.Spindexer.RPM_TOLERANCE;
-    }
-
-    @Override
-    public boolean canStartIntakeRollers() {
-        double error = getCurrentRPM() - getTargetRPM();
-        return Math.abs(error) <= Settings.Spindexer.TOLERANCE_TO_START_INTAKE_ROLLERS_DURING_SCORING_ROUTINE;
     }
 
     @Override

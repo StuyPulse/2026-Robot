@@ -166,7 +166,6 @@ public class HandoffImpl extends Handoff {
             motorFollow.stopMotor();
         }
         
-        
         SmartDashboard.putBoolean("Handoff/ShouldStop?", shouldStop());
         SmartDashboard.putNumber("Handoff/Lead Velocity", getLeaderRPM());
         SmartDashboard.putNumber("Handoff/Follow Velocity", getLeaderRPM());

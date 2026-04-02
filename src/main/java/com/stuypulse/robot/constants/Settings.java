@@ -81,8 +81,8 @@ public interface Settings {
     }
 
     public interface Spindexer {
-        double FORWARD_SPEED = 4500.0;
-        double REVERSE_SPEED = -4500.0;
+        double FORWARD_DUTY_CYCLE = -0.8; //TODO: GET
+        double REVERSE_DUTY_CYCLE = 0.8;
         double STOP_SPEED = 0.0;
         double REVERSE_TIME = 2.0;
 

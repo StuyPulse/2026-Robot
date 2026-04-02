@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -42,7 +43,7 @@ public class SpindexerImpl extends Spindexer {
 
     private final TalonFX leaderMotor;
 
-    private final VelocityVoltage controller;
+    private final DutyCycleOut controller;
     private final BStream isStalling;
     private boolean hasStartedStallTimer;
     private final Timer unjamTimer;
@@ -56,7 +57,7 @@ public class SpindexerImpl extends Spindexer {
 
     public SpindexerImpl() {
         spindexerLeadConfig = new Motors.TalonFXConfig()
-                .withInvertedValue(InvertedValue.Clockwise_Positive)    //TODO: VERIFY DIR
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withNeutralMode(NeutralModeValue.Brake)
 
                 .withSupplyCurrentLimitAmps(45)
@@ -72,7 +73,7 @@ public class SpindexerImpl extends Spindexer {
 
         spindexerLeadConfig.configure(leaderMotor);
 
-        controller = new VelocityVoltage(getTargetRPM()).withEnableFOC(true);
+        controller = new DutyCycleOut(getTargetDutyCycle()).withEnableFOC(true);
 
         leaderSupplyCurrent = leaderMotor.getSupplyCurrent();
         leaderStatorCurrent = leaderMotor.getStatorCurrent();
@@ -123,18 +124,6 @@ public class SpindexerImpl extends Spindexer {
     }
 
     @Override
-    public boolean atTolerance() {
-        double error = getMotorRPM() - getTargetRPM();
-        return Math.abs(error) <= Settings.Spindexer.RPM_TOLERANCE;
-    }
-
-    @Override
-    public boolean canStartIntakeRollers() {
-        double error = getMotorRPM() - getTargetRPM();
-        return Math.abs(error) <= Settings.Spindexer.TOLERANCE_TO_START_INTAKE_ROLLERS_DURING_SCORING_ROUTINE;
-    }
-
-    @Override
     public void periodicAfterScheduler() {
         super.periodicAfterScheduler();
 
@@ -152,7 +141,7 @@ public class SpindexerImpl extends Spindexer {
                     leaderMotor.stopMotor();
                 }             
                 else {
-                    leaderMotor.setControl(controller.withVelocity(getTargetRPM() / Settings.SECONDS_IN_A_MINUTE));
+                    leaderMotor.setControl(controller.withOutput(getTargetDutyCycle()));
                 }
             }
         } else {
@@ -162,15 +151,12 @@ public class SpindexerImpl extends Spindexer {
         SmartDashboard.putNumber("Spindexer/Leader Motor RPM", getMotorRPM());
         // SmartDashboard.putBoolean("Spindexer/Unjamming", unJamming);
 
-        SmartDashboard.putBoolean("Spindexer/At Tolerance", atTolerance());
-
         SmartDashboard.putNumber("Spindexer/Leader Voltage (volts)", leaderMotorVoltage.getValueAsDouble());
         SmartDashboard.putNumber("Spindexer/Leader Supply Current (amps)", leaderSupplyCurrent.getValueAsDouble());
         SmartDashboard.putNumber("Spindexer/Leader Stator Current (amps)", leaderStatorCurrent.getValueAsDouble());
 
         SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
         SmartDashboard.putBoolean("Spindexer/shouldNotShootIntoHub", shouldNotShootIntoHub);
-
 
         if (Settings.DEBUG_MODE.get()) {
             if (Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {

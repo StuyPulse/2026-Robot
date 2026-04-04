@@ -44,7 +44,7 @@ public class RightTwoCycle extends SequentialCommandGroup {
             new HandoffRun().andThen(
                 new SpindexerRun()
             ).andThen(new WaitCommand(1.75)
-                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
+                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(3.5),
             new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             // NZ Trip 2

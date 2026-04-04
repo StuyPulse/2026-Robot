@@ -577,13 +577,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		// return behindHubX && withinHubY;
 		
 		// === RECTANGLE ===:
-		Translation2d turretTranslation = getTurretPose().getTranslation();
-		boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX()
-				&& turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX;
-		boolean withinHubY = Field.hubFarRightCorner.getY() + Field.hubToleranceY < getTurretPose().getY()
-				&& getTurretPose().getY() < Field.hubFarLeftCorner.getY() - Field.hubToleranceY;
+		// Translation2d turretTranslation = getTurretPose().getTranslation();
+		// boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX()
+		// 		&& turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX;
+		// boolean withinHubY = Field.hubFarRightCorner.getY() + Field.hubToleranceY < getTurretPose().getY()
+		// 		&& getTurretPose().getY() < Field.hubFarLeftCorner.getY() - Field.hubToleranceY;
 
-		return behindHubX && withinHubY;
+		// return behindHubX && withinHubY;
 	}
 
 	public boolean isOutsideAllianceZone() {

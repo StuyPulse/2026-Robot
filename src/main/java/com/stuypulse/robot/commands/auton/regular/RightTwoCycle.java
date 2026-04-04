@@ -43,9 +43,9 @@ public class RightTwoCycle extends SequentialCommandGroup {
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().andThen(
                 new SpindexerRun()
-            ).andThen(new WaitCommand(2.5)
-                .andThen(new IntakeAutoDigest()).withTimeout(2.0)),
-            new SuperstructureAutoInterpolation(),
+            ).andThen(new WaitCommand(1.75)
+                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
+            new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             // NZ Trip 2
             new ParallelCommandGroup(
@@ -58,24 +58,23 @@ public class RightTwoCycle extends SequentialCommandGroup {
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().andThen(
                 new SpindexerRun()
-            ).andThen(new WaitCommand(2.5)
-                .andThen(new IntakeAutoDigest()).withTimeout(2.0)),
-            new SuperstructureAutoInterpolation(),
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]),
+            ).andThen(new WaitCommand(1.75)
+                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
+            new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             new ParallelCommandGroup(
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[4]),
+                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]),
                 new HandoffStop(),
                 new SpindexerStop()
-            ),
+            )
 
-            new SuperstructureSOTM(),
-            new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
-            new HandoffRun().andThen(
-                new SpindexerRun()
-            ).andThen(new WaitCommand(2.5)
-                .andThen(new IntakeAutoDigest()).withTimeout(2.0)),
-            new SuperstructureAutoInterpolation()
+            // new SuperstructureSOTM(),
+            // new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
+            // new HandoffRun().andThen(
+            //     new SpindexerRun()
+            // ).andThen(new WaitCommand(2.5)
+            //     .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
+            // new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy())
         
         );
 

@@ -5,17 +5,26 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.superstructure.turret;
 
+import java.util.Optional;
+
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.Robot.RobotMode;
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.DriverConstants;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import com.stuypulse.robot.util.EnergyUtil;
 import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.SysId;
 import com.stuypulse.robot.util.superstructure.TurretAngleCalculator;
@@ -27,17 +36,6 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-
-import java.util.Optional;
 
 public class TurretImpl extends Turret {
     private final Motors.TalonFXConfig turretConfig;
@@ -53,6 +51,7 @@ public class TurretImpl extends Turret {
 
     private Optional<Double> voltageOverride;
     private final PositionVoltage controller;
+    private final MotionMagicVoltage motionMagicVoltageController;
 
     private double prevActualTargetAngle;
     private boolean isWrapping;
@@ -89,9 +88,10 @@ public class TurretImpl extends Turret {
                         Gains.Superstructure.Turret.slot1.kI.get(), Gains.Superstructure.Turret.slot1.kD.get(), 1)
                 .withFFConstants(Gains.Superstructure.Turret.slot1.kS.get(), Gains.Superstructure.Turret.slot1.kV.get(),
                         Gains.Superstructure.Turret.slot1.kA.get(), 1)
-                .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign, 1)
-
                 .withSensorToMechanismRatio(Settings.Superstructure.Turret.GEAR_RATIO_MOTOR_TO_MECH)
+
+                .withMotionProfile(Settings.Superstructure.Turret.MAX_VELOCITY_DEG_PER_SEC, 
+                    Settings.Superstructure.Turret.MAX_ACCEL_DEG_PER_SEC_SQ)
 
                 .withSoftLimits(
                         false, false,
@@ -122,6 +122,7 @@ public class TurretImpl extends Turret {
         prevActualTargetAngle = getTargetAngle().getDegrees();
 
         controller = new PositionVoltage(getTargetAngle().getRotations()).withEnableFOC(true);
+        motionMagicVoltageController = new MotionMagicVoltage(getTargetAngle().getRotations()).withEnableFOC(true);
 
         turretMotor.getClosedLoopError().setUpdateFrequency(1000.0);
 
@@ -260,16 +261,18 @@ public class TurretImpl extends Turret {
                 turretMotor.setVoltage(voltageOverride.get());
             } 
             else {
-                double omega = CommandSwerveDrivetrain.getInstance().getChassisSpeeds().omegaRadiansPerSecond;
-                double omegaFF = Gains.Superstructure.Turret.kOmega.get() * omega;
-                // double setpointVelocityRPS = delta / (360 * Settings.DT);
-                // double translationFF = Gains.Superstructure.Turret.slot0.kV * setpointVelocityRPS;
+                // double omega = CommandSwerveDrivetrain.getInstance().getChassisSpeeds().omegaRadiansPerSecond;
+                // double omegaFF = Gains.Superstructure.Turret.kOmega.get() * omega;
+                // // double setpointVelocityRPS = delta / (360 * Settings.DT);
+                // // double translationFF = Gains.Superstructure.Turret.slot0.kV * setpointVelocityRPS;
 
-                turretMotor.setControl(controller
-                    .withPosition(prevActualTargetAngle / 360.0)
-                    .withSlot(slot)
-                    .withFeedForward(omegaFF /* + translationFF */)
-                );
+                // turretMotor.setControl(controller
+                //     .withPosition(prevActualTargetAngle / 360.0)
+                //     .withSlot(slot)
+                //     .withFeedForward(omegaFF /* + translationFF */)
+                // );
+                motionMagicVoltageController.withPosition(prevActualTargetAngle / 360.0)
+                .withSlot(slot);
             }
         } else {
             turretMotor.stopMotor();

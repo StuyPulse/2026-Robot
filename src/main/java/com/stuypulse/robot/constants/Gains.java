@@ -5,9 +5,8 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.stuylib.network.SmartNumber;
-
 import com.pathplanner.lib.config.PIDConstants;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 public class Gains {
 
@@ -40,7 +39,7 @@ public class Gains {
                 double kD = 0.0;
             
                 double kS = 0.4775;
-                double kV = 0.0;
+                double kV = 0.12;
                 double kA = 0.0;
             }
             
@@ -50,7 +49,7 @@ public class Gains {
                 SmartNumber kD = new SmartNumber("Superstructure/Turret/Gains/kD", 10.0);
 
                 SmartNumber kS = new SmartNumber("Superstructure/Turret/Gains/kS", 0.4775);
-                SmartNumber kV = new SmartNumber("Superstructure/Turret/Gains/kV", 0.0);
+                SmartNumber kV = new SmartNumber("Superstructure/Turret/Gains/kV", 0.12);
                 SmartNumber kA = new SmartNumber("Superstructure/Turret/Gains/kA", 0.0);
             }
 

@@ -507,9 +507,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	}
 
 	public boolean isBehindTower() {
-		boolean withinTowerX = getPose().getTranslation().getX() < Field.towerFarCenter.getX();
-		boolean withinTowerY = Field.towerFarRight.getY() < getTurretPose().getTranslation().getY()
-				&& getTurretPose().getTranslation().getY() < Field.towerFarLeft.getY();
+		boolean withinTowerX = getPose().getTranslation().getX() < Field.TOWER_FAR_CENTER.getX();
+		boolean withinTowerY = Field.TOWER_FAR_RIGHT.getY() < getTurretPose().getTranslation().getY()
+				&& getTurretPose().getTranslation().getY() < Field.TOWER_FAR_LEFT.getY();
 		return withinTowerX && withinTowerY;
 	}
 
@@ -520,26 +520,48 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	 * @return true if robot turret pose is behind the hub.
 	 */
 	public boolean isBehindHub() {
-		// ^^^ TRIANGLE ^^^:
+		// ^^^ TRIANGLE ^^^ (choosing own vertex)
 		Translation2d turretTranslation = getTurretPose().getTranslation();
-		boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX();
+		boolean behindHubX = Field.HUB_FAR_LEFT_CORNER.getX() < turretTranslation.getX();
 				// && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX; // With this line the triangle will be cut to more like a trapezoid.
 			
 		// Find point on triangle using the point-slope formula (of the line constructed by the hub corner pose and ferry pose)
 		// y = (slope)(robotX - hubCornerX) + (hubCornerY)
 		// where the slope = (hubCornerY - ferryY)/(hubCornerX - ferryX)
-		double leftY = ((Field.hubFarLeftCorner.getY() - Field.leftFerryZone.getY())/(Field.hubFarLeftCorner.getX() - Field.leftFerryZone.getX())) // (Slope)
-						* (turretTranslation.getX() - Field.hubFarLeftCorner.getX()) + Field.hubFarLeftCorner.getY(); // *(robotX - hubCornerX) + (hubCornerY)
-		double rightY = ((Field.hubFarRightCorner.getY() - Field.rightFerryZone.getY())/(Field.hubFarRightCorner.getX() - Field.rightFerryZone.getX())) // (Slope)
-						* (turretTranslation.getX() - Field.hubFarRightCorner.getX()) + Field.hubFarRightCorner.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+		double leftY = ((Field.HUB_FAR_LEFT_CORNER.getY() - Field.BEHIND_HUB_TRIANGLE_VERTEX.getX())
+		/(Field.HUB_FAR_LEFT_CORNER.getX() - Field.BEHIND_HUB_TRIANGLE_VERTEX.getY())) // (Slope)
+						* (turretTranslation.getX() - Field.HUB_FAR_LEFT_CORNER.getX()) + Field.HUB_FAR_LEFT_CORNER.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+		double rightY = ((Field.HUB_FAR_RIGHT_CORNER.getY() - Field.RIGHT_FERRY_ZONE.getY())/(Field.HUB_FAR_RIGHT_CORNER.getX() - Field.RIGHT_FERRY_ZONE.getX())) // (Slope)
+						* (turretTranslation.getX() - Field.HUB_FAR_RIGHT_CORNER.getX()) + Field.HUB_FAR_RIGHT_CORNER.getY(); // *(robotX - hubCornerX) + (hubCornerY)
 
-		leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY - Field.hubToleranceY, new Rotation2d()));
-		rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY + Field.hubToleranceY, new Rotation2d()));
+		leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY - Field.HUB_TOLERANCE_Y, new Rotation2d()));
+		rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY + Field.HUB_TOLERANCE_Y, new Rotation2d()));
 
-		boolean withinHubY = rightY + Field.hubToleranceY < getTurretPose().getY()
-							&& getTurretPose().getY() < leftY - Field.hubToleranceY;
+		boolean withinHubY = rightY + Field.HUB_TOLERANCE_Y < getTurretPose().getY()
+							&& getTurretPose().getY() < leftY - Field.HUB_TOLERANCE_Y;
 			
 		return behindHubX && withinHubY;
+
+		// ^^^ TRIANGLE ^^^ (from ferry points):
+		// Translation2d turretTranslation = getTurretPose().getTranslation();
+		// boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX();
+		// 		// && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX; // With this line the triangle will be cut to more like a trapezoid.
+			
+		// // Find point on triangle using the point-slope formula (of the line constructed by the hub corner pose and ferry pose)
+		// // y = (slope)(robotX - hubCornerX) + (hubCornerY)
+		// // where the slope = (hubCornerY - ferryY)/(hubCornerX - ferryX)
+		// double leftY = ((Field.hubFarLeftCorner.getY() - Field.leftFerryZone.getY())/(Field.hubFarLeftCorner.getX() - Field.leftFerryZone.getX())) // (Slope)
+		// 				* (turretTranslation.getX() - Field.hubFarLeftCorner.getX()) + Field.hubFarLeftCorner.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+		// double rightY = ((Field.hubFarRightCorner.getY() - Field.rightFerryZone.getY())/(Field.hubFarRightCorner.getX() - Field.rightFerryZone.getX())) // (Slope)
+		// 				* (turretTranslation.getX() - Field.hubFarRightCorner.getX()) + Field.hubFarRightCorner.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+
+		// leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY - Field.hubToleranceY, new Rotation2d()));
+		// rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY + Field.hubToleranceY, new Rotation2d()));
+
+		// boolean withinHubY = rightY + Field.hubToleranceY < getTurretPose().getY()
+		// 					&& getTurretPose().getY() < leftY - Field.hubToleranceY;
+			
+		// return behindHubX && withinHubY;
 		
 		// === RECTANGLE ===:
 		// Translation2d turretTranslation = getTurretPose().getTranslation();
@@ -629,7 +651,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 		SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", chassisSpeeds.omegaRadiansPerSecond);
 		SmartDashboard.putNumber("Swerve/Distance From Hub (meters)",
-				Field.hubCenter.getTranslation().getDistance(pose.getTranslation()));
+				Field.HUB_CENTER.getTranslation().getDistance(pose.getTranslation()));
 
 		Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? pose : Field.transformToOppositeAlliance(pose));
 
@@ -640,9 +662,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 			SmartDashboard.putBoolean("FieldPositions/isInOpponentZone", isInOpponentZone());
 
 			SmartDashboard.putNumber("Superstructure/Turret/Dist From Hub",
-					turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
+					turretPose.getTranslation().getDistance(Field.HUB_CENTER.getTranslation()));
 			SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Hub",
-					turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
+					turretPose.getTranslation().getDistance(Field.HUB_CENTER.getTranslation()));
 			SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Ferry Zone", turretPose.getTranslation()
 					.getDistance(Field.getFerryZonePose(pose.getTranslation()).getTranslation()));
 

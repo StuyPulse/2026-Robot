@@ -533,6 +533,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		double rightY = ((Field.hubFarRightCorner.getY() - Field.rightFerryZone.getY())/(Field.hubFarRightCorner.getX() - Field.rightFerryZone.getX())) // (Slope)
 						* (turretTranslation.getX() - Field.hubFarRightCorner.getX()) + Field.hubFarRightCorner.getY(); // *(robotX - hubCornerX) + (hubCornerY)
 
+		leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY - Field.hubToleranceY, new Rotation2d()));
+		rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY + Field.hubToleranceY, new Rotation2d()));
+
 		boolean withinHubY = rightY + Field.hubToleranceY < getTurretPose().getY()
 							&& getTurretPose().getY() < leftY - Field.hubToleranceY;
 			

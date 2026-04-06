@@ -5,7 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.superstructure.turret;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.DriverConstants;
@@ -119,21 +118,22 @@ public class TurretSim extends Turret {
 
     private double getDelta(double target, double current) {
         double delta = (target - current) % 360;
-        
-        if (delta > 180.0) delta -= 360;
-        else if (delta < -180) delta += 360;
 
-        if (current + delta < Settings.Superstructure.Turret.RANGE_LEFT) return delta + 360;
-        if (current + delta > Settings.Superstructure.Turret.RANGE_RIGHT) return delta - 360;
+        if (delta > 180.0) {
+            delta -= 360;
+        } else if (delta < -180) {
+            delta += 360;
+        }
+
+        if (current + delta > Settings.Superstructure.Turret.RANGE_CW) {
+            return delta - 360;
+        }
+        if (current + delta < Settings.Superstructure.Turret.RANGE_CCW) {
+            return delta + 360;
+        }
 
         return delta;
     }
-
-     @Override
-    public void refreshStatusSignals() {
-        // Crickets, crickets, crickets...
-    }
-
     @Override
     public void periodic() {
         super.periodic();

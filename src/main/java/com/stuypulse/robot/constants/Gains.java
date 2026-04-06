@@ -70,7 +70,7 @@ public class Gains {
 
     public interface Intake {
         public interface Pivot {
-            SmartNumber kP = new SmartNumber("Intake/Pivot/Gains/kP", 100.0);
+            SmartNumber kP = new SmartNumber("Intake/Pivot/Gains/kP", 200.0);
             SmartNumber kI = new SmartNumber("Intake/Pivot/Gains/kI", 0.0);
             SmartNumber kD = new SmartNumber("Intake/Pivot/Gains/kD", 10.0);
             
@@ -114,8 +114,8 @@ public class Gains {
         }
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(2.2, 0, 0.0);
-            PIDConstants THETA = new PIDConstants(3, 0, 0.0);
+            PIDConstants XY = new PIDConstants(4.0, 0, 0);
+            PIDConstants THETA = new PIDConstants(4.0, 0, 0.0);
         }
     }
 }

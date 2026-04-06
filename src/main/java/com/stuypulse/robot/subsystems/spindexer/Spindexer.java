@@ -36,11 +36,11 @@ public abstract class Spindexer extends SubsystemBase {
         REVERSE;
     }
 
-    public double getTargetRPM() {
+    public double getTargetDutyCycle() {
         return switch (getState()) {
             case STOP -> 0;
-            case FORWARD -> Settings.Spindexer.FORWARD_SPEED;
-            case REVERSE -> Settings.Spindexer.REVERSE_SPEED;
+            case FORWARD -> Settings.Spindexer.FORWARD_DUTY_CYCLE;//((Robot.getPeriodicCounter() % Settings.Spindexer.ANTI_POPCORN_FREQ <= Settings.Spindexer.ANTI_POPCORN_LENGTH) ? Settings.Spindexer.ANTI_POPCORN_DUTY_CYCLE : Settings.Spindexer.FORWARD_DUTY_CYCLE);
+            case REVERSE -> Settings.Spindexer.REVERSE_DUTY_CYCLE;
         };
     }
 
@@ -56,19 +56,16 @@ public abstract class Spindexer extends SubsystemBase {
         this.spindexerState = state;
     }
 
-    public abstract boolean atTolerance();
-    public abstract boolean canStartIntakeRollers();
+    // public abstract boolean atTolerance();
+    // public abstract boolean canStartIntakeRollers();
 
     public abstract SysIdRoutine getSysIdRoutine();
     public abstract void setVoltageOverride(Optional<Double> voltage);
     
     public abstract double getCurrentDraw();
-    public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Spindexer/State", getState().name());
-        SmartDashboard.putNumber("Spindexer/Target RPM", getTargetRPM());
-        SmartDashboard.putBoolean("Spindexer/At Tolerance?", atTolerance());
+        SmartDashboard.putNumber("Spindexer/Target Duty Cycle", getTargetDutyCycle());
     }
 }

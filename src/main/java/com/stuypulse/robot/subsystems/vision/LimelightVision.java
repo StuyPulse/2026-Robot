@@ -8,7 +8,6 @@ package com.stuypulse.robot.subsystems.vision;
 import java.util.Arrays;
 
 import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.commands.vision.BlacklistAllTags;
 import com.stuypulse.robot.constants.Cameras;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
@@ -27,6 +26,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.util.Units;
 
 public class LimelightVision extends SubsystemBase {
 
@@ -77,9 +77,9 @@ public class LimelightVision extends SubsystemBase {
                     robotRelativePose.getX(),
                     robotRelativePose.getY(),
                     robotRelativePose.getZ(),
-                    Rotation2d.fromRadians(robotRelativePose.getRotation().getX()).getDegrees(),
-                    Rotation2d.fromRadians(robotRelativePose.getRotation().getY()).getDegrees(),
-                    Rotation2d.fromRadians(robotRelativePose.getRotation().getZ()).getDegrees()
+                    Units.radiansToDegrees(robotRelativePose.getRotation().getX()),
+                    Units.radiansToDegrees(robotRelativePose.getRotation().getY()),
+                    Units.radiansToDegrees(robotRelativePose.getRotation().getZ())
             );
 
             limelightPoseArray[i] = new Pose2d();
@@ -193,8 +193,7 @@ public class LimelightVision extends SubsystemBase {
         return debouncedHasData.get();
     }
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         if (enabled.get()) {
             hasData = false;
 

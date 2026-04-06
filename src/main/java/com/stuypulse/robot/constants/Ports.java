@@ -25,7 +25,8 @@ public interface Ports {
     }
 
     public interface Handoff {
-        int HANDOFF = 43;
+        int MOTOR_LEAD = 43;
+        int MOTOR_FOLLOW = 48;
     }
 
     public interface Superstructure {
@@ -53,7 +54,6 @@ public interface Ports {
     }
 
     public interface Spindexer {
-        int SPINDEXER_LEAD_MOTOR = 30;
-        int SPINDEXER_FOLLOW_MOTOR = 31;
+        int MOTOR = 30;
     }
 }

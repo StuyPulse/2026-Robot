@@ -7,8 +7,8 @@ package com.stuypulse.robot.commands.superstructure;
 
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 
-public class SuperstructureShoot extends SuperstructureSetState {
-    public SuperstructureShoot() {
-        super(SuperstructureState.SHOOT);
+public class SuperstructureManualOverride extends SuperstructureSetState {
+    public SuperstructureManualOverride() {
+        super(SuperstructureState.MANUAL_OVERRIDE);
     }
 }

@@ -12,6 +12,7 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -21,7 +22,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -29,6 +29,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import java.util.Optional;
 
 public class ShooterImpl extends Shooter {
@@ -50,8 +51,6 @@ public class ShooterImpl extends Shooter {
     private StatusSignal<Voltage> shooterLeaderVoltage;
     private StatusSignal<Voltage> shooterFollowerVoltage;
     private StatusSignal<Double> shooterLeaderClosedLoopError;
-    private BaseStatusSignal[] signals;
-
 
     public ShooterImpl() {
         shooterConfig = new Motors.TalonFXConfig()
@@ -102,9 +101,9 @@ public class ShooterImpl extends Shooter {
         shooterLeaderVoltage = shooterLeader.getMotorVoltage();
         shooterFollowerVoltage = shooterLeader.getMotorVoltage();
         shooterLeaderClosedLoopError = shooterLeader.getClosedLoopError();
-        signals = new BaseStatusSignal[] { shooterLeaderSpeed, shooterFollowerSpeed, shooterFollowSupplyCurrent,
-                shooterFollowStatorCurrent, shooterLeadSupplyCurrent, shooterLeadStatorCurrent, shooterLeaderVoltage,
-                shooterFollowerVoltage, shooterLeaderClosedLoopError };
+        PhoenixUtil.registerToRio(shooterLeaderSpeed, shooterFollowerSpeed, shooterFollowSupplyCurrent, 
+                shooterFollowStatorCurrent, shooterLeadSupplyCurrent, shooterLeadStatorCurrent, 
+                shooterLeaderVoltage, shooterFollowerVoltage, shooterLeaderClosedLoopError);
         voltageOverride = Optional.empty();
     }
 
@@ -125,14 +124,10 @@ public class ShooterImpl extends Shooter {
         return mesurement < setpoint ? 1.0 : -1.0;
     }
 
-    @Override
-    public void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(signals);
-    }
 
     @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
 
         shooterConfig.updateGainsConfig(
                 shooterLeader,
@@ -195,10 +190,12 @@ public class ShooterImpl extends Shooter {
                                 + String.valueOf(Ports.Superstructure.Shooter.MOTOR_FOLLOW) + ")",
                         shooterFollower.isConnected());
             }
+           Robot.getEnergyUtil().logEnergyUsage(getName(), getCurrentDraw());
         }
 
         SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error (RPM)",
                 shooterLeaderClosedLoopError.getValueAsDouble() * 60.0);
+
     }
 
     private void setVoltageOverride(Optional<Double> voltageOverride) {
@@ -220,7 +217,7 @@ public class ShooterImpl extends Shooter {
 
     @Override
     public double getCurrentDraw() {
-        return Math.abs(shooterLeadSupplyCurrent.getValueAsDouble()) +
-                Math.abs(shooterFollowSupplyCurrent.getValueAsDouble());
+        return Double.max(0, shooterLeadSupplyCurrent.getValueAsDouble()) +
+                Double.max(0, shooterFollowSupplyCurrent.getValueAsDouble());
     }
 }

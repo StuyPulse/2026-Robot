@@ -14,7 +14,7 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.util.SettableNumber;
+import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -68,7 +67,6 @@ public class IntakeImpl extends Intake {
     StatusSignal<Voltage> pivotMotorVoltage;
     StatusSignal<Voltage> rollerLeaderVoltage;
     StatusSignal<Voltage> rollerFollowerVoltage;
-    BaseStatusSignal[] signals;
 
     public IntakeImpl() {
         pivotConfig = new Motors.TalonFXConfig()
@@ -89,7 +87,7 @@ public class IntakeImpl extends Intake {
                 .withSensorToMechanismRatio(Settings.Intake.GEAR_RATIO);
 
         rollerConfig = new Motors.TalonFXConfig()
-                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withSupplyCurrentLimitAmps(30.0)
                 .withStatorCurrentLimitEnabled(false)
@@ -105,7 +103,7 @@ public class IntakeImpl extends Intake {
         rollerConfig.configure(rollerFollower);
 
         rollerController = new DutyCycleOut(getRollerState().getTargetDutyCycle()).withEnableFOC(true);
-        follower = new Follower(Ports.Intake.ROLLER_LEADER, MotorAlignmentValue.Aligned);
+        follower = new Follower(Ports.Intake.ROLLER_LEADER, MotorAlignmentValue.Opposed);
 
         rollerFollower.setControl(follower);
 
@@ -126,11 +124,10 @@ public class IntakeImpl extends Intake {
         pivotMotorVoltage = pivot.getMotorVoltage();
         rollerLeaderVoltage = rollerLeader.getMotorVoltage();
         rollerFollowerVoltage = rollerFollower.getMotorVoltage();
-        signals = new BaseStatusSignal[] { pivotSupplyCurrent, pivotStatorCurrent, rollerLeaderSupplyCurrent,
+        PhoenixUtil.registerToRio(pivotStatorCurrent, rollerLeaderSupplyCurrent,
                 rollerLeaderStatorCurrent, rollerFollowerSupplyCurrent, rollerFollowerStatorCurrent,
                 rollerLeaderTemperature, rollerFollowerTemperature, pivotTemperature, pivotMotorVoltage,
-                rollerLeaderVoltage, rollerFollowerVoltage, pivotMotorPosition };
-        refreshStatusSignals();
+                rollerLeaderVoltage, rollerFollowerVoltage, pivotMotorPosition );
 
         pivotStalling = BStream.create(
                 () -> Math.abs(pivotSupplyCurrent.getValueAsDouble()) > Settings.Intake.STALL_CURRENT_LIMIT)
@@ -164,15 +161,11 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
-    public void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(signals);
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
 
         PivotState pivotState = getPivotState();
+        RollerState rollerState = getRollerState();
 
         pivotConfig.updateGainsConfig(
                 pivot,
@@ -190,10 +183,11 @@ public class IntakeImpl extends Intake {
                 pivot.setVoltage(pivotVoltageOverride.get());
             } else {
                 // PIVOT
-                if (pivotState == PivotState.DEPLOY && getPivotAngle()
-                        .getDegrees() <= Settings.Intake.ANGLE_THRESHOLD_FOR_HOLDING_VOLTAGE.getDegrees()) {
-                    pivot.setControl(new VoltageOut(-Settings.Intake.PUSHDOWN_VOLTAGE)); // applying 3 volts
-                    applyingPushdownVoltage = true;
+                if (pivotState == PivotState.DEPLOY && 
+                    getPivotAngle().getDegrees() <= Settings.Intake.ANGLE_THRESHOLD_FOR_HOLDING_VOLTAGE.getDegrees()
+                    && rollerState != RollerState.STOP) {
+                        pivot.setControl(new VoltageOut(-Settings.Intake.PUSHDOWN_VOLTAGE)); // applying 3 volts
+                        applyingPushdownVoltage = true;
                 } else if (pivotState == PivotState.HOMING) {
                     pivot.setControl(new VoltageOut(-Settings.Intake.HOMING_VOLTAGE));
                 } else {
@@ -267,6 +261,8 @@ public class IntakeImpl extends Intake {
                     SmartDashboard.putBoolean("Robot/CAN/Main/Intake Roller Follower Motor Connected? (ID "
                             + String.valueOf(Ports.Intake.ROLLER_FOLLOWER) + ")", rollerFollower.isConnected());
                 }
+                Robot.getEnergyUtil().logEnergyUsage(getName(), getCurrentDraw());
+
             }
         }
     }
@@ -291,8 +287,8 @@ public class IntakeImpl extends Intake {
 
     @Override
     public double getCurrentDraw() {
-        return Math.abs(pivotSupplyCurrent.getValueAsDouble()) +
-                Math.abs(rollerFollowerSupplyCurrent.getValueAsDouble()) +
-                Math.abs(rollerLeaderSupplyCurrent.getValueAsDouble());
+        return Double.max(0, pivotSupplyCurrent.getValueAsDouble()) +
+                Double.max(0, rollerFollowerSupplyCurrent.getValueAsDouble()) +
+                Double.max(0, rollerLeaderSupplyCurrent.getValueAsDouble());
     }
 }

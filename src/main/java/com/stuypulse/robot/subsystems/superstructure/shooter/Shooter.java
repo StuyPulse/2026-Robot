@@ -33,7 +33,7 @@ public abstract class Shooter extends SubsystemBase {
 
     public enum ShooterState {
         STOP,
-        SHOOT,
+        MANUAL_OVERRIDE,
         FERRY,
         REVERSE,
         KB,
@@ -45,7 +45,7 @@ public abstract class Shooter extends SubsystemBase {
     }
 
     public Shooter() {
-        state = ShooterState.SHOOT;
+        state = ShooterState.MANUAL_OVERRIDE;
     }
 
     public void setState(ShooterState state) {
@@ -63,7 +63,7 @@ public abstract class Shooter extends SubsystemBase {
         
         return switch(state) {
             case STOP -> 0;
-            case SHOOT -> getShootRPM();
+            case MANUAL_OVERRIDE -> getShootRPM();
             case FERRY -> InterpolationCalculator.interpolateFerryingInfo().targetRPM();
             case REVERSE -> Settings.Superstructure.Shooter.RPM.REVERSE;
             case KB -> Settings.Superstructure.Shooter.RPM.KB;
@@ -76,7 +76,7 @@ public abstract class Shooter extends SubsystemBase {
     }
 
     public double getShootRPM() {
-        return Settings.Superstructure.Shooter.RPM.SHOOT.get(); // Adjustable RPM on Glass
+        return Settings.Superstructure.Shooter.RPM.MANUAL_OVERRIDE.get(); // Adjustable RPM on Glass
     }
 
     public boolean atTolerance() {
@@ -102,10 +102,8 @@ public abstract class Shooter extends SubsystemBase {
     public abstract SysIdRoutine getShooterSysIdRoutine();
     
     public abstract double getCurrentDraw();
-    public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Superstructure/Shooter/State", state.name());
 
         SmartDashboard.putNumber("Superstructure/Shooter/Current RPM (Leader)", getRPM());

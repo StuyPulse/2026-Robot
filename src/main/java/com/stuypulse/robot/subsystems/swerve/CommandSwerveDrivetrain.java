@@ -8,41 +8,7 @@ package com.stuypulse.robot.subsystems.swerve;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.math.Vector2D;
-
-import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.Robot.RobotMode;
-import com.stuypulse.robot.RobotContainer;
-import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
-import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Gains;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.superstructure.Superstructure;
-import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
-import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
-import com.stuypulse.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
-
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.sql.Struct;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
@@ -60,6 +26,39 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.RobotMode;
+import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
+import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Gains;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
+import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
+import com.stuypulse.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
+import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.math.Vector2D;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -70,6 +69,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 	private FieldObject2d turret2d = Field.FIELD2D.getObject("Turret 2D");
 	private Pose2d turretPose = new Pose2d();
+	private StructPublisher<Pose2d> leftBehindHubYPlublisher;
+	private StructPublisher<Pose2d> rightBehindHubYPlublisher;
+	private StructPublisher<Pose2d> vertexBehindHubPublisher;
 
 	private StructPublisher<Pose2d> robotPose = NetworkTableInstance.getDefault()
 			.getStructTopic("Robot Pose", Pose2d.struct).publish();
@@ -199,7 +201,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 					this));
 
 	/* The SysId routine to test */
-	private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineChassisTranslation;
+	private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineModuleTranslation;
 
 	/**
 	 * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -220,6 +222,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		if (Utils.isSimulation()) {
 			startSimThread();
 		}
+
+		leftBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/LeftBehindHubY", Pose2d.struct).publish();
+		rightBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/RightBehindHubY", Pose2d.struct).publish();
+		vertexBehindHubPublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/VertexBehindHub", Pose2d.struct).publish();
 	}
 
 	/**
@@ -401,6 +407,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 			PathPlannerLogging.setLogActivePathCallback((poses) -> {
 				if (Robot.isBlue()) {
 					Field.FIELD2D.getObject("path").setPoses(poses);
+
 				} else {
 					Field.FIELD2D.getObject("path").setPoses(Field.transformToOppositeAlliance(poses));
 				}
@@ -471,7 +478,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 	public double[] getWheelDrivePositionsRadians() {
 		double[] positions = new double[4];
-		double kDriveGearRatio = 6.48;
+		double kDriveGearRatio = 7.67;
 		for (int i = 0; i < 4; i++) {
 			positions[i] = getModule(i).getDriveMotor().getPosition().getValueAsDouble() * 2 * Math.PI
 					/ kDriveGearRatio;
@@ -506,21 +513,77 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	}
 
 	public boolean isBehindTower() {
-		boolean withinTowerX = getPose().getTranslation().getX() < Field.towerFarCenter.getX();
-		boolean withinTowerY = Field.towerFarRight.getY() < getTurretPose().getTranslation().getY()
-				&& getTurretPose().getTranslation().getY() < Field.towerFarLeft.getY();
+		boolean withinTowerX = getPose().getTranslation().getX() < Field.TOWER_FAR_CENTER.getX();
+		boolean withinTowerY = Field.TOWER_FAR_RIGHT.getY() < getTurretPose().getTranslation().getY()
+				&& getTurretPose().getTranslation().getY() < Field.TOWER_FAR_LEFT.getY();
 		return withinTowerX && withinTowerY;
 	}
 
-	// Stop ferrying when in rectangle behind hub (in neutral zone)
+	/**
+	 * Checks whether the robot turret pose is behind the hub or not in the neutral zone.
+	 * For stopping ferrying to prevent fuel hitting the hub.
+	 * 
+	 * @return true if robot turret pose is behind the hub.
+	 */
 	public boolean isBehindHub() {
+		// === TRIANGLE === (CUSTOM VERTEX)
 		Translation2d turretTranslation = getTurretPose().getTranslation();
-		boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX()
-				&& turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX;
-		boolean withinHubY = Field.hubFarRightCorner.getY() + Field.hubToleranceY < getTurretPose().getY()
-				&& getTurretPose().getY() < Field.hubFarLeftCorner.getY() - Field.hubToleranceY;
 
+		boolean behindHubX = Field.HUB_FAR_LEFT_CORNER.getX() < turretTranslation.getX();
+				// && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX; // With this line the triangle will be cut to more like a trapezoid.
+
+		Pose2d hubFarLeftCornerWithTolerance = new Pose2d(Field.HUB_FAR_LEFT_CORNER.getX(), Field.HUB_FAR_LEFT_CORNER.getY() + Field.BEHIND_HUB_TOLERANCE_Y, new Rotation2d());
+		Pose2d hubFarRightCornerWithTolerance = new Pose2d(Field.HUB_FAR_RIGHT_CORNER.getX(), Field.HUB_FAR_RIGHT_CORNER.getY() - Field.BEHIND_HUB_TOLERANCE_Y, new Rotation2d());
+
+		// Find point on triangle using the point-slope formula (of the line constructed by the hub corner pose and ferry pose)
+		// y = (slope)(robotX - hubCornerX) + (hubCornerY)
+		// where the slope = (hubCornerY - vertexY)/(hubCornerX - vertexX)
+		double leftY = ((hubFarLeftCornerWithTolerance.getY() - Field.BEHIND_HUB_TRIANGLE_VERTEX.getY())
+						/(hubFarLeftCornerWithTolerance.getX() - Field.BEHIND_HUB_TRIANGLE_VERTEX.getX())) // (Slope)
+						* (turretTranslation.getX() - hubFarLeftCornerWithTolerance.getX()) + hubFarLeftCornerWithTolerance.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+		double rightY = ((hubFarRightCornerWithTolerance.getY() - Field.BEHIND_HUB_TRIANGLE_VERTEX.getY())
+						/(hubFarRightCornerWithTolerance.getX() - Field.BEHIND_HUB_TRIANGLE_VERTEX.getX())) // (Slope)
+						* (turretTranslation.getX() - hubFarRightCornerWithTolerance.getX()) + hubFarRightCornerWithTolerance.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+
+		// Debug:
+		leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY, new Rotation2d()));
+		rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY, new Rotation2d()));
+		vertexBehindHubPublisher.set(Field.BEHIND_HUB_TRIANGLE_VERTEX);
+
+		boolean withinHubY = rightY < getTurretPose().getY()
+							&& getTurretPose().getY() < leftY;
+			
 		return behindHubX && withinHubY;
+
+		// === TRIANGLE === (FROM FERRY ZONES):
+		// Translation2d turretTranslation = getTurretPose().getTranslation();
+		// boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX();
+		// 		// && turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX; // With this line the triangle will be cut to more like a trapezoid.
+			
+		// // Find point on triangle using the point-slope formula (of the line constructed by the hub corner pose and ferry pose)
+		// // y = (slope)(robotX - hubCornerX) + (hubCornerY)
+		// // where the slope = (hubCornerY - ferryY)/(hubCornerX - ferryX)
+		// double leftY = ((Field.hubFarLeftCorner.getY() - Field.leftFerryZone.getY())/(Field.hubFarLeftCorner.getX() - Field.leftFerryZone.getX())) // (Slope)
+		// 				* (turretTranslation.getX() - Field.hubFarLeftCorner.getX()) + Field.hubFarLeftCorner.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+		// double rightY = ((Field.hubFarRightCorner.getY() - Field.rightFerryZone.getY())/(Field.hubFarRightCorner.getX() - Field.rightFerryZone.getX())) // (Slope)
+		// 				* (turretTranslation.getX() - Field.hubFarRightCorner.getX()) + Field.hubFarRightCorner.getY(); // *(robotX - hubCornerX) + (hubCornerY)
+
+		// leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY - Field.hubToleranceY, new Rotation2d()));
+		// rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY + Field.hubToleranceY, new Rotation2d()));
+
+		// boolean withinHubY = rightY + Field.hubToleranceY < getTurretPose().getY()
+		// 					&& getTurretPose().getY() < leftY - Field.hubToleranceY;
+			
+		// return behindHubX && withinHubY;
+		
+		// === RECTANGLE ===:
+		// Translation2d turretTranslation = getTurretPose().getTranslation();
+		// boolean behindHubX = Field.hubFarLeftCorner.getX() < turretTranslation.getX()
+		// 		&& turretTranslation.getX() < Field.hubFarLeftCorner.getX() + Field.hubToleranceX;
+		// boolean withinHubY = Field.hubFarRightCorner.getY() + Field.hubToleranceY < getTurretPose().getY()
+		// 		&& getTurretPose().getY() < Field.hubFarLeftCorner.getY() - Field.hubToleranceY;
+
+		// return behindHubX && withinHubY;
 	}
 
 	public boolean isOutsideAllianceZone() {
@@ -557,7 +620,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		double total = 0.0;
 
 		for (SwerveModule<TalonFX, TalonFX, CANcoder> module : getModules()) {
-			total += Math.abs(module.getDriveMotor().getSupplyCurrent().getValueAsDouble());
+			total += Double.max(0, module.getDriveMotor().getSupplyCurrent().getValueAsDouble());
 		}
 
 		return total;
@@ -567,7 +630,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		double total = 0.0;
 
 		for (SwerveModule<TalonFX, TalonFX, CANcoder> module : getModules()) {
-			total += Math.abs(module.getSteerMotor().getSupplyCurrent().getValueAsDouble());
+			total += Double.max(0, module.getSteerMotor().getSupplyCurrent().getValueAsDouble());
 		}
 
 		return total;
@@ -579,8 +642,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		return !isOutsideAllianceZone() || (state == SuperstructureState.KB || state == SuperstructureState.LEFT_CORNER || state == SuperstructureState.RIGHT_CORNER); 
 	}
 
-	@Override
-	public void periodic() {
+	public void periodicAfterScheduler() {
 		Pose2d pose = getPose();
 		turretPose = new Pose2d(
 				pose.getTranslation().plus(
@@ -602,7 +664,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 		SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", chassisSpeeds.omegaRadiansPerSecond);
 		SmartDashboard.putNumber("Swerve/Distance From Hub (meters)",
-				Field.hubCenter.getTranslation().getDistance(pose.getTranslation()));
+				Field.HUB_CENTER.getTranslation().getDistance(pose.getTranslation()));
 
 		Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? pose : Field.transformToOppositeAlliance(pose));
 
@@ -613,9 +675,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 			SmartDashboard.putBoolean("FieldPositions/isInOpponentZone", isInOpponentZone());
 
 			SmartDashboard.putNumber("Superstructure/Turret/Dist From Hub",
-					turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
+					turretPose.getTranslation().getDistance(Field.HUB_CENTER.getTranslation()));
 			SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Hub",
-					turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
+					turretPose.getTranslation().getDistance(Field.HUB_CENTER.getTranslation()));
 			SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Ferry Zone", turretPose.getTranslation()
 					.getDistance(Field.getFerryZonePose(pose.getTranslation()).getTranslation()));
 
@@ -636,6 +698,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 							getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
 				}
 			}
+			Robot.getEnergyUtil().logEnergyUsage(getName() + " Drive", getTotalDriveSupplyCurrent());
+			Robot.getEnergyUtil().logEnergyUsage(getName() + " Turn", getTotalSteerSupplyCurrent());
 
 			// CAN SIGNAL LOGGING
 			if (Settings.DEBUG_MODE.get() && Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {

@@ -5,7 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.handoff;
 
-import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
@@ -63,20 +62,22 @@ public class HandoffSim extends Handoff {
     public boolean shouldStop() {
         Superstructure superstructure = Superstructure.getInstance();
         SuperstructureState superstructureState = superstructure.getState();
+        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
         boolean isStopState = getState() == HandoffState.STOP;
         boolean isTurretWrapping = superstructure.isTurretWrapping();
         boolean isBehindHubWhileFerrying = superstructureState == SuperstructureState.FOTM
-                && CommandSwerveDrivetrain.getInstance().isBehindHub();
+                && swerve.isBehindHub();
         boolean isOutsideAllianceZone = 
             CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && 
-            superstructureState != superstructureState.FOTM;
+            superstructureState != SuperstructureState.FOTM;
         boolean isUnderTrench = CommandSwerveDrivetrain.getInstance().isUnderTrench() 
             && superstructureState != SuperstructureState.FOTM;
         boolean inManualState =       
-            superstructureState == superstructureState.LEFT_CORNER &&
-            superstructureState == superstructureState.RIGHT_CORNER &&
-            superstructureState == superstructureState.KB;
+            superstructureState == SuperstructureState.LEFT_CORNER &&
+            superstructureState == SuperstructureState.RIGHT_CORNER &&
+            superstructureState == SuperstructureState.KB;
+        boolean isBehindTower = swerve.isBehindTower() && superstructureState == SuperstructureState.SOTM;
 
         boolean turretLaggingSOTM = !superstructure.isTurretAtTolerance() && superstructureState == SuperstructureState.SOTM;
 
@@ -85,11 +86,12 @@ public class HandoffSim extends Handoff {
         (isBehindHubWhileFerrying && !inManualState) || 
         turretLaggingSOTM || 
         (isOutsideAllianceZone  && !inManualState) || 
-        (isUnderTrench && !inManualState);
+        (isUnderTrench && !inManualState) ||
+        isBehindTower;
     }
 
     @Override
-    public double getCurrentRPM() {
+    public double getLeaderRPM() {
         return sim.getOutput(0) * 60.0 / (2.0 * Math.PI); // convert to RPM
     }
 
@@ -101,15 +103,13 @@ public class HandoffSim extends Handoff {
         controller.correct(VecBuilder.fill(sim.getOutput(0)));
         controller.predict(Settings.DT);
 
-        boolean shouldNotShootIntoHub = (Superstructure.getInstance().superstructureInShootIntoHubMode()) ? 
-            !CommandSwerveDrivetrain.getInstance().canShootIntoHub() 
-            : false;
+        // removed shouldNotShootIntoHub logic (no longer used)
 
         if (EnabledSubsystems.HANDOFF.get()) {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
                 SmartDashboard.putNumber("Handoff/Input Voltage", voltageOverride.get());
-            } else if (shouldStop() || shouldNotShootIntoHub) {
+            } else if (shouldStop()) {
                 sim.setInput(0.0);
                 SmartDashboard.putNumber("Handoff/Input Voltage", 0.0);
             } else {
@@ -123,8 +123,7 @@ public class HandoffSim extends Handoff {
 
         sim.update(Settings.DT);
         
-        SmartDashboard.putBoolean("Handoff/Should Stop", shouldStop());
-        SmartDashboard.putBoolean("Handoff/Should Not Shoot Into Hub", shouldNotShootIntoHub);
+    SmartDashboard.putBoolean("Handoff/Should Stop", shouldStop());
         SmartDashboard.putNumber("Handoff/Target Duty Cycle", getTargetDutyCycle());
     }
 
@@ -154,10 +153,5 @@ public class HandoffSim extends Handoff {
     @Override
     public double getCurrentDraw() {
         return 0;
-    }
-
-    @Override
-    public void refreshStatusSignals() {
-        // :)
     }
 }

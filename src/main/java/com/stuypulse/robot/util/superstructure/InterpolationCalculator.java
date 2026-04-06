@@ -9,6 +9,7 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Superstructure.AngleInterpolation;
 import com.stuypulse.robot.constants.Settings.Superstructure.FerryRPMInterpolation;
+import com.stuypulse.robot.constants.Settings.Superstructure.FerryTOFInterpolation;
 import com.stuypulse.robot.constants.Settings.Superstructure.RPMInterpolation;
 import com.stuypulse.robot.constants.Settings.Superstructure.TOFInterpolation;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -26,6 +27,7 @@ public class InterpolationCalculator {
     public static InterpolatingDoubleTreeMap distanceTOFInterpolator;
 
     public static InterpolatingDoubleTreeMap ferryingDistanceRPMInterpolator;
+    public static InterpolatingDoubleTreeMap ferryingDistanceTOFInterpolator;
 
     public record InterpolatedShotInfo(
         Rotation2d targetHoodAngle,
@@ -38,8 +40,7 @@ public class InterpolationCalculator {
         double targetRPM,
         double flightTimeSeconds) {   
     }
-
-
+    
     static {
         distanceAngleInterpolator = new InterpolatingDoubleTreeMap();
         for (double[] pair : AngleInterpolation.distanceAngleInterpolationValues) {
@@ -60,6 +61,13 @@ public class InterpolationCalculator {
         for(double[] pair: FerryRPMInterpolation.ferryDistanceRPMInterpolation) {
             ferryingDistanceRPMInterpolator.put(pair[0], pair[1]);
         }
+
+        ferryingDistanceTOFInterpolator = new InterpolatingDoubleTreeMap();
+        for(double[] pair: FerryTOFInterpolation.FerryTOFInterpolationInterpolation) {
+            ferryingDistanceTOFInterpolator.put(pair[0], pair[1]);
+        }
+
+
     }
     
     public static InterpolatedShotInfo interpolateShotInfo(){
@@ -67,7 +75,6 @@ public class InterpolationCalculator {
 
         return interpolateShotInfo(swerve.getTurretPose(), Field.getHubPose());
     }
-
 
     public static InterpolatedShotInfo interpolateShotInfo(Pose2d turretPose, Pose2d targetPose) {
         Translation2d hubPose = targetPose.getTranslation();
@@ -91,36 +98,26 @@ public class InterpolationCalculator {
         );
     }
     
-
     public static InterpolatedFerryInfo interpolateFerryingInfo() {
         CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
         Pose2d turretPose = swerve.getTurretPose();
-        Pose2d ferryPose = Field.getFerryZonePose(swerve.getPose().getTranslation());
+        Pose2d ferryPose = Field.getFerryZonePose(turretPose.getTranslation());
 
-        double distanceMeters = turretPose.getTranslation().getDistance(ferryPose.getTranslation());
-
-        double targetRPM = distanceRPMInterpolator.get(distanceMeters);
-        double flightTime = distanceTOFInterpolator.get(distanceMeters);
-
-        SmartDashboard.putNumber("InterpolationTesting/Ferry Interpolated RPM", targetRPM);
-        SmartDashboard.putNumber("InterpolationTesting/Ferry Interpolated TOF", flightTime);
-        
         return interpolateFerryingInfo(
             turretPose,
-            Field.getFerryZonePose(turretPose.getTranslation())
+            ferryPose
         );
     }
 
     public static InterpolatedFerryInfo interpolateFerryingInfo(Pose2d turretPose, Pose2d targetPose) {
-        
         Translation2d currentPose = turretPose.getTranslation();
         Translation2d ferryPose = targetPose.getTranslation();
 
         double distanceMeters = currentPose.getDistance(ferryPose);
 
-        Rotation2d targetAngle = Rotation2d.fromDegrees(Settings.Superstructure.Hood.Angles.FERRY.getAsDouble());
+        Rotation2d targetAngle = Settings.Superstructure.Hood.Angles.FERRY_ANGLE;
         double targetRPM = ferryingDistanceRPMInterpolator.get(distanceMeters);
-        double flightTime = 2.1;
+        double flightTime = ferryingDistanceTOFInterpolator.get(distanceMeters);
         
         SmartDashboard.putNumber("Superstructure/Interpolated Ferry Target Angle", targetAngle.getDegrees());
         SmartDashboard.putNumber("Superstructure/Interpolated Ferry RPM", targetRPM);
@@ -131,7 +128,5 @@ public class InterpolationCalculator {
             targetRPM, 
             flightTime
         );
-    }
-
-    
+    }    
 }

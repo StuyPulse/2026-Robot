@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class EnergyUtil {
     private double totalCurrent = 0.0;
     private double totalPowerWatts = 0.0;
+    private double totalCurrentCurrent = 0.0;
+    private double totalCurrentPowerWatts = 0.0;
     private double totalEnergyWattHours = 0.0;
     private double batteryVoltage = 12.6;
 
@@ -55,11 +57,17 @@ public class EnergyUtil {
 
     public void periodic() {
 
-        SmartDashboard.putNumber("EnergyUtil/Total Supply Current Amps", totalCurrent);
-        totalCurrent = 0.0;
-        SmartDashboard.putNumber("EnergyUtil/Total Supply Power Watts", totalPowerWatts);
-        totalPowerWatts = 0.0;
+        // energy used over the total time the robot has been on
+        SmartDashboard.putNumber("EnergyUtil/Total used Supply Current draw Amps", totalCurrent);
+        SmartDashboard.putNumber("EnergyUtil/total used Power Watts", totalPowerWatts);
         SmartDashboard.putNumber("EnergyUtil/Total Used Energy Watt Hours", joulesToWattHours(totalEnergyWattHours));
+
+
+        // energy used over the current command schedule loop 
+        totalCurrentCurrent = totalCurrent - totalCurrentCurrent;
+        totalCurrentPowerWatts = totalPowerWatts - totalCurrentPowerWatts;
+        SmartDashboard.putNumber("EnergyUtil/Total current Current", totalCurrentCurrent);
+        SmartDashboard.putNumber("EnergyUtil/Total current Power Watts", totalCurrentCurrent);
 
         for (var entry : subsytemCurrents.entrySet()) {
             SmartDashboard.putNumber("EnergyUtil/Supply Current Amps/" + entry.getKey(), entry.getValue());

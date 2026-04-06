@@ -42,7 +42,7 @@ public abstract class Hood extends SubsystemBase{
     public enum HoodState {
         STOW,
         FERRY,
-        SHOOT,
+        MANUAL_OVERRIDE,
         KB,
         LEFT_CORNER,
         RIGHT_CORNER,
@@ -75,7 +75,7 @@ public abstract class Hood extends SubsystemBase{
         return switch(state) {
             case STOW -> Settings.Superstructure.Hood.Angles.STOW;
             case FERRY -> Settings.Superstructure.Hood.Angles.FERRY_ANGLE;
-            case SHOOT -> Rotation2d.fromDegrees(Settings.Superstructure.Hood.Angles.SHOOT.get());
+            case MANUAL_OVERRIDE -> Rotation2d.fromDegrees(Settings.Superstructure.Hood.Angles.MANUAL_OVERRIDE.get());
             case KB -> Settings.Superstructure.Hood.Angles.KB;
             case LEFT_CORNER -> Settings.Superstructure.Hood.Angles.LEFT_CORNER;
             case RIGHT_CORNER -> Settings.Superstructure.Hood.Angles.RIGHT_CORNER;
@@ -128,10 +128,8 @@ public abstract class Hood extends SubsystemBase{
     
     public abstract double getCurrentDraw();
 
-    public abstract void refreshStatusSignals();
 
-    @Override
-    public void periodic() {
+    public void periodicAfterScheduler() {
         SmartDashboard.putString("Superstructure/Hood/State", state.name());
 
         SmartDashboard.putNumber("Superstructure/Hood/Target Angle (deg)", getTargetAngle().getDegrees());

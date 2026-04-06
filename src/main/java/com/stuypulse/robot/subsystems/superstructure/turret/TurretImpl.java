@@ -15,6 +15,8 @@ import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.util.EnergyUtil;
+import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.SysId;
 import com.stuypulse.robot.util.superstructure.TurretAngleCalculator;
 
@@ -26,9 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -37,8 +37,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class TurretImpl extends Turret {
@@ -66,7 +64,6 @@ public class TurretImpl extends Turret {
     private StatusSignal<Current> turretMotorStatorCurrent;
     private StatusSignal<Double> turretMotorClosedLoopError;
     private StatusSignal<Voltage> turretMotorVoltage;
-    private BaseStatusSignal[] signals;
 
     public TurretImpl() {
         turretConfig = new Motors.TalonFXConfig()
@@ -135,8 +132,8 @@ public class TurretImpl extends Turret {
         turretMotorStatorCurrent = turretMotor.getStatorCurrent();
         turretMotorClosedLoopError = turretMotor.getClosedLoopError();
         turretMotorVoltage = turretMotor.getMotorVoltage();
-        signals = new BaseStatusSignal[] { encoder17tPos, encoder18tPos, turretMotorPos, turretMotorSupplyCurrent,
-                turretMotorStatorCurrent, turretMotorClosedLoopError, turretMotorVoltage };
+        PhoenixUtil.registerToRio(encoder18tPos, encoder17tPos, turretMotorPos, 
+            turretMotorSupplyCurrent, turretMotorStatorCurrent, turretMotorClosedLoopError, turretMotorVoltage);
     }
 
     private Rotation2d getEncoderPos17t() {
@@ -193,11 +190,11 @@ public class TurretImpl extends Turret {
             delta += 360;
         }
 
-        if (current + delta < Settings.Superstructure.Turret.RANGE_LEFT) {
-            return delta + 360;
-        }
-        if (current + delta > Settings.Superstructure.Turret.RANGE_RIGHT) {
+        if (current + delta > Settings.Superstructure.Turret.RANGE_CW) {
             return delta - 360;
+        }
+        if (current + delta < Settings.Superstructure.Turret.RANGE_CCW) {
+            return delta + 360;
         }
 
         return delta;
@@ -208,15 +205,11 @@ public class TurretImpl extends Turret {
         return currentAngle + getDelta(getTargetAngle().getDegrees(), currentAngle);
     }
 
-    @Override
-    public void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(signals);
-    }
 
     @Override
-    public void periodic() {
-        super.periodic();
-
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
+        
         turretConfig.updateGainsConfig(
                 turretMotor, 1,
                 Gains.Superstructure.Turret.slot1.kP,
@@ -269,18 +262,23 @@ public class TurretImpl extends Turret {
             else {
                 double omega = CommandSwerveDrivetrain.getInstance().getChassisSpeeds().omegaRadiansPerSecond;
                 double omegaFF = Gains.Superstructure.Turret.kOmega.get() * omega;
+                double setpointVelocityRPS = delta / (360 * Settings.DT);
+
+                // the component of the turret's setpoint velocity that comes from robot translation
+                double translationalVelocityRPS = setpointVelocityRPS - omega / (2 * Math.PI);
+                double translationFF = Gains.Superstructure.Turret.slot0.kV * translationalVelocityRPS;
 
                 turretMotor.setControl(controller
                     .withPosition(prevActualTargetAngle / 360.0)
                     .withSlot(slot)
-                    .withFeedForward(omegaFF)
+                    .withFeedForward(omegaFF /* + translationFF */)
                 );
             }
         } else {
             turretMotor.stopMotor();
         }
 
-        SmartDashboard.putNumber("Superstructure/Turret/Relative Encoder Position (Rot)",
+        SmartDashboard.putNumber("Superstructure/Turret/Relative Encoder Position (deg)",
                 turretMotorPos.getValueAsDouble() * 360.0);
         SmartDashboard.putNumber("Superstructure/Turret/Closed Loop Error (deg)",
                 turretMotorClosedLoopError.getValueAsDouble() * 360.0);
@@ -310,6 +308,8 @@ public class TurretImpl extends Turret {
                 SmartDashboard.putBoolean("Robot/CAN/Main/Turret 18t Encoder Connected? (ID "
                         + String.valueOf(Ports.Superstructure.Turret.ENCODER18T) + ")", encoder18t.isConnected());
             }
+            Robot.getEnergyUtil().logEnergyUsage(getName(), getCurrentDraw());
+
         }
     }
 
@@ -332,6 +332,6 @@ public class TurretImpl extends Turret {
 
     @Override
     public double getCurrentDraw() {
-        return Math.abs(turretMotorSupplyCurrent.getValueAsDouble());
+        return Double.max(0, turretMotorSupplyCurrent.getValueAsDouble());
     }
 }

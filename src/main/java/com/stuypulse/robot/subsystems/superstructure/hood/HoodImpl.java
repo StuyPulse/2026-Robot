@@ -14,8 +14,7 @@ import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.superstructure.Superstructure;
-import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
+import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,14 +25,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import java.util.Optional;
 
@@ -45,6 +42,8 @@ public class HoodImpl extends Hood {
     // private final CANcoder hoodEncoder;
 
     private final PositionVoltage controller;
+    private final VoltageOut homingUpperController;
+    private final VoltageOut homingLowerController;
 
     private Optional<Double> voltageOverride;
 
@@ -57,11 +56,10 @@ public class HoodImpl extends Hood {
     private StatusSignal<Current> hoodMotorSupplyCurrent;
     private StatusSignal<Current> hoodMotorStatorCurrent;
     private StatusSignal<Double> hoodMotorClosedLoopError;
-    private BaseStatusSignal[] signals;
 
     public HoodImpl() {
         hoodConfig = new Motors.TalonFXConfig()
-                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withSupplyCurrentLimitAmps(80.0)
                 .withStatorCurrentLimitEnabled(false)
@@ -83,14 +81,16 @@ public class HoodImpl extends Hood {
         // .withMagnetOffset(Settings.Superstructure.Hood.ENCODER_OFFSET.getRotations());
 
         hoodMotor = new TalonFX(Ports.Superstructure.Hood.MOTOR, Ports.RIO);
-        // hoodEncoder = new CANcoder(Ports.Superstructure.Hood.THROUGHBORE_ENCODER,
-        // Ports.RIO);
+        // hoodEncoder = new CANcoder(Ports.Superstructure.Hood.THROUGHBORE_ENCODER, Ports.RIO);
 
         hoodConfig.configure(hoodMotor);
         // hoodEncoderConfig.configure(hoodEncoder);
 
         controller = new PositionVoltage(getTargetAngle().getRotations())
                 .withEnableFOC(true);
+
+        homingLowerController = new VoltageOut(-Settings.Superstructure.Hood.HOOD_HOMING_VOLTAGE).withIgnoreSoftwareLimits(true);
+        homingUpperController = new VoltageOut(Settings.Superstructure.Hood.HOOD_HOMING_VOLTAGE).withIgnoreSoftwareLimits(true);
 
         voltageOverride = Optional.empty();
 
@@ -104,8 +104,8 @@ public class HoodImpl extends Hood {
         hoodMotorSupplyCurrent = hoodMotor.getSupplyCurrent();
         hoodMotorStatorCurrent = hoodMotor.getStatorCurrent();
         hoodMotorClosedLoopError = hoodMotor.getClosedLoopError();
-        signals = new BaseStatusSignal[] { hoodMotorPosition, hoodMotorVoltage, hoodMotorSupplyCurrent,
-                hoodMotorStatorCurrent, hoodMotorClosedLoopError };
+        PhoenixUtil.registerToRio(hoodMotorPosition, hoodMotorVoltage, hoodMotorSupplyCurrent,
+                hoodMotorStatorCurrent, hoodMotorClosedLoopError);
     }
 
     @Override
@@ -125,57 +125,54 @@ public class HoodImpl extends Hood {
      */
     @Override
     public void seedHood() {
-        // hoodMotor.setPosition(getAbsoluteHoodAngleDeg() / 360.0);
+        hoodMotor.setPosition(getAbsoluteHoodAngleDeg() / 360.0);
     }
 
     @Override
     public void seedHoodAtUpperHardStop() {
-        hoodMotor.setPosition(Rotation2d.fromDegrees(40).getRotations());
+        hoodMotor.setPosition(Settings.Superstructure.Hood.MAX_FROM_HORIZON.getRotations());
     }
 
     @Override
     public void seedHoodAtLowerHardStop() {
-        hoodMotor.setPosition(Rotation2d.fromDegrees(7.7).getRotations()); //empirically found with our current seed at top, then going down manually
+        hoodMotor.setPosition(Settings.Superstructure.Hood.MIN_FROM_HORIZON.getRotations()); //empirically found with our current seed at top, then going down manually
     }
 
     private double getAbsoluteHoodAngleDeg() {
         return 0.0; // TODO:change back
         // return Settings.Superstructure.Hood.MIN_FROM_HORIZON.getDegrees() + hoodEncoder.getAbsolutePosition().getValueAsDouble() * 360.0 / Settings.Superstructure.Hood.ENCODER_TO_MECH;
     }
-
+    
     @Override
-    public void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(signals);
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
+    public void periodicAfterScheduler() {
+        super.periodicAfterScheduler();
+        HoodState state = getState();
 
         if (!hasUsedAbsoluteEncoder) {
             // seedHood();
-            seedHoodAtUpperHardStop();
+            seedHoodAtLowerHardStop();
             hasUsedAbsoluteEncoder = true;
         }
 
-        if (isStalling() && getState() == HoodState.HOMING_UPPER) {
+        if (isStalling() && state == HoodState.HOMING_UPPER) {
             seedHoodAtUpperHardStop();
-            setState(HoodState.IDLE);
+            setState(HoodState.STOW);
             SmartDashboard.putBoolean("Superstructure/Hood/SUCCESFULLY HOMED UPPER", true);
         }
-        if (isStalling() && getState() == HoodState.HOMING_LOWER) {
+
+        if (isStalling() && state == HoodState.HOMING_LOWER) {
             seedHoodAtLowerHardStop();
-            setState(HoodState.IDLE);
+            setState(HoodState.STOW);
             SmartDashboard.putBoolean("Superstructure/Hood/SUCCESFULLY HOMED LOWER", true);
         }
 
         if (EnabledSubsystems.HOOD.get()) {
             if (voltageOverride.isPresent()) {
                 hoodMotor.setVoltage(voltageOverride.get());
-            } else if (getState() == HoodState.HOMING_UPPER && !isStalling()) {
-                hoodMotor.setVoltage(Settings.Superstructure.Hood.HOOD_HOMING_VOLTAGE);
-            } else if (getState() == HoodState.HOMING_LOWER && !isStalling()) {
-                hoodMotor.setVoltage(-Settings.Superstructure.Hood.HOOD_HOMING_VOLTAGE);
+            } else if (state == HoodState.HOMING_UPPER && !isStalling()) {
+                hoodMotor.setControl(homingUpperController);
+            } else if (state == HoodState.HOMING_LOWER && !isStalling()) {
+                hoodMotor.setControl(homingLowerController);
             } else {
                 hoodMotor.setControl(controller.withPosition(getTargetAngle().getRotations()));
             }
@@ -187,21 +184,19 @@ public class HoodImpl extends Hood {
 
         SmartDashboard.putBoolean("Prematch Checks/Hood at Top?", getAngle().getDegrees() > 39.0);
         SmartDashboard.putNumber("Superstructure/Hood/Correct Hood Angle (deg)", getAbsoluteHoodAngleDeg());
-        SmartDashboard.putNumber("Superstructure/Hood/Closed Loop Error (deg)",
-                hoodMotorClosedLoopError.getValueAsDouble() * 360.0);
+        SmartDashboard.putNumber("Superstructure/Hood/Closed Loop Error (deg)", hoodMotorClosedLoopError.getValueAsDouble() * 360.0);
 
         if (Settings.DEBUG_MODE.get()) {
             SmartDashboard.putNumber("Superstructure/Hood/Applied Voltage (amps)", hoodMotorVoltage.getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Hood/Supply Current (amps)",
-                    hoodMotorSupplyCurrent.getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Hood/Stator Current (amps)",
-                    hoodMotorStatorCurrent.getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value",
-                    hoodMotorStatorCurrent.getValueAsDouble());
+            SmartDashboard.putNumber("Superstructure/Hood/Supply Current (amps)", hoodMotorSupplyCurrent.getValueAsDouble());
+            SmartDashboard.putNumber("Superstructure/Hood/Stator Current (amps)", hoodMotorStatorCurrent.getValueAsDouble());
+            SmartDashboard.putNumber("Superstructure/Hood/Raw Motor Encoder Value",hoodMotorStatorCurrent.getValueAsDouble());
+            SmartDashboard.putBoolean("Superstructure/Hood/is stalling", isStalling());
+            Robot.getEnergyUtil().logEnergyUsage(getName(), getCurrentDraw());
+
 
             if (Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
-                SmartDashboard.putBoolean("Robot/CAN/Canivore/Hood Motor Connected? (ID "
-                        + String.valueOf(Ports.Superstructure.Hood.MOTOR) + ")", hoodMotor.isConnected());
+                SmartDashboard.putBoolean("Robot/CAN/Canivore/Hood Motor Connected? (ID " + String.valueOf(Ports.Superstructure.Hood.MOTOR) + ")", hoodMotor.isConnected());
                 // SmartDashboard.putBoolean("Robot/CAN/Canivore/Hood Encoder Connected? (ID " + String.valueOf(hoodEncoder.getDeviceID()) + ")", hoodEncoder.isConnected());
             }
         }
@@ -268,6 +263,6 @@ public class HoodImpl extends Hood {
 
     @Override
     public double getCurrentDraw() {
-        return Math.abs(hoodMotorSupplyCurrent.getValueAsDouble());
+        return Double.max(0, hoodMotorSupplyCurrent.getValueAsDouble());
     }
 }

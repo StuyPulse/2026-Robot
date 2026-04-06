@@ -72,7 +72,7 @@ public interface Settings {
         Rotation2d ANGLE_THRESHOLD_FOR_HOLDING_VOLTAGE = Rotation2d.fromDegrees(15.0);
         double HOMING_VOLTAGE = 3.0;
         
-        double PUSHDOWN_VOLTAGE = 2.5;
+        double PUSHDOWN_VOLTAGE = 3.0;
 
         double GEAR_RATIO = 37.93;
         
@@ -144,13 +144,13 @@ public interface Settings {
                 {6.94, 3600.0},
                 {7.87, 3800.0},
                 {9.77, 4300.0},
-                {10.694, 4595.0},       //STARTING FROM HERE THE DATA IS UNRELIABLE!!!
-                {11.516, 4750.0},
-                {12.416, 4900.0},
-                {13.316, 5050.0},
-                {14.216, 5175.0},
-                {15.148, 5200.0},
-                {16.54, 5300}           //FIELD LENGTH
+                {10.694, 4700.0},       //STARTING FROM HERE THE DATA IS UNRELIABLE!!!
+                {11.516, 4900.0},
+                {12.416, 5200.0},
+                {13.316, 5500.0},
+                {14.216, 5600.0}
+                // {15.148, 5200.0},
+                // {16.54, 5300}           //FIELD LENGTH
             };
         }
 
@@ -231,8 +231,8 @@ public interface Settings {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
-            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 5);//Rotation2d.fromDegrees(10.0);
-            public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
+            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 7.5);//Rotation2d.fromDegrees(10.0);
+            public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(10.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
             public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(-233.0);
@@ -292,7 +292,7 @@ public interface Settings {
 
         public interface Constraints {
             public final double MAX_VELOCITY_M_PER_S = 4.16; 
-            public final double MAX_VELOCITY_SOTM_M_PER_S = 2.0;
+            public final double MAX_VELOCITY_SOTM_M_PER_S = 1.75;
             public final double MAX_VELOCITY_FOTM_M_PER_S = 4.16;
 
             public final double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(300.0);

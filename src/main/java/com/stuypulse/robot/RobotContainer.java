@@ -159,31 +159,32 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Scoring Routine (TR)
-        driver.getTopButton()
-            .whileTrue(new LEDApplyPattern(Settings.LED.SHOOT_IN_PLACE))
-            .whileTrue(new WaitUntilCommand(() -> spindexer.getState() == SpindexerState.FORWARD)
-                .andThen(new WaitCommand(0.75).andThen(new IntakeDeploy())))
-            .whileTrue(new SwerveXMode())
-            .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
-            .whileTrue(
-                new SuperstructureInterpolation() 
-                    .andThen(new WaitUntilCommand(superstructure::isReadyToShoot))
-                    .andThen(
-                        Commands.parallel(
-                            new RunCommand(
-                                () -> handoff.setState(HandoffState.FORWARD),
-                                handoff),
-                            new RunCommand(
-                                () -> spindexer.setState(SpindexerState.FORWARD),
-                                spindexer)
-                        )
-                        .repeatedly()
-                    )
-            ); 
-
         // driver.getTopButton()
-        //     .whileTrue(new IntakeAutoDigest().repeatedly())
-        //     .onFalse(new IntakeDeploy());
+        //     .whileTrue(new LEDApplyPattern(Settings.LED.SHOOT_IN_PLACE))
+        //     .whileTrue(new WaitUntilCommand(() -> spindexer.getState() == SpindexerState.FORWARD)
+        //         .andThen(new WaitCommand(0.75).andThen(new IntakeDeploy())))
+        //     .whileTrue(new SwerveXMode())
+        //     .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
+        //     .whileTrue(
+        //         new SuperstructureInterpolation() 
+        //             .andThen(new WaitUntilCommand(superstructure::isReadyToShoot))
+        //             .andThen(
+        //                 Commands.parallel(
+        //                     new RunCommand(
+        //                         () -> handoff.setState(HandoffState.FORWARD),
+        //                         handoff),
+        //                     new RunCommand(
+        //                         () -> spindexer.setState(SpindexerState.FORWARD),
+        //                         spindexer)
+        //                 )
+        //                 .repeatedly()
+        //             )
+        //     ); 
+
+        // Digest (TR)
+        driver.getTopButton()
+            .whileTrue(new IntakeAutoDigest().repeatedly())
+            .onFalse(new IntakeDeploy());
 
         // Intake Stow
         driver.getLeftTriggerButton()

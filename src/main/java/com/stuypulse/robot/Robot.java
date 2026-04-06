@@ -179,10 +179,10 @@ public class Robot extends TimedRobot {
             auto = robot.getAutonomousCommand();
             switch (auto.getName()) {
                 case "LeftTwoCycle":
-                    CommandScheduler.getInstance().schedule(new WhitelistRoutineLeftSideAuto());
+                    CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras());
                     break;
                 case "RightTwoCycle":
-                    CommandScheduler.getInstance().schedule(new WhitelistRoutineRightSideAuto());
+                    CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras());
                     break;
                 default:
                     CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras());

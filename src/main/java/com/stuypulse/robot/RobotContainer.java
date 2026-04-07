@@ -104,7 +104,7 @@ public class RobotContainer {
         SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
-        SmartBoolean LEDS = new SmartBoolean("Enabled Subsystems/LEDs Is Enabled", true);
+        SmartBoolean LEDS = new SmartBoolean("Enabled Subsystems/LEDs Is Enabled", false);
 
         SmartBoolean BACK_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Back Limelight Is Enabled", true);
         SmartBoolean LEFT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Left Limelight Is Enabled", true);
@@ -127,7 +127,7 @@ public class RobotContainer {
     private final Shooter shooter = Shooter.getInstance();
     private final Hood hood = Hood.getInstance();
 
-    private final LEDController leds = LEDController.getInstance();
+    // private final LEDController leds = LEDController.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -150,7 +150,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        leds.setDefaultCommand(new LEDDefaultCommand());
+        // leds.setDefaultCommand(new LEDDefaultCommand());
     }
 
     /***************/
@@ -447,7 +447,7 @@ public class RobotContainer {
 
         handoff.periodicAfterScheduler();
         intake.periodicAfterScheduler();
-        leds.periodicAfterScheduler();
+        // leds.periodicAfterScheduler(); TODO: ADD THESE BACK TY
         spindexer.periodicAfterScheduler();
         hood.periodicAfterScheduler();
         shooter.periodicAfterScheduler();

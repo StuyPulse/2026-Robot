@@ -11,7 +11,6 @@ import com.stuypulse.robot.commands.vision.SetMegaTagMode;
 import com.stuypulse.robot.commands.vision.WhitelistAllTagsForAllCameras;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineLeftSideAuto;
 import com.stuypulse.robot.commands.vision.WhitelistRoutineRightSideAuto;
-import com.stuypulse.robot.constants.Cameras;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Cameras.Camera;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
@@ -26,11 +25,9 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Timer;
 
@@ -106,8 +102,8 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         SignalLogger.start();
         CommandScheduler.getInstance().schedule(new SwerveAutonInit());
-        FollowPathCommand.warmupCommand().schedule();
-        PathfindingCommand.warmupCommand().schedule();
+        CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+        CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
         energyUtil = new EnergyUtil();
 
         CommandScheduler.getInstance().schedule(new SwerveAutonInit());
@@ -172,7 +168,7 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         mode = RobotMode.DISABLED;
 
-        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG1));
+        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
 
         CommandScheduler.getInstance().schedule(new BlackListAllTagsForAllCameras());
 
@@ -198,7 +194,7 @@ public class Robot extends TimedRobot {
         auto = robot.getAutonomousCommand();
 
         if (auto != null) {
-            auto.schedule();
+            CommandScheduler.getInstance().schedule(auto);
         }
 
     }

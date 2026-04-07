@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.771069900142653,
-        "y": 0.71623395149786
+        "x": 3.5473894436519258,
+        "y": 0.5350927246790309
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.503192122364876,
-        "y": 0.6967450626089725
+        "x": 6.833808844507845,
+        "y": 0.37982881597717666
       },
       "isLocked": false,
       "linkedName": "Right Trench Score"
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 3.3880333333333335,
-        "y": 0.5075111111111108
+        "x": 3.6250213980028523,
+        "y": 0.5868473609129818
       },
       "prevControl": {
-        "x": 6.7520846885401795,
-        "y": 0.41694049770169517
+        "x": 6.989072753209699,
+        "y": 0.4962767475035662
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,15 +62,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.23027718550106568,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 0.7344398340248979,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 0.9933609958506272,
+      "waypointRelativePos": 0.9722814498933927,
       "rotationDegrees": 90.0
     },
     {
@@ -105,7 +97,7 @@
   "folder": "To Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

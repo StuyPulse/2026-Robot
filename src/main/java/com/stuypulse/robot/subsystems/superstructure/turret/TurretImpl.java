@@ -265,13 +265,13 @@ public class TurretImpl extends Turret {
                 double setpointVelocityRPS = delta / (360 * Settings.DT);
 
                 // the component of the turret's setpoint velocity that comes from robot translation
-                double translationalComponentVelocityRPS = setpointVelocityRPS - omega / (2 * Math.PI);
-                double translationFF = Gains.Superstructure.Turret.kTranslation.get() * translationalComponentVelocityRPS;
+                double translationalVelocityRPS = setpointVelocityRPS - omega / (2 * Math.PI);
+                double translationFF = Gains.Superstructure.Turret.slot0.kV * translationalVelocityRPS;
 
                 turretMotor.setControl(controller
                     .withPosition(prevActualTargetAngle / 360.0)
                     .withSlot(slot)
-                    .withFeedForward(omegaFF + translationFF)
+                    .withFeedForward(omegaFF /* + translationFF */)
                 );
             }
         } else {

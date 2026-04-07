@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.308815977175463,
-        "y": 4.74015691868759
+        "x": 8.27,
+        "y": 4.61077032810271
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.713277777777778,
-        "y": 6.188522222222222
+        "x": 7.791269614835947,
+        "y": 8.026576319543508
       },
       "isLocked": false,
       "linkedName": "NZ Left Center"
     },
     {
       "anchor": {
-        "x": 3.0815977175463622,
-        "y": 7.250256776034237
+        "x": 3.6120827389443653,
+        "y": 7.509029957203994
       },
       "prevControl": {
-        "x": 10.300853051193904,
-        "y": 7.3675474243210735
+        "x": 7.428987161198288,
+        "y": 7.5996005706134095
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,24 +31,10 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.8063943161634181,
-      "rotationDegrees": 0.0
+      "rotationDegrees": -90.0
     }
   ],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8372721134368668,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 7.0,
-        "maxAngularVelocity": 300.0,
-        "maxAngularAcceleration": 900.0,
-        "nominalVoltage": 12.5,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -61,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "To Score",

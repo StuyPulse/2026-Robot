@@ -22,7 +22,6 @@ import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
-import edu.wpi.first.hal.HAL;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.Timer;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -45,6 +45,7 @@ import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.superstructure.SuperstructureFOTM;
 import com.stuypulse.robot.commands.vision.BlackListAllTagsForAllCameras;
+import com.stuypulse.robot.commands.vision.BlacklistAllTags;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 public class Robot extends TimedRobot {
 
@@ -55,6 +56,8 @@ public class Robot extends TimedRobot {
         TEST
     }
 
+    private Timer threadTimer;
+
     private RobotContainer robot;
     private Command auto;
     private static Alliance alliance;
@@ -64,6 +67,7 @@ public class Robot extends TimedRobot {
     private SendableChooser<Camera> cameras = new SendableChooser<Camera>();
     private Camera selected;
     private GcStatsCollector gcStatsCollector;
+    private SmartBoolean shouldRunSecondThread;
 
     private static int periodicCounter = 0; 
 
@@ -139,12 +143,19 @@ public class Robot extends TimedRobot {
             alliance = DriverStation.getAlliance().get();
         }
 
+        if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && Superstructure.getInstance().getState() == SuperstructureState.SOTM) {
+            CommandScheduler.getInstance().schedule(
+                    new SuperstructureFOTM(),
+                    new SpindexerStop(),
+                    new HandoffStop()
+            );
+        }
+
         SmartDashboard.putNumber("Robot/Match Time", DriverStation.getMatchTime());
         SmartDashboard.putData("Robot/Scheduled Commands", CommandScheduler.getInstance());
         SmartDashboard.putNumber("Robot/Battery Voltage", batteryVoltage);
         SmartDashboard.putNumber("Robot/CPU Temperature (C)", RobotController.getCPUTemp());
-        SmartDashboard.putNumber("Robot/Times Disconnected", HAL.getCommsDisableCount());
-        
+    
         robot.periodicAfterScheduler();
         energyUtil.periodic();
     }
@@ -218,14 +229,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("FMSUtil/time left in shift", fmsUtil.getTimeLeftInShift());
         SmartDashboard.putBoolean("FMSUtil/is active shift", fmsUtil.isActiveShift());
         SmartDashboard.putBoolean("FMSUtil/won auto?", fmsUtil.didWinAuto());
-
-        if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && Superstructure.getInstance().getState() == SuperstructureState.SOTM) {
-            CommandScheduler.getInstance().schedule(
-                    new SuperstructureFOTM(),
-                    new SpindexerStop(),
-                    new HandoffStop()
-            );
-        }
     }
 
     @Override

@@ -55,7 +55,6 @@ public class Gains {
             }
 
             SmartNumber kOmega = new SmartNumber("Superstructure/Turret/Gains/kOmega", 3.43);
-            SmartNumber kTranslation = new SmartNumber("Superstructure/Turret/Gains/kTranslation", 0.0);
         }
     }
 

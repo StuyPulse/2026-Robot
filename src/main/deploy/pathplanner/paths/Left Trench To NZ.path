@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.998600237247925,
-        "y": 7.526358244365362
+        "x": 4.439727164887308,
+        "y": 7.655468564650059
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.99456490727532,
-        "y": 7.509029957203994
+        "x": 9.033902728351128,
+        "y": 7.687746144721235
       },
       "isLocked": false,
       "linkedName": "Left Trench Start"
     },
     {
       "anchor": {
-        "x": 8.308815977175463,
-        "y": 4.74015691868759
+        "x": 8.27,
+        "y": 4.61077032810271
       },
       "prevControl": {
-        "x": 8.257061340941512,
-        "y": 7.560784593437947
+        "x": 8.218245363766048,
+        "y": 7.431398002853067
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,8 +40,8 @@
       "minWaypointRelativePos": 0.629304523970286,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 7.0,
+        "maxVelocity": 1.75,
+        "maxAcceleration": 10.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 900.0,
         "nominalVoltage": 12.5,
@@ -67,7 +67,7 @@
   "folder": "To NZ",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -76.49029381374567
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

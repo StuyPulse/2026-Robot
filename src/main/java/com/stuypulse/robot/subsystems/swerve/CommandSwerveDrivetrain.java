@@ -26,6 +26,7 @@ import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains;
+import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
@@ -678,6 +679,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 		if (Robot.getPeriodicCounter() % Settings.LOGGING_FREQUENCY == 0) {
 			SmartDashboard.putNumber("Swerve/Failed DAQ Count", this.getState().FailedDaqs);
+			SmartDashboard.putNumber("Swerve/CANBus Utiliaztion", Ports.CANIVORE.getStatus().BusUtilization);
 			// will confirm whether we are even getting data
 
 			SmartDashboard.putBoolean("FieldPositions/isBehindTower", isBehindTower());

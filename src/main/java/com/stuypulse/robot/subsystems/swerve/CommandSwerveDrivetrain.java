@@ -391,10 +391,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		double proposedX = getState().Pose.getX();
 		double proposedY = getState().Pose.getY();
 		double poseDelta = lastGoodPose.getTranslation().getDistance(getState().Pose.getTranslation());
+		
 		if(!(proposedX > Field.LENGTH || proposedX < 0 || proposedY > Field.WIDTH || proposedY < 0) &&
-			poseDelta < Settings.Swerve.ACCEPTABLE_POSE_DELTA_METERS) {
+			poseDelta < Settings.Swerve.MAX_ACCEPTABLE_POSE_DELTA_METERS) {
 			lastGoodPose = getState().Pose;
 		}
+
 		return lastGoodPose;
 	}
 

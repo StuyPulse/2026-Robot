@@ -388,13 +388,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	}
 
 	public Pose2d getPose() {
-		double proposedX = getState().Pose.getX();
-		double proposedY = getState().Pose.getY();
-		double poseDelta = lastGoodPose.getTranslation().getDistance(getState().Pose.getTranslation());
+		Pose2d proposedPose = getState().Pose;
+		double proposedX = proposedPose.getX();
+		double proposedY = proposedPose.getY();
+		double poseDelta = lastGoodPose.getTranslation().getDistance(proposedPose.getTranslation());
 		
 		if(!(proposedX > Field.LENGTH || proposedX < 0 || proposedY > Field.WIDTH || proposedY < 0) &&
-			poseDelta < Settings.Swerve.MAX_ACCEPTABLE_POSE_DELTA_METERS) {
-			lastGoodPose = getState().Pose;
+			poseDelta <= Settings.Swerve.MAX_ACCEPTABLE_POSE_DELTA_METERS) {
+			lastGoodPose = proposedPose;
 		}
 
 		return lastGoodPose;

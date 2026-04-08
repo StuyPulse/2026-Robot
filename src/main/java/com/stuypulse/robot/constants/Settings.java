@@ -5,9 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartBoolean;
@@ -21,6 +18,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -33,7 +32,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public interface Settings {
     public final double DT = 0.020;
-    public final int LOGGING_FREQUENCY = 2;
+    public final int LOGGING_FREQUENCY = 5;
     public final double SECONDS_IN_A_MINUTE = 60.0;
     public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", true);
     public final CANBus CANIVORE = new CANBus("canivore", "./logs/example.hoot");

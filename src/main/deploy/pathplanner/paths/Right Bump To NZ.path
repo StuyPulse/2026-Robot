@@ -3,44 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.445677480916031,
-        "y": 7.675219465648855
+        "x": 3.4833206106870227,
+        "y": 2.9220133587786257
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.86415076335878,
-        "y": 7.700324427480917
+        "x": 5.4749809160305345,
+        "y": 2.813225190839695
       },
       "isLocked": false,
-      "linkedName": "Left Trench Start"
+      "linkedName": "Right Bump Start"
     },
     {
       "anchor": {
-        "x": 8.308815977175463,
-        "y": 4.74015691868759
+        "x": 6.336917938931298,
+        "y": 3.4492175572519077
       },
       "prevControl": {
-        "x": 8.261631679389314,
-        "y": 7.265171755725191
+        "x": 6.36674218315174,
+        "y": 2.6439629632999404
+      },
+      "nextControl": {
+        "x": 6.3034446564885505,
+        "y": 4.352996183206107
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.144475190839694,
+        "y": 4.026631679389314
+      },
+      "prevControl": {
+        "x": 7.144475190839694,
+        "y": 4.026631679389314
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left NZ"
+      "linkedName": "Middy"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.140401146131807,
-      "rotationDegrees": -90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.629304523970286,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 1.6496980155306307,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.75,
         "maxAcceleration": 7.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 900.0,
@@ -60,14 +71,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "To NZ",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

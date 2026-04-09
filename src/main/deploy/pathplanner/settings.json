@@ -3,16 +3,11 @@
   "robotLength": 0.762,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Bump",
-    "Misc",
-    "Right Bump",
-    "Tests",
+    "To Depot",
     "To NZ",
     "To Score"
   ],
-  "autoFolders": [
-    "Tests"
-  ],
+  "autoFolders": [],
   "defaultMaxVel": 3.75,
   "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 300.0,

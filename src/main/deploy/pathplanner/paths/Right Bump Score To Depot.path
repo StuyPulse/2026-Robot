@@ -3,67 +3,76 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.308815977175463,
-        "y": 4.74015691868759
+        "x": 3.4749522900763368,
+        "y": 2.486860687022901
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.82645038167939,
-        "y": 4.687729007633589
+        "x": 1.8598664122137403,
+        "y": 4.838358778625954
       },
       "isLocked": false,
-      "linkedName": "Left NZ"
+      "linkedName": "Right Bump Score"
     },
     {
       "anchor": {
-        "x": 6.052395038167939,
-        "y": 6.378129770992366
+        "x": 1.8933396946564884,
+        "y": 4.938778625954199
       },
       "prevControl": {
-        "x": 6.061945145745694,
-        "y": 4.945613634328742
+        "x": 1.9041990007255656,
+        "y": 4.689014586365434
       },
       "nextControl": {
-        "x": 6.044026717557253,
-        "y": 7.63337786259542
+        "x": 1.8369555219739746,
+        "y": 6.235614597651982
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.583740458015267,
-        "y": 7.440906488549619
+        "x": 0.5795133587786261,
+        "y": 5.959713740458016
       },
       "prevControl": {
-        "x": 6.504284351145039,
-        "y": 7.524589694656489
+        "x": 1.684131679389313,
+        "y": 5.859293893129771
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Trench Score"
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0
-    },
-    {
       "waypointRelativePos": 1.6,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.65,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 50.0,
+        "maxAngularAcceleration": 100.0,
+        "nominalVoltage": 12.5,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
       "minWaypointRelativePos": 1.65,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 2.5,
-        "maxAcceleration": 7.0,
-        "maxAngularVelocity": 300.0,
-        "maxAngularAcceleration": 900.0,
+        "maxVelocity": 1.75,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 50.0,
+        "maxAngularAcceleration": 100.0,
         "nominalVoltage": 12.5,
         "unlimited": false
       }
@@ -81,13 +90,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "To Score",
+  "folder": "To Depot",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

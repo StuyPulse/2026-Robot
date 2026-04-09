@@ -3,48 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.231184022824536,
-        "y": 3.3427817403708993
+        "x": 3.4749522900763368,
+        "y": 5.507824427480916
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.302642099153387,
-        "y": 2.620718614147219
+        "x": 1.6506583969465654,
+        "y": 5.959713740458016
       },
       "isLocked": false,
-      "linkedName": "Right Center NZ"
+      "linkedName": "Left Bump Score"
     },
     {
       "anchor": {
-        "x": 2.911921708185054,
-        "y": 2.491055753262159
+        "x": 0.5795133587786261,
+        "y": 5.959713740458016
       },
       "prevControl": {
-        "x": 4.8270581257414005,
-        "y": 2.5771293001186257
+        "x": 1.4665553435114504,
+        "y": 5.959713740458016
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Bump Score"
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3516873889875677,
+      "waypointRelativePos": 0.6590257879656263,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.42138765117759275,
-      "maxWaypointRelativePos": 0.8338637810311925,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.7,
       "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 5.0,
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.75,
+        "maxAngularVelocity": 50.0,
+        "maxAngularAcceleration": 100.0,
+        "nominalVoltage": 12.5,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.75,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 900.0,
-        "nominalVoltage": 12.0,
+        "nominalVoltage": 12.5,
         "unlimited": false
       }
     }
@@ -64,10 +77,10 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Right Bump",
+  "folder": "To Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

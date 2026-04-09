@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.978088445078458,
-        "y": 0.6386019971469341
+        "x": 3.633950381679389,
+        "y": 0.5705152671755729
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.549158345221111,
-        "y": 0.6256633380884467
+        "x": 7.2050202818220415,
+        "y": 0.5575766081170854
       },
       "isLocked": false,
-      "linkedName": "Right Score (F)"
+      "linkedName": "Right Trench Score"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Center NZ"
+      "linkedName": "Right NZ"
     }
   ],
   "rotationTargets": [

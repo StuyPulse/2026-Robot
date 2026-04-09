@@ -7,8 +7,9 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.auton.regular.DepotAuton;
+import com.stuypulse.robot.commands.auton.regular.LeftMiddy;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
+import com.stuypulse.robot.commands.auton.regular.RightMiddy;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
@@ -354,9 +355,12 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
 
         // DEPOT
-        AutonConfig DEPOT_AUTON = new AutonConfig("Depot Auton", DepotAuton::new, 
-        "Left Bump To Depot", "Depot To Tower Left");
-        DEPOT_AUTON.register(autonChooser);
+        AutonConfig LEFT_MIDDY = new AutonConfig("Left Middy", LeftMiddy::new,  
+        "Left Bump To NZ", "Left Middy To Bump Score", "Left Bump Score To Depot");
+        LEFT_MIDDY.register(autonChooser);
+        AutonConfig RIGHT_MIDDY = new AutonConfig("Right Middy", RightMiddy::new,  
+        "Right Bump To NZ", "Right Middy To Bump Score", "Right Bump Score To Depot");
+        RIGHT_MIDDY.register(autonChooser);
 
         // TWO CYCLES (TRENCH)
         AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  

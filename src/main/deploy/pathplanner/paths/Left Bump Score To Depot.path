@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.868901569186875,
-        "y": 4.675463623395149
+        "x": 3.4749522900763368,
+        "y": 5.507824427480916
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.114686204930087,
-        "y": 5.231779917860097
+        "x": 0.7207369258195486,
+        "y": 6.064140721945863
       },
       "isLocked": false,
       "linkedName": "Left Bump Score"
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6590257879656263,
+      "waypointRelativePos": 0.42984014209591426,
       "rotationDegrees": 180.0
     }
   ],
@@ -38,7 +38,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 0.5016872890888694,
       "constraints": {
         "maxVelocity": 0.5,
         "maxAcceleration": 0.75,

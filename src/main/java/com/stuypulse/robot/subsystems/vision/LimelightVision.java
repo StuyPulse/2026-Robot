@@ -21,7 +21,6 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -256,8 +255,9 @@ public class LimelightVision extends SubsystemBase {
                     boolean notNull = false;
                     boolean withinAngularVelocityTolerance = false;
                     boolean withinInvalidPositionTolerance = false;
+                    boolean withinTargetAreaTolerance = false;
 
-                    if (poseEstimate != null && poseEstimate.tagCount > 0 )  {
+                    if (poseEstimate != null && poseEstimate.tagCount > 0)  {
                         notNull = true;
 
                         if (poseEstimate.pose.getTranslation().getDistance(Settings.Vision.INVALID_POSITION) < Settings.Vision.INVALID_POSITION_TOLERANCE_M){
@@ -268,10 +268,14 @@ public class LimelightVision extends SubsystemBase {
                             withinAngularVelocityTolerance = true;
                         }
 
+                        if(poseEstimate.avgTagArea >= Settings.Vision.MIN_TAG_AREA) {
+                            withinTargetAreaTolerance = true;
+                        }
+
                         Pose2d robotPose = poseEstimate.pose;
                         double timestamp = poseEstimate.timestampSeconds;
 
-                        boolean isAcceptablePose = notNull && withinAngularVelocityTolerance && !withinInvalidPositionTolerance;
+                        boolean isAcceptablePose = notNull && withinAngularVelocityTolerance && !withinInvalidPositionTolerance && withinTargetAreaTolerance;
 
                         if (megaTagMode == MegaTagMode.MEGATAG1 && isAcceptablePose) {
                             CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT1_STDEVS);

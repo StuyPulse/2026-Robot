@@ -5,12 +5,14 @@
 /** ************************************************************ */
 package com.stuypulse.robot.subsystems.vision;
 
+import java.nio.channels.Pipe;
 import java.util.Arrays;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Cameras;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Cameras.Camera.RejectionValue;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.vision.LimelightHelpers;
 import com.stuypulse.robot.util.vision.LimelightHelpers.IMUData;
@@ -54,6 +56,7 @@ public class LimelightVision extends SubsystemBase {
     private BStream debouncedHasData;
 
     private Pipeline currentPipeline;
+    private final Pipeline[] HDRPipelines = {Pipeline.NO_SUN, Pipeline.HIGH_SUN};
 
     public enum MegaTagMode {
         MEGATAG1,
@@ -262,14 +265,20 @@ public class LimelightVision extends SubsystemBase {
 
                         if (poseEstimate.pose.getTranslation().getDistance(Settings.Vision.INVALID_POSITION) < Settings.Vision.INVALID_POSITION_TOLERANCE_M){
                             withinInvalidPositionTolerance = true;
+                        } else {
+                            Cameras.LimelightCameras[i].incrementRejection(RejectionValue.INVALID_POSITION);
                         }
 
                         if (CommandSwerveDrivetrain.getInstance().getChassisSpeeds().omegaRadiansPerSecond < Settings.Vision.MAX_ANGULAR_VELOCITY_RAD_SEC) {
                             withinAngularVelocityTolerance = true;
+                        } else {
+                            Cameras.LimelightCameras[i].incrementRejection(RejectionValue.ANGULAR_VELOCITY);
                         }
 
                         if(poseEstimate.avgTagArea >= Settings.Vision.MIN_TAG_AREA) {
                             withinTargetAreaTolerance = true;
+                        } else {
+                            Cameras.LimelightCameras[i].incrementRejection(RejectionValue.TARGET_AREA);
                         }
 
                         Pose2d robotPose = poseEstimate.pose;
@@ -309,6 +318,7 @@ public class LimelightVision extends SubsystemBase {
                         
                     } else {
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
+                        Cameras.LimelightCameras[i].incrementRejection(RejectionValue.NOT_NULL);
                     }
 
                     SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
@@ -316,6 +326,9 @@ public class LimelightVision extends SubsystemBase {
                     SmartDashboard.putNumber("Vision/Limelight Robot Yaw", LimelightHelpers.getIMUData(limelightName).robotYaw);
                     // this is just the yaw of the internal imu 
                     SmartDashboard.putNumber("Vision/Limelight Yaw", LimelightHelpers.getIMUData(limelightName).Yaw);
+
+                    //Rejection counters
+                    Cameras.LimelightCameras[i].logRejections();
                 }
 
                 if (Settings.DEBUG_MODE.get()) {

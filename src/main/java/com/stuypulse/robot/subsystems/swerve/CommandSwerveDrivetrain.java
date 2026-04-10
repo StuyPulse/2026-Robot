@@ -100,7 +100,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	private Notifier m_simNotifier = null;
 	private double m_lastSimTime;
 
-	private Pose2d lastGoodPose = new Pose2d(Field.LENGTH / 2.0, Field.WIDTH / 2.0, Rotation2d.kZero);
+	private Pose2d lastGoodPose = new Pose2d(1.5, 1.5, Rotation2d.kZero);
 
 	/* Swerve requests to apply during SysId characterization */
 	private final SwerveRequest.SysIdSwerveTranslation m_moduleTranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();

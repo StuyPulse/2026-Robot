@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.893246882557342,
-        "y": 7.472562277580071
+        "x": 6.717360912981454,
+        "y": 7.521968616262482
       },
       "isLocked": false,
       "linkedName": "Left Trench Score"
@@ -32,32 +32,32 @@
     },
     {
       "anchor": {
-        "x": 7.185259365994238,
-        "y": 4.518559077809798
+        "x": 6.937318116975749,
+        "y": 4.571954350927247
       },
       "prevControl": {
-        "x": 6.8149542891317,
-        "y": 4.24230493639618
+        "x": 6.567013040113212,
+        "y": 4.295700209513629
       },
       "nextControl": {
-        "x": 7.826973879910546,
-        "y": 4.997289462973852
+        "x": 7.5790326308920575,
+        "y": 5.0506847360913
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.185259365994238,
-        "y": 7.366704707560627
+        "x": 7.0667047075606275,
+        "y": 7.440906488549619
       },
       "prevControl": {
-        "x": 7.483027922040206,
-        "y": 7.358919908709752
+        "x": 7.3644732636065955,
+        "y": 7.433121689698743
       },
       "nextControl": {
-        "x": 5.205644530045594,
-        "y": 7.418459343794579
+        "x": 5.087089871611983,
+        "y": 7.49266112478357
       },
       "isLocked": false,
       "linkedName": null
@@ -86,19 +86,19 @@
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 0.9593360995850618,
+      "waypointRelativePos": 0.9,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.2942430703624668,
+      "waypointRelativePos": 2.3,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 2.6268656716418013,
+      "waypointRelativePos": 2.5,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 3.1047812817904377,
+      "waypointRelativePos": 3.2,
       "rotationDegrees": 0.0
     }
   ],

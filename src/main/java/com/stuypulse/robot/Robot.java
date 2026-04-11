@@ -43,6 +43,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
+import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.superstructure.SuperstructureFOTM;
 import com.stuypulse.robot.commands.vision.BlackListAllTagsForAllCameras;
@@ -205,6 +206,7 @@ public class Robot extends TimedRobot {
         fmsUtil.restartTimer(false);
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
         CommandScheduler.getInstance().schedule(new WhitelistAllTagsForAllCameras());
+        CommandScheduler.getInstance().schedule(new IntakeDeploy());
 
         if (auto != null) {
             auto.cancel();

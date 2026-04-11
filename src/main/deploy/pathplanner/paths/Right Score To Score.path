@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.892473994275653,
-        "y": 0.7106025563708602
+        "x": 6.575035663338087,
+        "y": 0.6515406562054205
       },
       "isLocked": false,
       "linkedName": "Right Trench Score"
@@ -52,7 +52,7 @@
         "y": 0.5868473609129818
       },
       "prevControl": {
-        "x": 7.673089129599269,
+        "x": 7.673089129599266,
         "y": 0.5487960706826538
       },
       "nextControl": null,
@@ -70,11 +70,11 @@
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.031518624641834,
+      "waypointRelativePos": 0.9,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.9829424307036287,
+      "waypointRelativePos": 2.05,
       "rotationDegrees": -90.0
     },
     {

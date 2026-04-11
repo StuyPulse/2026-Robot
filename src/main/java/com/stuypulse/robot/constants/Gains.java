@@ -115,7 +115,7 @@ public class Gains {
         }
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(4.0, 0, 0);
+            PIDConstants XY = new PIDConstants(5.0, 0, 0); // 4.0 P
             PIDConstants THETA = new PIDConstants(4.0, 0, 0.0);
         }
     }

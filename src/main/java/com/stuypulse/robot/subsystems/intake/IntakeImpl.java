@@ -187,8 +187,13 @@ public class IntakeImpl extends Intake {
                 if (pivotState == PivotState.DEPLOY && 
                     getPivotAngle().getDegrees() <= Settings.Intake.ANGLE_THRESHOLD_FOR_HOLDING_VOLTAGE.getDegrees()
                     && rollerState != RollerState.STOP) {
-                        // pivot.setControl(new VoltageOut(-Settings.Intake.PUSHDOWN_VOLTAGE)); // applying 3 volts
-                        pivot.setControl(new TorqueCurrentFOC(Settings.Intake.PUSHDOWN_CURRENT));
+                        // pivot.setControl(new VoltageOut(Settings.Intake.PUSHDOWN_VOLTAGE)); // applying 3 volts
+                        // double pushdownCurrent = 
+                        //     Robot.getMode() == RobotMode.AUTON ? 
+                        //     Settings.Intake.PUSHDOWN_CURRENT_AUTON : Settings.Intake.PUSHDOWN_CURRENT_TELEOP;
+                        
+
+                        pivot.setControl(new TorqueCurrentFOC(Settings.Intake.PUSHDOWN_CURRENT_TELEOP));
                         applyingPushdownVoltage = true;
                 } else if (pivotState == PivotState.HOMING) {
                     pivot.setControl(new VoltageOut(-Settings.Intake.HOMING_VOLTAGE));

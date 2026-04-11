@@ -8,11 +8,11 @@
     "To Score"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 3.75,
+  "defaultMaxVel": 4.0,
   "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 300.0,
   "defaultMaxAngAccel": 900.0,
-  "defaultNominalVoltage": 12.5,
+  "defaultNominalVoltage": 12.7,
   "robotMass": 64.86,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,

@@ -3,21 +3,16 @@
   "robotLength": 0.762,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Bump",
-    "Misc",
-    "Right Bump",
-    "Tests",
+    "To Depot",
     "To NZ",
     "To Score"
   ],
-  "autoFolders": [
-    "Tests"
-  ],
-  "defaultMaxVel": 4.16,
+  "autoFolders": [],
+  "defaultMaxVel": 4.19,
   "defaultMaxAccel": 10.0,
   "defaultMaxAngVel": 300.0,
   "defaultMaxAngAccel": 900.0,
-  "defaultNominalVoltage": 12.5,
+  "defaultNominalVoltage": 12.7,
   "robotMass": 64.86,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,

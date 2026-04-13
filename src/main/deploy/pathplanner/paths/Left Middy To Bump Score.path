@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 8.144475190839694,
+        "y": 4.026631679389314
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0000000000000018,
-        "y": 2.0
+        "x": 4.997986641221376,
+        "y": 5.876030534351146
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Middy"
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 2.0
+        "x": 3.4749522900763368,
+        "y": 5.507824427480916
       },
       "prevControl": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 5.516822519083972,
+        "y": 5.616612595419848
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Bump Score"
     }
   ],
   "rotationTargets": [],
@@ -33,19 +33,19 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.16,
+    "maxVelocity": 4.19,
     "maxAcceleration": 10.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
-    "nominalVoltage": 12.5,
+    "nominalVoltage": 12.7,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Tests",
+  "folder": "To Score",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

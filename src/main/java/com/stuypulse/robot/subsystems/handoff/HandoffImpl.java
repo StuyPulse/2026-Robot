@@ -33,7 +33,6 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -187,7 +186,7 @@ public class HandoffImpl extends Handoff {
             SmartDashboard.putNumber("Handoff/Follow Supply Current", motorLeadSupplyCurrent.getValueAsDouble());
             SmartDashboard.putNumber("Handoff/Follow Stator Current", motorLeadStatorCurrent.getValueAsDouble());
             
-            if(Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+            if(Robot.getMode() == RobotMode.DISABLED && !Robot.fmsAttached) {
                 SmartDashboard.putBoolean("Robot/CAN/Main/Handoff Lead Motor Connected? (ID " + String.valueOf(Ports.Handoff.MOTOR_LEAD) + ")", motorLead.isConnected());
                 SmartDashboard.putBoolean("Robot/CAN/Main/Handoff Follow Motor Connected? (ID " + String.valueOf(Ports.Handoff.MOTOR_FOLLOW) + ")", motorFollow.isConnected());
             }

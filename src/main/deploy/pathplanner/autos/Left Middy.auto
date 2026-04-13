@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Box 1"
+            "pathName": "Left Bump To NZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Box 2"
+            "pathName": "Left Middy To Bump Score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Box 3"
+            "pathName": "Left Bump Score To Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Box 4"
+            "pathName": "Depot To Score"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Tests",
+  "folder": null,
   "choreoAuto": false
 }

@@ -5,9 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartBoolean;
@@ -21,6 +18,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -33,11 +32,13 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public interface Settings {
     public final double DT = 0.020;
-    public final int LOGGING_FREQUENCY = 2;
+    public final int LOGGING_FREQUENCY = 5;
     public final double SECONDS_IN_A_MINUTE = 60.0;
     public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", true);
     public final CANBus CANIVORE = new CANBus("canivore", "./logs/example.hoot");
     public final double LOOP_OVERRUN_WARNING_TIME_SEC = 1; 
+    SmartBoolean ENABLE_DISTANCE_CHECK = new SmartBoolean("Robot/Enable Distance Check?", false);
+    SmartBoolean ENABLE_OUT_OF_FIELD_CHECK = new SmartBoolean("Robot/Enable out of field check", true);
 
     public interface Handoff {
         public final double GEAR_RATIO = 3.0 / 1.0;
@@ -72,7 +73,9 @@ public interface Settings {
         Rotation2d ANGLE_THRESHOLD_FOR_HOLDING_VOLTAGE = Rotation2d.fromDegrees(15.0);
         double HOMING_VOLTAGE = 3.0;
         
-        double PUSHDOWN_VOLTAGE = 2.5;
+        double PUSHDOWN_VOLTAGE = -3.0;
+        double PUSHDOWN_CURRENT_TELEOP = -75.0;//new SmartNumber("Intake/Pushdown Current", -65.0); //TODO: GET ACTUAL TYTY
+        double PUSHDOWN_CURRENT_AUTON = -80.0;
 
         double GEAR_RATIO = 37.93;
         
@@ -100,13 +103,13 @@ public interface Settings {
     public interface Superstructure {
         public final double SHOOTER_TOLERANCE_RPM_HIGH = 50.0;
         public final double SHOOTER_TOLERANCE_RPM_LOW = 80.0;        
-        public final double SHOOTER_SOTM_TOLERANCE_RPM_HIGH = 50.0;
-        public final double SHOOTER_SOTM_TOLERANCE_RPM_LOW = 80.0;
+        public final double SHOOTER_SOTM_TOLERANCE_RPM_HIGH = 100.0;
+        public final double SHOOTER_SOTM_TOLERANCE_RPM_LOW = 100.0;
         public final double SHOOTER_FOTM_TOLERANCE_RPM_HIGH = 150.0;
         public final double SHOOTER_FOTM_TOLERANCE_RPM_LOW = 250.0;
         
         public final Rotation2d HOOD_TOLERANCE = Rotation2d.fromDegrees(0.5);
-        public final Rotation2d HOOD_SOTM_TOLERANCE = Rotation2d.fromDegrees(0.5);
+        public final Rotation2d HOOD_SOTM_TOLERANCE = Rotation2d.fromDegrees(2);
 
         public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
@@ -140,17 +143,18 @@ public interface Settings {
 
         public interface FerryRPMInterpolation {
             double[][] ferryDistanceRPMInterpolation = {
+                {1, 2000},
                 {5.16, 3300.0},
                 {6.94, 3600.0},
                 {7.87, 3800.0},
                 {9.77, 4300.0},
-                {10.694, 4595.0},       //STARTING FROM HERE THE DATA IS UNRELIABLE!!!
-                {11.516, 4750.0},
-                {12.416, 4900.0},
-                {13.316, 5050.0},
-                {14.216, 5175.0},
-                {15.148, 5200.0},
-                {16.54, 5300}           //FIELD LENGTH
+                {10.694, 4700.0},       //STARTING FROM HERE THE DATA IS UNRELIABLE!!!
+                {11.516, 4900.0},
+                {12.416, 5200.0},
+                {13.316, 5500.0},
+                {14.216, 5600.0}
+                // {15.148, 5200.0},
+                // {16.54, 5300}           //FIELD LENGTH
             };
         }
 
@@ -179,7 +183,7 @@ public interface Settings {
                 public final SmartNumber MANUAL_OVERRIDE = new SmartNumber("InterpolationTesting/Shoot State Target RPM", 3500.0);
 
                 public final double REVERSE = 0.0;
-                public final double KB = 2600.0;
+                public final double KB = 2675.0;
                 public final double LEFT_CORNER = 3650.0;
                 public final double RIGHT_CORNER = 3650.0;
             }
@@ -231,8 +235,8 @@ public interface Settings {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
-            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 5);//Rotation2d.fromDegrees(10.0);
-            public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(5.0);
+            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 6);//Rotation2d.fromDegrees(10.0);
+            public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(10.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
             public final Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(-233.0);
@@ -289,10 +293,12 @@ public interface Settings {
     public interface Swerve {
         public final double MODULE_VELOCITY_DEADBAND_M_PER_S = 0.1;
         public final double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
+        double MAX_ACCEPTABLE_POSE_DELTA_METERS = Math.sqrt(Field.LENGTH * Field.LENGTH + Field.WIDTH * Field.WIDTH); //TODO: Might wanna make this smaller.
+        double MAX_ACCEPTABLE_VISION_DEVIATION_METERS = 1.0;
 
         public interface Constraints {
             public final double MAX_VELOCITY_M_PER_S = 4.16; 
-            public final double MAX_VELOCITY_SOTM_M_PER_S = 2.0;
+            public final double MAX_VELOCITY_SOTM_M_PER_S = 1.75;
             public final double MAX_VELOCITY_FOTM_M_PER_S = 4.16;
 
             public final double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(300.0);
@@ -381,6 +387,10 @@ public interface Settings {
         public final Translation2d INVALID_POSITION = new Translation2d(8.2705, 4.0345);
         public final double INVALID_POSITION_TOLERANCE_M = 0.05;
         public final double MAX_ANGULAR_VELOCITY_RAD_SEC = 2 * Math.PI;
+        double MIN_TAG_AREA = 5; //TODO: MAKE SURE THIS IS A GOOD VALUE!!!
+
+        SmartBoolean HDR_ENABLED = new SmartBoolean("Vision/HDR Enabled?", false);
+        double HDR_TIMEOUT_SEC = 0.25;
 
         public final double BUZZ_DEBOUNCE = 0.25;
     }

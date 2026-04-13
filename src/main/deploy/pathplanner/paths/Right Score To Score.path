@@ -3,28 +3,28 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5473894436519258,
-        "y": 0.5350927246790309
+        "x": 3.6120827389443653,
+        "y": 0.5868473609129818
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.833808844507845,
-        "y": 0.37982881597717666
+        "x": 6.575035663338087,
+        "y": 0.6515406562054205
       },
       "isLocked": false,
       "linkedName": "Right Trench Score"
     },
     {
       "anchor": {
-        "x": 5.928102710413694,
+        "x": 5.850470756062768,
         "y": 2.851112696148359
       },
       "prevControl": {
-        "x": 5.928102710413694,
+        "x": 5.850470756062768,
         "y": 0.3280741797432247
       },
       "nextControl": {
-        "x": 5.928102710413694,
+        "x": 5.850470756062768,
         "y": 4.150659142168011
       },
       "isLocked": false,
@@ -32,41 +32,49 @@
     },
     {
       "anchor": {
-        "x": 6.9502567760342355,
+        "x": 7.302881844380403,
         "y": 2.851112696148359
       },
       "prevControl": {
-        "x": 6.923667038863391,
-        "y": 3.8349329714696054
+        "x": 7.215816731986725,
+        "y": 3.83143356936277
       },
       "nextControl": {
-        "x": 7.014950071326675,
-        "y": 0.45746077032810284
+        "x": 7.525057636887608,
+        "y": 0.34949567723342856
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.6250213980028523,
+        "x": 3.6120827389443653,
         "y": 0.5868473609129818
       },
       "prevControl": {
-        "x": 6.989072753209699,
-        "y": 0.4962767475035662
+        "x": 7.673089129599265,
+        "y": 0.5487960706826538
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Score (F)"
+      "linkedName": "Right Trench Score"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9722814498933927,
+      "waypointRelativePos": 0.17051509769094172,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.644760213143872,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.9829424307036287,
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.05,
       "rotationDegrees": -90.0
     },
     {
@@ -97,7 +105,7 @@
   "folder": "To Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }

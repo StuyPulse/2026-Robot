@@ -5,12 +5,8 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
-
-import java.sql.Struct;
-
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -31,11 +27,13 @@ import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains;
+import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
 import com.stuypulse.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
+import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.Vector2D;
 
@@ -45,13 +43,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.LinearAcceleration;
+
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -72,13 +74,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	private StructPublisher<Pose2d> leftBehindHubYPlublisher;
 	private StructPublisher<Pose2d> rightBehindHubYPlublisher;
 	private StructPublisher<Pose2d> vertexBehindHubPublisher;
+	private StatusSignal<LinearAcceleration> robotAccelerationX;
+	private StatusSignal<LinearAcceleration> robotAccelerationY;
 
 	private StructPublisher<Pose2d> robotPose = NetworkTableInstance.getDefault()
 			.getStructTopic("Robot Pose", Pose2d.struct).publish();
 
 	static {
 		instance = TunerConstants.createDrivetrain();
+		// instance.registerTelemetry(instance::telemeterize);
 	}
+
+	// public void telemeterize(SwerveDriveState state) {
+	// 	/* Write drive state to the log file */
+	// 	SignalLogger.writeStruct("DriveState/Pose", Pose2d.struct, state.Pose);
+	// 	SignalLogger.writeStruct("DriveState/Speeds", ChassisSpeeds.struct, state.Speeds);
+	// 	SignalLogger.writeStructArray("DriveState/ModuleStates", SwerveModuleState.struct, state.ModuleStates);
+	// 	SignalLogger.writeStructArray("DriveState/ModuleTargets", SwerveModuleState.struct, state.ModuleTargets);
+	// 	SignalLogger.writeStructArray("DriveState/ModulePositions", SwerveModulePosition.struct, state.ModulePositions);
+	// 	SignalLogger.writeStruct("DriveState/RawHeading", Rotation2d.struct, state.RawHeading);
+	// 	SignalLogger.writeDouble("DriveState/Timestamp", state.Timestamp, "seconds");
+	// 	SignalLogger.writeDouble("DriveState/OdometryPeriod", state.OdometryPeriod, "seconds");
+	// 	SignalLogger.writeInteger("DriveState/FailedDaqs", state.FailedDaqs);
+	// }
 
 	public static CommandSwerveDrivetrain getInstance() {
 		return instance;
@@ -87,6 +105,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	private static final double kSimLoopPeriod = 0.005; // 5 ms
 	private Notifier m_simNotifier = null;
 	private double m_lastSimTime;
+
+	private Pose2d lastGoodPose = new Pose2d(1.5, 1.5, Rotation2d.kZero);
 
 	/* Swerve requests to apply during SysId characterization */
 	private final SwerveRequest.SysIdSwerveTranslation m_moduleTranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -226,6 +246,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		leftBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/LeftBehindHubY", Pose2d.struct).publish();
 		rightBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/RightBehindHubY", Pose2d.struct).publish();
 		vertexBehindHubPublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/VertexBehindHub", Pose2d.struct).publish();
+
+		robotAccelerationX = this.getPigeon2().getAccelerationX();
+		robotAccelerationY = this.getPigeon2().getAccelerationY();
+
+		PhoenixUtil.registerToCanivore(
+			robotAccelerationX,
+			robotAccelerationY
+		);
 	}
 
 	/**
@@ -347,6 +375,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		m_simNotifier.startPeriodic(kSimLoopPeriod);
 	}
 
+	private boolean checkIfVisionMeasurementValid(Pose2d visionPose) {
+		return !Settings.ENABLE_DISTANCE_CHECK.get() || visionPose.getTranslation().getDistance(getState().Pose.getTranslation()) < Settings.Swerve.MAX_ACCEPTABLE_VISION_DEVIATION_METERS;
+	} 
+
 	/**
 	 * Adds a vision measurement to the Kalman Filter. This will correct the
 	 * odometry pose estimate
@@ -359,7 +391,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	 */
 	@Override
 	public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
-		super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
+		// SignalLogger.writeStruct("Vision/Pose", Pose2d.struct, visionRobotPoseMeters);
+		// SignalLogger.writeDouble("Vision/Timestamp", timestampSeconds);
+
+		if(checkIfVisionMeasurementValid(visionRobotPoseMeters)) { 
+			super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
+		}
 	}
 
 	/**
@@ -381,16 +418,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	 *                                 meters and radians.
 	 */
 	@Override
-	public void addVisionMeasurement(
-			Pose2d visionRobotPoseMeters,
-			double timestampSeconds,
-			Matrix<N3, N1> visionMeasurementStdDevs) {
-		super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
-				visionMeasurementStdDevs);
+	public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs) {
+		// SignalLogger.writeStruct("Vision/Pose", Pose2d.struct, visionRobotPoseMeters);
+		// SignalLogger.writeDouble("Vision/Timestamp", timestampSeconds);
+
+		if(checkIfVisionMeasurementValid(visionRobotPoseMeters)) { 
+			super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
+					visionMeasurementStdDevs);
+		}
 	}
 
 	public Pose2d getPose() {
-		return getState().Pose;
+		Pose2d proposedPose = getState().Pose;
+		double proposedX = proposedPose.getX();
+		double proposedY = proposedPose.getY();
+		double poseDelta = lastGoodPose.getTranslation().getDistance(proposedPose.getTranslation());
+	
+		 if (!(proposedX > Field.LENGTH || proposedX < 0 || proposedY > Field.WIDTH || proposedY < 0) &&
+		 	poseDelta <= Settings.Swerve.MAX_ACCEPTABLE_POSE_DELTA_METERS) {
+			lastGoodPose = proposedPose;
+		 }
+
+		return lastGoodPose;
 	}
 
 	public void configureAutoBuilder() {
@@ -430,15 +479,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	}
 
 	public SwerveModuleState[] getModuleStates() {
-		SwerveModuleState[] moduleStates = new SwerveModuleState[4];
-		for (int i = 0; i < 4; i++) {
-			moduleStates[i] = getModule(i).getCurrentState();
-		}
-		return moduleStates;
+    	return getState().ModuleStates;
 	}
 
 	public ChassisSpeeds getChassisSpeeds() {
-		return getKinematics().toChassisSpeeds(getModuleStates());
+    	return getState().Speeds;
 	}
 
 	public Vector2D getFieldRelativeSpeeds() {
@@ -669,6 +714,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? pose : Field.transformToOppositeAlliance(pose));
 
 		if (Robot.getPeriodicCounter() % Settings.LOGGING_FREQUENCY == 0) {
+			SmartDashboard.putNumber("Swerve/Robot Accel X", robotAccelerationX.getValueAsDouble() * 9.81);
+			SmartDashboard.putNumber("Swerve/Robot Accel Y", robotAccelerationY.getValueAsDouble() * 9.81);
+
+			SmartDashboard.putNumber("Swerve/Failed DAQ Count", this.getState().FailedDaqs);
+			SmartDashboard.putNumber("Swerve/CANBus Utiliaztion", Ports.CANIVORE.getStatus().BusUtilization);
+			// will confirm whether we are even getting data
+
 			SmartDashboard.putBoolean("FieldPositions/isBehindTower", isBehindTower());
 			SmartDashboard.putBoolean("FieldPositions/isUnderTrench", isUnderTrench());
 			SmartDashboard.putBoolean("FieldPositions/isBehindHub", isBehindHub());
@@ -702,7 +754,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 			Robot.getEnergyUtil().logEnergyUsage(getName() + " Turn", getTotalSteerSupplyCurrent());
 
 			// CAN SIGNAL LOGGING
-			if (Settings.DEBUG_MODE.get() && Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+			if (Settings.DEBUG_MODE.get() && Robot.getMode() == RobotMode.DISABLED && !Robot.fmsAttached) {
 				SmartDashboard.putBoolean(
 						"Robot/CAN/Canivore/Front Left Drive Motor Connected? (ID "
 								+ String.valueOf(TunerConstants.kFrontLeftDriveMotorId) + ")",

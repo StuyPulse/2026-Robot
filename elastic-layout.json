@@ -70,19 +70,6 @@
                 }
               },
               {
-                "title": "Swerve",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 166.0,
-                "height": 166.0,
-                "type": "Toggle Switch",
-                "properties": {
-                  "topic": "SmartDashboard/Enabled Subsystems/Swerve Is Enabled",
-                  "period": 0.06,
-                  "data_type": "boolean"
-                }
-              },
-              {
                 "title": "Shooter",
                 "x": 0.0,
                 "y": 0.0,
@@ -122,19 +109,6 @@
                 }
               },
               {
-                "title": "Left Limelight",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 166.0,
-                "height": 166.0,
-                "type": "Toggle Switch",
-                "properties": {
-                  "topic": "SmartDashboard/Enabled Subsystems/Left Limelight Is Enabled",
-                  "period": 0.06,
-                  "data_type": "boolean"
-                }
-              },
-              {
                 "title": "Right Limelight",
                 "x": 0.0,
                 "y": 0.0,
@@ -159,6 +133,32 @@
                   "period": 0.5,
                   "data_type": "boolean"
                 }
+              },
+              {
+                "title": "Swerve",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 166.0,
+                "height": 166.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "SmartDashboard/Enabled Subsystems/Swerve Is Enabled",
+                  "period": 0.06,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Left Limelight",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 166.0,
+                "height": 166.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "SmartDashboard/Enabled Subsystems/Left Limelight Is Enabled",
+                  "period": 0.06,
+                  "data_type": "boolean"
+                }
               }
             ]
           }
@@ -174,7 +174,7 @@
             "properties": {
               "topic": "/SmartDashboard/Field",
               "period": 0.06,
-              "field_game": "Rebuilt (No Fuel)",
+              "field_game": "Rebuilt",
               "robot_width": 0.85,
               "robot_length": 0.85,
               "show_other_objects": true,
@@ -193,9 +193,8 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Handoff/At Tolerance?",
+              "topic": "/Robot/Handoff/At Tolerance?",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -210,7 +209,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Handoff/State",
+              "topic": "/Robot/Handoff/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -224,7 +223,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Intake/Pivot At Tolerance?",
+              "topic": "/Robot/Intake/Pivot At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -241,7 +240,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Intake/Pivot State",
+              "topic": "/Robot/Intake/Pivot State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -255,7 +254,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Hood/State",
+              "topic": "/Robot/Superstructure/Hood/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -269,7 +268,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Shooter/State",
+              "topic": "/Robot/Superstructure/Shooter/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -283,7 +282,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Turret/State",
+              "topic": "/Robot/Superstructure/Turret/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -297,7 +296,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Hood At Tolerance?",
+              "topic": "/Robot/Superstructure/Hood At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -314,7 +313,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Shooter At Tolerance?",
+              "topic": "/Robot/Superstructure/Shooter At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -331,7 +330,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Turret At Tolerance?",
+              "topic": "/Robot/Superstructure/Turret At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -349,8 +348,7 @@
             "type": "Large Text Display",
             "properties": {
               "topic": "/SmartDashboard/FMSUtil/Field State",
-              "period": 0.06,
-              "data_type": "string"
+              "period": 0.06
             }
           },
           {
@@ -361,9 +359,8 @@
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/Is Active Shift?",
+              "topic": "/Robot/FMSUtil/Is Active Shift?",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -378,25 +375,12 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/Time Left In Shift",
+              "topic": "/Robot/FMSUtil/time left in shift",
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 20,
               "yellow_start_time": 30
-            }
-          },
-          {
-            "title": "Autonomous",
-            "x": 560.0,
-            "y": 420.0,
-            "width": 210.0,
-            "height": 140.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/SmartDashboard/Autonomous",
-              "period": 0.06,
-              "sort_options": false
             }
           },
           {
@@ -409,8 +393,8 @@
             "properties": {
               "topic": "/SmartDashboard/Robot/Set Megatag 2",
               "period": 0.5,
-              "show_type": true,
-              "maximize_button_space": false
+              "show_type": false,
+              "maximize_button_space": true
             }
           },
           {
@@ -423,8 +407,8 @@
             "properties": {
               "topic": "/SmartDashboard/Robot/Set Megatag 1",
               "period": 0.5,
-              "show_type": true,
-              "maximize_button_space": false
+              "show_type": false,
+              "maximize_button_space": true
             }
           },
           {
@@ -435,9 +419,8 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Spindexer/At Tolerance",
+              "topic": "/Robot/Spindexer/At Tolerance",
               "period": 0.5,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -452,7 +435,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Spindexer/State",
+              "topic": "/Robot/Spindexer/State",
               "period": 0.5,
               "data_type": "string",
               "show_submit_button": false
@@ -466,23 +449,22 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/Robot/Match Time",
+              "topic": "/Robot/Robot/Match Time",
               "period": 0.5,
-              "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 20,
               "yellow_start_time": 30
             }
           },
           {
-            "title": "limelight-back Has Data",
+            "title": "Back Has Data",
             "x": 420.0,
             "y": 560.0,
             "width": 140.0,
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Vision/limelight-back Has Data",
+              "topic": "/Robot/Vision/limelight-back Has Data",
               "period": 0.5,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -492,14 +474,14 @@
             }
           },
           {
-            "title": "limelight-left Has Data",
+            "title": "Left Has Data",
             "x": 560.0,
             "y": 560.0,
             "width": 140.0,
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Vision/limelight-left Has Data",
+              "topic": "/Robot/Vision/limelight-left Has Data",
               "period": 0.5,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -509,20 +491,33 @@
             }
           },
           {
-            "title": "limelight-right Has Data",
+            "title": "Right Has Data",
             "x": 700.0,
             "y": 560.0,
             "width": 140.0,
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Vision/limelight-right Has Data",
+              "topic": "/Robot/Vision/limelight-right Has Data",
               "period": 0.5,
               "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
               "false_icon": "None"
+            }
+          },
+          {
+            "title": "Autonomous",
+            "x": 560.0,
+            "y": 420.0,
+            "width": 210.0,
+            "height": 140.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Autonomous",
+              "period": 0.5,
+              "sort_options": false
             }
           }
         ]
@@ -687,7 +682,7 @@
             "properties": {
               "topic": "/SmartDashboard/Field",
               "period": 0.06,
-              "field_game": "Rebuilt (No Fuel)",
+              "field_game": "Rebuilt",
               "robot_width": 0.85,
               "robot_length": 0.85,
               "show_other_objects": true,
@@ -706,9 +701,8 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Handoff/At Tolerance?",
+              "topic": "/Robot/Handoff/At Tolerance?",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -723,7 +717,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Handoff/State",
+              "topic": "/Robot/Handoff/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -737,7 +731,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Intake/Pivot At Tolerance?",
+              "topic": "/Robot/Intake/Pivot At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -754,7 +748,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Intake/Pivot State",
+              "topic": "/Robot/Intake/Pivot State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -768,7 +762,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Hood/State",
+              "topic": "/Robot/Superstructure/Hood/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -782,7 +776,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Turret/State",
+              "topic": "/Robot/Superstructure/Turret/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -796,7 +790,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Hood At Tolerance?",
+              "topic": "/Robot/Superstructure/Hood At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -813,7 +807,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Shooter At Tolerance?",
+              "topic": "/Robot/Superstructure/Shooter At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -830,26 +824,13 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Turret At Tolerance?",
+              "topic": "/Robot/Superstructure/Turret At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
               "false_icon": "None"
-            }
-          },
-          {
-            "title": "Shift",
-            "x": 0.0,
-            "y": 560.0,
-            "width": 280.0,
-            "height": 140.0,
-            "type": "Large Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/FMSUtil/Field State",
-              "period": 0.06,
-              "data_type": "string"
             }
           },
           {
@@ -860,9 +841,8 @@
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/Is Active Shift?",
+              "topic": "/Robot/is active shift",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -877,7 +857,7 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/Time Left In Shift",
+              "topic": "/Robot/FMSUtil/time left in shift",
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
@@ -893,7 +873,7 @@
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/No Auto Winner Data",
+              "topic": "/Robot/FMSUtil/No Auto Winner Data",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -904,10 +884,10 @@
           },
           {
             "title": "Handoff Reverse",
-            "x": 1120.0,
+            "x": 560.0,
             "y": 420.0,
             "width": 280.0,
-            "height": 280.0,
+            "height": 140.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Robot/Handoff Reverse",
@@ -918,10 +898,10 @@
           },
           {
             "title": "Intake Reverse",
-            "x": 560.0,
+            "x": 840.0,
             "y": 420.0,
             "width": 280.0,
-            "height": 280.0,
+            "height": 140.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Robot/Intake Reverse",
@@ -932,10 +912,10 @@
           },
           {
             "title": "Spindexer Reverse",
-            "x": 840.0,
+            "x": 1120.0,
             "y": 420.0,
             "width": 280.0,
-            "height": 280.0,
+            "height": 140.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Robot/Spindexer Reverse",
@@ -952,9 +932,8 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Spindexer/At Tolerance",
+              "topic": "/Robot/Spindexer/At Tolerance",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -969,15 +948,15 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Spindexer/State",
+              "topic": "/Robot/Spindexer/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
             }
           },
           {
-            "title": "Current Intake Angle (deg)",
-            "x": 910.0,
+            "title": "Current Intake Angle",
+            "x": 560.0,
             "y": 700.0,
             "width": 210.0,
             "height": 140.0,
@@ -997,9 +976,8 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/Robot/Match Time",
+              "topic": "/Robot/Robot/Match Time",
               "period": 0.5,
-              "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 20,
               "yellow_start_time": 30
@@ -1007,7 +985,7 @@
           },
           {
             "title": "Current Hood Angle",
-            "x": 280.0,
+            "x": 1050.0,
             "y": 700.0,
             "width": 210.0,
             "height": 140.0,
@@ -1021,7 +999,7 @@
           },
           {
             "title": "Hood Homing Routine Lower",
-            "x": 0.0,
+            "x": 770.0,
             "y": 700.0,
             "width": 280.0,
             "height": 140.0,
@@ -1035,7 +1013,7 @@
           },
           {
             "title": "Seed Intake At Upper Limit",
-            "x": 630.0,
+            "x": 280.0,
             "y": 700.0,
             "width": 280.0,
             "height": 140.0,
@@ -1049,7 +1027,7 @@
           },
           {
             "title": "Seed Intake At Lower Limit",
-            "x": 1120.0,
+            "x": 0.0,
             "y": 700.0,
             "width": 280.0,
             "height": 140.0,
@@ -1069,10 +1047,63 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Shooter/State",
+              "topic": "/Robot/Superstructure/Shooter/State",
               "period": 0.5,
               "data_type": "string",
               "show_submit_button": false
+            }
+          },
+          {
+            "title": "Enable Distance Check?",
+            "x": 560.0,
+            "y": 560.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "SmartDashboard/Robot/Enable Distance Check?",
+              "period": 0.5,
+              "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Set Robot Pose Right Corner",
+            "x": 1120.0,
+            "y": 560.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Robot/Set Robot Pose Right Corner",
+              "period": 0.5,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Set Robot Pose Left Corner",
+            "x": 840.0,
+            "y": 560.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Robot/Set Robot Pose Left Corner",
+              "period": 0.5,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Shift",
+            "x": 0.0,
+            "y": 560.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/FMSUtil/Field State",
+              "period": 0.06
             }
           }
         ]
@@ -1237,7 +1268,7 @@
             "properties": {
               "topic": "/SmartDashboard/Field",
               "period": 0.06,
-              "field_game": "Rebuilt (No Fuel)",
+              "field_game": "Rebuilt",
               "robot_width": 0.85,
               "robot_length": 0.85,
               "show_other_objects": true,
@@ -1256,9 +1287,8 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Handoff/At Tolerance?",
+              "topic": "/Robot/Handoff/At Tolerance?",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -1273,7 +1303,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Handoff/State",
+              "topic": "/Robot/Handoff/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -1287,7 +1317,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Intake/Pivot At Tolerance?",
+              "topic": "/Robot/Intake/Pivot At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -1304,7 +1334,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Intake/Pivot State",
+              "topic": "/Robot/Intake/Pivot State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -1318,7 +1348,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Hood/State",
+              "topic": "/Robot/Superstructure/Hood/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -1332,7 +1362,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Shooter/State",
+              "topic": "/Robot/Superstructure/Shooter/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -1346,7 +1376,7 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Turret/State",
+              "topic": "/Robot/Superstructure/Turret/State",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
@@ -1360,7 +1390,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Hood At Tolerance?",
+              "topic": "/Robot/Superstructure/Hood At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -1377,7 +1407,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Shooter At Tolerance?",
+              "topic": "/Robot/Superstructure/Shooter At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -1394,7 +1424,7 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Superstructure/Turret At Tolerance?",
+              "topic": "/Robot/Superstructure/Turret At Tolerance?",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -1411,9 +1441,8 @@
             "height": 70.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Spindexer/At Tolerance",
+              "topic": "/Robot/Spindexer/At Tolerance",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -1428,23 +1457,9 @@
             "height": 70.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Spindexer/State",
+              "topic": "/Robot/Spindexer/State",
               "period": 0.06,
               "data_type": "string",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Current Intake Angle (deg)",
-            "x": 420.0,
-            "y": 560.0,
-            "width": 210.0,
-            "height": 140.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Intake/Current Angle (deg)",
-              "period": 0.5,
-              "data_type": "double",
               "show_submit_button": false
             }
           },
@@ -1471,20 +1486,6 @@
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Superstructure/Turret/Current Angle",
-              "period": 0.5,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Current Hood Angle",
-            "x": 0.0,
-            "y": 560.0,
-            "width": 210.0,
-            "height": 140.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Superstructure/Hood/Current Angle (deg)",
               "period": 0.5,
               "data_type": "double",
               "show_submit_button": false
@@ -1519,7 +1520,21 @@
             }
           },
           {
-            "title": "Seed Hood Relative Encoder At Lower Hardstop",
+            "title": "Current Hood Angle",
+            "x": 0.0,
+            "y": 560.0,
+            "width": 210.0,
+            "height": 140.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Superstructure/Hood/Current Angle (deg)",
+              "period": 0.5,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Seed Hood At Lower Limit",
             "x": 0.0,
             "y": 420.0,
             "width": 280.0,
@@ -1528,8 +1543,133 @@
             "properties": {
               "topic": "/SmartDashboard/Robot/Seed Hood Relative Encoder At Lower Hardstop",
               "period": 0.5,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Pipeline back",
+            "x": 1260.0,
+            "y": 560.0,
+            "width": 140.0,
+            "height": 70.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/limelight-back/getpipe",
+              "period": 0.5,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Pipeline right",
+            "x": 1260.0,
+            "y": 490.0,
+            "width": 140.0,
+            "height": 70.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/limelight-right/getpipe",
+              "period": 0.5,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Pipeline Left",
+            "x": 1260.0,
+            "y": 420.0,
+            "width": 140.0,
+            "height": 70.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/limelight-left/getpipe",
+              "period": 0.5,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "HDR Enabled?",
+            "x": 1260.0,
+            "y": 630.0,
+            "width": 140.0,
+            "height": 140.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "SmartDashboard/Vision/HDR Enabled?",
+              "period": 0.5,
+              "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Set Pipeline High Sun",
+            "x": 0.0,
+            "y": 700.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Robot/Set Pipeline High Sun",
+              "period": 0.5,
               "show_type": true,
-              "maximize_button_space": false
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Set Pipeline Med Sun",
+            "x": 280.0,
+            "y": 700.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Robot/Set Pipeline Med Sun",
+              "period": 0.5,
+              "show_type": true,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Set Pipeline Low Sun",
+            "x": 560.0,
+            "y": 700.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Robot/Set Pipeline Low Sun",
+              "period": 0.5,
+              "show_type": true,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Set Pipeline No Sun",
+            "x": 840.0,
+            "y": 700.0,
+            "width": 280.0,
+            "height": 140.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Robot/Set Pipeline No Sun",
+              "period": 0.5,
+              "show_type": true,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Current Intake Angle ",
+            "x": 700.0,
+            "y": 560.0,
+            "width": 210.0,
+            "height": 140.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Intake/Current Angle (deg)",
+              "period": 0.5,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]

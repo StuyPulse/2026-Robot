@@ -5,13 +5,14 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.stuylib.network.SmartBoolean;
-
 import com.stuypulse.robot.RobotContainer;
+import com.stuypulse.robot.util.vision.LimelightHelpers;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** This interface stores information about each camera. */
 public interface Cameras {
@@ -39,6 +40,75 @@ public interface Cameras {
         private String name;
         private Pose3d location;
         private SmartBoolean isEnabled;
+
+        private int rejectedCounterNotNull;
+        private int rejectedCounterAngularVelocity;
+        private int rejectedCounterInvalidPosition;
+        private int rejectedCounterTargetArea;
+
+        private Pipeline currentPipeline;
+
+        public enum Pipeline {
+            NO_SUN,
+            LOW_SUN,
+            MED_SUN,
+            HIGH_SUN
+        }
+        
+        private int getCurrentPipelineID() {
+            return switch(this.currentPipeline) {
+                case NO_SUN -> 3;
+                case LOW_SUN -> 2;
+                case MED_SUN -> 1;
+                case HIGH_SUN -> 0;
+            };
+        }
+
+        public enum RejectionValue {
+            NOT_NULL,
+            ANGULAR_VELOCITY,
+            INVALID_POSITION,
+            TARGET_AREA
+        };
+
+        public void setPipeline(Pipeline pipeline) {
+            this.currentPipeline = pipeline;
+            LimelightHelpers.setPipelineIndex(name, getCurrentPipelineID());
+        }
+
+        public void performHDR() {
+            Pipeline nextHdrPipeline = Pipeline.NO_SUN;
+
+            if (currentPipeline == Pipeline.NO_SUN) {
+                nextHdrPipeline = Pipeline.HIGH_SUN;
+            }
+
+            setPipeline(nextHdrPipeline);
+        }
+
+        public void incrementRejection(RejectionValue rejectionValue) {
+            switch (rejectionValue) {
+                case NOT_NULL:
+                    rejectedCounterNotNull++;
+                    break;
+                case ANGULAR_VELOCITY:
+                    rejectedCounterAngularVelocity++;
+                    break;
+                case INVALID_POSITION:
+                    rejectedCounterInvalidPosition++;
+                    break;
+                case TARGET_AREA:
+                    rejectedCounterTargetArea++;
+                    break;
+            }
+        }
+
+        public void logRejections() {
+            SmartDashboard.putNumber("Vision/" + name + "/# Rejected Not Null", rejectedCounterNotNull);
+            SmartDashboard.putNumber("Vision/" + name + "/# Rejected Target Area", rejectedCounterTargetArea);
+            SmartDashboard.putNumber("Vision/" + name + "/# Rejected Angular Velocity", rejectedCounterAngularVelocity);
+            SmartDashboard.putNumber("Vision/" + name + "/# Rejected Invalid Position", rejectedCounterInvalidPosition);
+        }
 
         public Camera(String name, Pose3d location, SmartBoolean isEnabled) {
             this.name = name;

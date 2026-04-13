@@ -5,6 +5,15 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.superstructure.shooter;
 
+import java.util.Optional;
+
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
@@ -18,19 +27,8 @@ import com.stuypulse.robot.util.SysId;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import java.util.Optional;
 
 public class ShooterImpl extends Shooter {
     private final Motors.TalonFXConfig shooterConfig;
@@ -73,14 +71,14 @@ public class ShooterImpl extends Shooter {
                 .withLowerLimitSupplyCurrent(60, 1);
 
         shooterLeader = new TalonFX(Ports.Superstructure.Shooter.MOTOR_LEAD, Ports.RIO);
-        shooterLeader.getVelocity().setUpdateFrequency(1000.0);
-        shooterLeader.getTorqueCurrent().setUpdateFrequency(1000.0);
+        shooterLeader.getVelocity().setUpdateFrequency(200.0);
+        shooterLeader.getTorqueCurrent().setUpdateFrequency(500.0);
         shooterLeader.getStatorCurrent().setUpdateFrequency(50.0);
         shooterLeader.getSupplyCurrent().setUpdateFrequency(50.0);
 
         shooterFollower = new TalonFX(Ports.Superstructure.Shooter.MOTOR_FOLLOW, Ports.RIO);
-        shooterFollower.getVelocity().setUpdateFrequency(1000.0);
-        shooterFollower.getTorqueCurrent().setUpdateFrequency(1000.0);
+        shooterFollower.getVelocity().setUpdateFrequency(200.0);
+        shooterFollower.getTorqueCurrent().setUpdateFrequency(50.0);
         shooterFollower.getStatorCurrent().setUpdateFrequency(50.0);
         shooterFollower.getSupplyCurrent().setUpdateFrequency(50.0);
 
@@ -129,26 +127,6 @@ public class ShooterImpl extends Shooter {
     public void periodicAfterScheduler() {
         super.periodicAfterScheduler();
 
-        shooterConfig.updateGainsConfig(
-                shooterLeader,
-                0,
-                Gains.Superstructure.Shooter.kP,
-                Gains.Superstructure.Shooter.kI,
-                Gains.Superstructure.Shooter.kD,
-                Gains.Superstructure.Shooter.kS,
-                Gains.Superstructure.Shooter.kV,
-                Gains.Superstructure.Shooter.kA);
-
-        shooterConfig.updateGainsConfig(
-                shooterFollower,
-                0,
-                Gains.Superstructure.Shooter.kP,
-                Gains.Superstructure.Shooter.kI,
-                Gains.Superstructure.Shooter.kD,
-                Gains.Superstructure.Shooter.kS,
-                Gains.Superstructure.Shooter.kV,
-                Gains.Superstructure.Shooter.kA);
-
         if (EnabledSubsystems.SHOOTER.get() || getState() == ShooterState.STOP) {
             if (voltageOverride.isPresent()) {
                 shooterLeader.setVoltage(voltageOverride.get());
@@ -180,7 +158,7 @@ public class ShooterImpl extends Shooter {
             SmartDashboard.putNumber("Superstructure/Shooter/Follower Stator Current (amps)",
                     shooterFollowStatorCurrent.getValueAsDouble());
 
-            if (Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+            if (Robot.getMode() == RobotMode.DISABLED && !Robot.fmsAttached) {
                 SmartDashboard.putBoolean(
                         "Robot/CAN/Main/Shooter Leader Motor Connected? (ID "
                                 + String.valueOf(Ports.Superstructure.Shooter.MOTOR_LEAD) + ")",
@@ -196,6 +174,7 @@ public class ShooterImpl extends Shooter {
         SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error (RPM)",
                 shooterLeaderClosedLoopError.getValueAsDouble() * 60.0);
 
+        SmartDashboard.putNumber("Superstructure/Shooter/Implemented Error (RPM)", getTargetRPM() - getLeaderRPM());
     }
 
     private void setVoltageOverride(Optional<Double> voltageOverride) {

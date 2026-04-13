@@ -7,8 +7,9 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.auton.regular.DepotAuton;
+import com.stuypulse.robot.commands.auton.regular.LeftMiddy;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
+import com.stuypulse.robot.commands.auton.regular.RightMiddy;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
@@ -17,6 +18,7 @@ import com.stuypulse.robot.commands.hood.HomingRoutineLower;
 import com.stuypulse.robot.commands.hood.HomingRoutineUpper;
 import com.stuypulse.robot.commands.hood.SeedHoodRelativeEncoderAtLowerHardstop;
 import com.stuypulse.robot.commands.hood.SeedHoodRelativeEncoderAtUpperHardstop;
+import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeOuttake;
 import com.stuypulse.robot.commands.intake.IntakeRunRollers;
@@ -26,35 +28,34 @@ import com.stuypulse.robot.commands.intake.IntakeStow;
 import com.stuypulse.robot.commands.intake.SeedPivotDeployed;
 import com.stuypulse.robot.commands.intake.SeedPivotStowed;
 import com.stuypulse.robot.commands.leds.LEDApplyPattern;
-import com.stuypulse.robot.commands.leds.LEDDefaultCommand;
 import com.stuypulse.robot.commands.spindexer.SpindexerReverse;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.superstructure.SuperstructureFOTM;
-import com.stuypulse.robot.commands.superstructure.SuperstructureInterpolation;
 import com.stuypulse.robot.commands.superstructure.SuperstructureKB;
 import com.stuypulse.robot.commands.superstructure.SuperstructureLeftCorner;
 import com.stuypulse.robot.commands.superstructure.SuperstructureRightCorner;
 import com.stuypulse.robot.commands.superstructure.SuperstructureSOTM;
-import com.stuypulse.robot.commands.superstructure.SuperstructureManualOverride;
 import com.stuypulse.robot.commands.superstructure.SuperstructureStow;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFOTM;
 import com.stuypulse.robot.commands.swerve.SwerveDriveSOTM;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
+import com.stuypulse.robot.commands.swerve.SwerveResetPose;
+import com.stuypulse.robot.commands.swerve.SwerveResetPoseKBShot;
+import com.stuypulse.robot.commands.swerve.SwerveResetPoseLeftCorner;
+import com.stuypulse.robot.commands.swerve.SwerveResetPoseRightCorner;
 import com.stuypulse.robot.commands.swerve.SwerveXMode;
-import com.stuypulse.robot.commands.swerve.pidToPose.SwerveDrivePIDToPose;
 import com.stuypulse.robot.commands.turret.SeedTurret;
 import com.stuypulse.robot.commands.turret.ZeroTurret;
-import com.stuypulse.robot.commands.vision.EnableBackLimelight;
-import com.stuypulse.robot.commands.vision.EnableLeftLimelight;
-import com.stuypulse.robot.commands.vision.EnableRightLimelight;
 import com.stuypulse.robot.commands.vision.ResetLimelightIMU;
 import com.stuypulse.robot.commands.vision.SetIMUMode;
 import com.stuypulse.robot.commands.vision.SetMegaTagMode;
+import com.stuypulse.robot.commands.vision.SetPipeline;
 import com.stuypulse.robot.commands.vision.WhitelistAllTagsForAllCameras;
 import com.stuypulse.robot.commands.vision.WhitelistOutpostTags;
 import com.stuypulse.robot.commands.vision.WhitelistTowerTags;
+import com.stuypulse.robot.constants.Cameras.Camera.Pipeline;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -62,7 +63,6 @@ import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.handoff.Handoff.HandoffState;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.intake.Intake.RollerState;
-import com.stuypulse.robot.subsystems.leds.LEDController;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer.SpindexerState;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
@@ -79,19 +79,14 @@ import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 
 public class RobotContainer {
@@ -103,7 +98,7 @@ public class RobotContainer {
         SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
-        SmartBoolean LEDS = new SmartBoolean("Enabled Subsystems/LEDs Is Enabled", true);
+        SmartBoolean LEDS = new SmartBoolean("Enabled Subsystems/LEDs Is Enabled", false);
 
         SmartBoolean BACK_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Back Limelight Is Enabled", true);
         SmartBoolean LEFT_LIMELIGHT = new SmartBoolean("Enabled Subsystems/Left Limelight Is Enabled", true);
@@ -126,7 +121,7 @@ public class RobotContainer {
     private final Shooter shooter = Shooter.getInstance();
     private final Hood hood = Hood.getInstance();
 
-    private final LEDController leds = LEDController.getInstance();
+    // private final LEDController leds = LEDController.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -149,7 +144,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        leds.setDefaultCommand(new LEDDefaultCommand());
+        // leds.setDefaultCommand(new LEDDefaultCommand());
     }
 
     /***************/
@@ -158,27 +153,32 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Scoring Routine (TR)
+        // driver.getTopButton()
+        //     .whileTrue(new LEDApplyPattern(Settings.LED.SHOOT_IN_PLACE))
+        //     .whileTrue(new WaitUntilCommand(() -> spindexer.getState() == SpindexerState.FORWARD)
+        //         .andThen(new WaitCommand(0.75).andThen(new IntakeDeploy())))
+        //     .whileTrue(new SwerveXMode())
+        //     .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
+        //     .whileTrue(
+        //         new SuperstructureInterpolation() 
+        //             .andThen(new WaitUntilCommand(superstructure::isReadyToShoot))
+        //             .andThen(
+        //                 Commands.parallel(
+        //                     new RunCommand(
+        //                         () -> handoff.setState(HandoffState.FORWARD),
+        //                         handoff),
+        //                     new RunCommand(
+        //                         () -> spindexer.setState(SpindexerState.FORWARD),
+        //                         spindexer)
+        //                 )
+        //                 .repeatedly()
+        //             )
+        //     ); 
+
+        // Digest (TR)
         driver.getTopButton()
-            .whileTrue(new LEDApplyPattern(Settings.LED.SHOOT_IN_PLACE))
-            .whileTrue(new WaitUntilCommand(() -> spindexer.getState() == SpindexerState.FORWARD)
-                .andThen(new WaitCommand(0.75).andThen(new IntakeDeploy())))
-            .whileTrue(new SwerveXMode())
-            .whileTrue(new BuzzController(driver).onlyWhile(() -> !vision.hasData()).repeatedly())
-            .whileTrue(
-                new SuperstructureInterpolation() 
-                    .andThen(new WaitUntilCommand(superstructure::isReadyToShoot))
-                    .andThen(
-                        Commands.parallel(
-                            new RunCommand(
-                                () -> handoff.setState(HandoffState.FORWARD),
-                                handoff),
-                            new RunCommand(
-                                () -> spindexer.setState(SpindexerState.FORWARD),
-                                spindexer)
-                        )
-                        .repeatedly()
-                    )
-            ); 
+            .whileTrue(new IntakeAutoDigest().repeatedly())
+            .onFalse(new IntakeDeploy());
 
         // Intake Stow
         driver.getLeftTriggerButton()
@@ -266,6 +266,7 @@ public class RobotContainer {
                     new SuperstructureLeftCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
                         .andThen(new HandoffRun())
                         .andThen(new SpindexerRun()),
+                    new SwerveResetPoseLeftCorner(),
                     new SwerveXMode()
                 )
                     )
@@ -276,6 +277,7 @@ public class RobotContainer {
             .whileTrue(new LEDApplyPattern(Settings.LED.RIGHT_CORNER))
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
+            .onTrue(new SwerveResetPoseRightCorner())
             .whileTrue(new SuperstructureRightCorner().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
                 .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD)
                 .andThen(new SpindexerRun())))
@@ -286,6 +288,7 @@ public class RobotContainer {
             .whileTrue(new LEDApplyPattern(Settings.LED.KB_DISTANCE))
             .whileTrue(new SwerveXMode())
             .onTrue(new IntakeRunRollers())
+            .onTrue(new SwerveResetPoseKBShot())
             .whileTrue(new SuperstructureKB().alongWith(new WaitUntilCommand(() -> superstructure.atTolerance()))
                 .andThen(new HandoffRun()).alongWith(new WaitUntilCommand(() -> handoff.getState() == HandoffState.FORWARD)
                 .andThen(new SpindexerRun())))
@@ -313,13 +316,21 @@ public class RobotContainer {
         SmartDashboard.putData("Robot/Set Megatag 1", new SetMegaTagMode(MegaTagMode.MEGATAG1));
         SmartDashboard.putData("Robot/Set Megatag 2", new SetMegaTagMode(MegaTagMode.MEGATAG2));
 
-        SmartDashboard.putData("Robot/Set Left LL PF", new EnableLeftLimelight());
-        SmartDashboard.putData("Robot/Set Right LL PF", new EnableRightLimelight());
-        SmartDashboard.putData("Robot/Set Back LL PF", new EnableBackLimelight());
+        SmartDashboard.putData("Robot/Set Robot Pose Left Corner", new SwerveResetPoseLeftCorner());
+        SmartDashboard.putData("Robot/Set Robot Pose Right Corner", new SwerveResetPoseRightCorner());
+
+        // SmartDashboard.putData("Robot/Set Left LL PF", new EnableLeftLimelight());
+        // SmartDashboard.putData("Robot/Set Right LL PF", new EnableRightLimelight());
+        // SmartDashboard.putData("Robot/Set Back LL PF", new EnableBackLimelight());
 
         SmartDashboard.putData("Robot/WL Outpost Tags Left-Camera", new WhitelistOutpostTags("limelight-left"));
         SmartDashboard.putData("Robot/WL Tower Tags Right-Camera", new WhitelistTowerTags("limelight-right"));
         SmartDashboard.putData("Robot/Whitelist All Cameras", new WhitelistAllTagsForAllCameras());
+
+        SmartDashboard.putData("Robot/Set Pipeline No Sun", new SetPipeline(Pipeline.NO_SUN));
+        SmartDashboard.putData("Robot/Set Pipeline Low Sun", new SetPipeline(Pipeline.LOW_SUN));
+        SmartDashboard.putData("Robot/Set Pipeline Med Sun", new SetPipeline(Pipeline.MED_SUN));
+        SmartDashboard.putData("Robot/Set Pipeline High Sun", new SetPipeline(Pipeline.HIGH_SUN));
 
         // Unjamming
         SmartDashboard.putData("Robot/Handoff Reverse", 
@@ -348,9 +359,12 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
 
         // DEPOT
-        AutonConfig DEPOT_AUTON = new AutonConfig("Depot Auton", DepotAuton::new, 
-        "Left Bump To Depot", "Depot To Tower Left");
-        DEPOT_AUTON.register(autonChooser);
+        AutonConfig LEFT_MIDDY = new AutonConfig("Left Middy", LeftMiddy::new,  
+        "Left Bump To NZ", "Left Middy To Bump Score", "Left Bump Score To Depot", "Depot To Score");
+        LEFT_MIDDY.register(autonChooser);
+        AutonConfig RIGHT_MIDDY = new AutonConfig("Right Middy", RightMiddy::new,  
+        "Right Bump To NZ", "Right Middy To Bump Score", "Right Bump Score To Depot", "Depot To Score");
+        RIGHT_MIDDY.register(autonChooser);
 
         // TWO CYCLES (TRENCH)
         AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  
@@ -441,7 +455,7 @@ public class RobotContainer {
 
         handoff.periodicAfterScheduler();
         intake.periodicAfterScheduler();
-        leds.periodicAfterScheduler();
+        // leds.periodicAfterScheduler(); TODO: ADD THESE BACK TY
         spindexer.periodicAfterScheduler();
         hood.periodicAfterScheduler();
         shooter.periodicAfterScheduler();

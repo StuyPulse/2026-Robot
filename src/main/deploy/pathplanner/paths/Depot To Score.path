@@ -3,48 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.56758915834522,
-        "y": 3.5498002853067057
+        "x": 0.5795133587786261,
+        "y": 5.959713740458016
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.639047234674071,
-        "y": 2.8277371590830254
+        "x": 1.617398935069807,
+        "y": 5.933846094852308
       },
       "isLocked": false,
-      "linkedName": "Right Center NZ"
+      "linkedName": "Depot"
     },
     {
       "anchor": {
-        "x": 2.911921708185054,
-        "y": 2.491055753262159
+        "x": 2.7074970344009497,
+        "y": 5.959713740458016
       },
       "prevControl": {
-        "x": 4.8270581257414005,
-        "y": 2.5771293001186257
+        "x": 1.856554697887364,
+        "y": 5.954351642472394
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Bump Score"
+      "linkedName": "Depot Out"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3516873889875677,
+      "waypointRelativePos": 0.3262260127931784,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.42138765117759275,
-      "maxWaypointRelativePos": 0.8338637810311925,
+      "minWaypointRelativePos": 0.14848143982002254,
+      "maxWaypointRelativePos": 0.9448818897637792,
       "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 5.0,
-        "maxAngularVelocity": 300.0,
-        "maxAngularAcceleration": 900.0,
-        "nominalVoltage": 12.0,
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.75,
+        "maxAngularVelocity": 50.0,
+        "maxAngularAcceleration": 100.0,
+        "nominalVoltage": 12.5,
         "unlimited": false
       }
     }
@@ -52,22 +52,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.16,
+    "maxVelocity": 4.19,
     "maxAcceleration": 10.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
-    "nominalVoltage": 12.5,
+    "nominalVoltage": 12.7,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Right Bump",
+  "folder": "To Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

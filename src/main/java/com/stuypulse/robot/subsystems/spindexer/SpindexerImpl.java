@@ -8,7 +8,7 @@ package com.stuypulse.robot.subsystems.spindexer;
 import java.util.Optional;
 
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -20,7 +20,6 @@ import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.handoff.Handoff;
-import com.stuypulse.robot.subsystems.handoff.Handoff.HandoffState;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -32,20 +31,9 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import java.util.Optional;
 
 public class SpindexerImpl extends Spindexer {
     private final Motors.TalonFXConfig spindexerLeadConfig;
@@ -189,7 +177,7 @@ public class SpindexerImpl extends Spindexer {
     SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
 
         if (Settings.DEBUG_MODE.get()) {
-            if (Robot.getMode() == RobotMode.DISABLED && !DriverStation.isFMSAttached()) {
+            if (Robot.getMode() == RobotMode.DISABLED && !Robot.fmsAttached) {
                 SmartDashboard.putBoolean(
                         "Robot/CAN/Canivore/Spindexer Leader Motor Connected? (ID "
                                 + String.valueOf(Ports.Spindexer.MOTOR) + ")",

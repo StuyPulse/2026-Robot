@@ -5,12 +5,16 @@
 /** ************************************************************ */
 package com.stuypulse.robot.subsystems.vision;
 
+import java.nio.channels.Pipe;
 import java.util.Arrays;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Cameras;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Cameras.Camera;
+import com.stuypulse.robot.constants.Cameras.Camera.Pipeline;
+import com.stuypulse.robot.constants.Cameras.Camera.RejectionValue;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.vision.LimelightHelpers;
 import com.stuypulse.robot.util.vision.LimelightHelpers.IMUData;
@@ -21,9 +25,9 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.util.Units;
@@ -54,9 +58,18 @@ public class LimelightVision extends SubsystemBase {
     private boolean hasData;
     private BStream debouncedHasData;
 
+    private Timer hdrTimer = new Timer();
+    private boolean lastHdrEnabledVal = false;
+
     public enum MegaTagMode {
         MEGATAG1,
         MEGATAG2
+    }
+
+    public void setPipeline(Pipeline pipeline) {
+        for(Camera camera: Cameras.LimelightCameras) {
+            camera.setPipeline(pipeline);
+        }
     }
 
     public LimelightVision() {
@@ -89,9 +102,14 @@ public class LimelightVision extends SubsystemBase {
         megaTagMode = MegaTagMode.MEGATAG1;
         setIMUMode(1);
 
+        hdrTimer.reset();
+        hdrTimer.start();
+
         debouncedHasData = BStream.create(
                 () -> hasData)
                 .filtered(new BDebounce.Both(Settings.Vision.BUZZ_DEBOUNCE));
+
+        setPipeline(Pipeline.NO_SUN);
     }
 
     public void setAllLTagWhitelist(int... ids) {
@@ -231,22 +249,33 @@ public class LimelightVision extends SubsystemBase {
                     boolean notNull = false;
                     boolean withinAngularVelocityTolerance = false;
                     boolean withinInvalidPositionTolerance = false;
+                    // boolean withinTargetAreaTolerance = false;
 
-                    if (poseEstimate != null && poseEstimate.tagCount > 0 )  {
+                    if (poseEstimate != null && poseEstimate.tagCount > 0)  {
                         notNull = true;
 
                         if (poseEstimate.pose.getTranslation().getDistance(Settings.Vision.INVALID_POSITION) < Settings.Vision.INVALID_POSITION_TOLERANCE_M){
                             withinInvalidPositionTolerance = true;
+                        } else {
+                            Cameras.LimelightCameras[i].incrementRejection(RejectionValue.INVALID_POSITION);
                         }
 
                         if (CommandSwerveDrivetrain.getInstance().getChassisSpeeds().omegaRadiansPerSecond < Settings.Vision.MAX_ANGULAR_VELOCITY_RAD_SEC) {
                             withinAngularVelocityTolerance = true;
+                        } else {
+                            Cameras.LimelightCameras[i].incrementRejection(RejectionValue.ANGULAR_VELOCITY);
                         }
+
+                        // if (poseEstimate.avgTagArea >= Settings.Vision.MIN_TAG_AREA) {
+                        //     withinTargetAreaTolerance = true;
+                        // } else {
+                        //     Cameras.LimelightCameras[i].incrementRejection(RejectionValue.TARGET_AREA);
+                        // }
 
                         Pose2d robotPose = poseEstimate.pose;
                         double timestamp = poseEstimate.timestampSeconds;
 
-                        boolean isAcceptablePose = notNull && withinAngularVelocityTolerance && !withinInvalidPositionTolerance;
+                        boolean isAcceptablePose = notNull && withinAngularVelocityTolerance && !withinInvalidPositionTolerance;// && withinTargetAreaTolerance;
 
                         if (megaTagMode == MegaTagMode.MEGATAG1 && isAcceptablePose) {
                             CommandSwerveDrivetrain.getInstance().addVisionMeasurement(robotPose, timestamp, Settings.Vision.MT1_STDEVS);
@@ -280,6 +309,7 @@ public class LimelightVision extends SubsystemBase {
                         
                     } else {
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
+                        Cameras.LimelightCameras[i].incrementRejection(RejectionValue.NOT_NULL);
                     }
 
                     SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
@@ -287,6 +317,9 @@ public class LimelightVision extends SubsystemBase {
                     SmartDashboard.putNumber("Vision/Limelight Robot Yaw", LimelightHelpers.getIMUData(limelightName).robotYaw);
                     // this is just the yaw of the internal imu 
                     SmartDashboard.putNumber("Vision/Limelight Yaw", LimelightHelpers.getIMUData(limelightName).Yaw);
+
+                    //Rejection counters
+                    Cameras.LimelightCameras[i].logRejections();
                 }
 
                 if (Settings.DEBUG_MODE.get()) {
@@ -297,6 +330,25 @@ public class LimelightVision extends SubsystemBase {
                     // this is just the yaw of the internal imu 
                     SmartDashboard.putNumber("Vision/Limelight Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).Yaw);
                     SmartDashboard.putNumber("Vision/Limelight Robot Yaw Passed in", (CommandSwerveDrivetrain.getInstance().getPose().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360);
+                }
+            }
+
+            // Alternating pipelines for hdr
+            if (lastHdrEnabledVal != Settings.Vision.HDR_ENABLED.get()) {
+                setPipeline(Pipeline.NO_SUN);
+                if(!lastHdrEnabledVal) {
+                    Cameras.LimelightCameras[2].setPipeline(Pipeline.HIGH_SUN);
+                }
+            }
+
+            lastHdrEnabledVal = Settings.Vision.HDR_ENABLED.get();
+
+            if(Settings.Vision.HDR_ENABLED.get()) {
+                if(hdrTimer.hasElapsed(Settings.Vision.HDR_TIMEOUT_SEC)) {
+                    for(Camera camera: Cameras.LimelightCameras) {
+                        camera.performHDR();
+                    }
+                    hdrTimer.reset();
                 }
             }
 

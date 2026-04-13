@@ -3,48 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.27,
-        "y": 4.61077032810271
+        "x": 3.4749522900763368,
+        "y": 5.507824427480916
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.515784635743212,
-        "y": 5.167086622567657
+        "x": 0.7207369258195486,
+        "y": 6.064140721945863
       },
       "isLocked": false,
-      "linkedName": "NZ Left Center"
+      "linkedName": "Left Bump Score"
     },
     {
       "anchor": {
-        "x": 2.8904033214709375,
-        "y": 5.643499406880189
+        "x": 0.5795133587786261,
+        "y": 5.959713740458016
       },
       "prevControl": {
-        "x": 4.644151838671412,
-        "y": 5.600462633451957
+        "x": 1.4665553435114504,
+        "y": 5.959713740458016
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Bump Score"
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3516873889875677,
+      "waypointRelativePos": 0.42984014209591426,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.42902609802673963,
-      "maxWaypointRelativePos": 0.846594525779758,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.5016872890888694,
       "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 5.0,
-        "maxAngularVelocity": 300.0,
-        "maxAngularAcceleration": 900.0,
-        "nominalVoltage": 12.0,
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.75,
+        "maxAngularVelocity": 50.0,
+        "maxAngularAcceleration": 100.0,
+        "nominalVoltage": 12.5,
         "unlimited": false
       }
     }
@@ -52,11 +52,11 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.16,
+    "maxVelocity": 4.19,
     "maxAcceleration": 10.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
-    "nominalVoltage": 12.5,
+    "nominalVoltage": 12.7,
     "unlimited": false
   },
   "goalEndState": {
@@ -64,10 +64,10 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Left Bump",
+  "folder": "To Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

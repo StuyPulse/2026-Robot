@@ -55,6 +55,7 @@ public class Gains {
             }
 
             SmartNumber kOmega = new SmartNumber("Superstructure/Turret/Gains/kOmega", 3.43);
+            SmartNumber kTranslation = new SmartNumber("Superstructure/Turret/Gains/kTranslation", 0.0);
         }
     }
 
@@ -114,7 +115,7 @@ public class Gains {
         }
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(4.0, 0, 0);
+            PIDConstants XY = new PIDConstants(5.0, 0, 0);
             PIDConstants THETA = new PIDConstants(4.0, 0, 0.0);
         }
     }

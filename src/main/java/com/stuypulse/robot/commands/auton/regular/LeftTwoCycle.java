@@ -14,6 +14,8 @@ import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.superstructure.SuperstructureAutoInterpolation;
 import com.stuypulse.robot.commands.superstructure.SuperstructureSOTM;
+import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
+import com.stuypulse.robot.commands.swerve.SwerveResetPose;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
@@ -30,6 +32,8 @@ public class LeftTwoCycle extends SequentialCommandGroup {
 
         addCommands(
 
+            new SwerveResetPose(paths[0].getStartingHolonomicPose().get()),
+
             // NZ Trip 1
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]).alongWith(
                 new WaitCommand(0.5).andThen(new IntakeDeploy())
@@ -44,7 +48,7 @@ public class LeftTwoCycle extends SequentialCommandGroup {
             new HandoffRun().andThen(
                 new SpindexerRun()
             ).andThen(new WaitCommand(1.75)
-                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(3.5),
+                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.0),
             new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             // NZ Trip 2
@@ -59,7 +63,7 @@ public class LeftTwoCycle extends SequentialCommandGroup {
             new HandoffRun().andThen(
                 new SpindexerRun()
             ).andThen(new WaitCommand(1.75)
-                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
+                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(15.0),
             new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             new ParallelCommandGroup(

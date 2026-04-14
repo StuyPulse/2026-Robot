@@ -5,6 +5,8 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.superstructure;
 
+import javax.naming.directory.DirContext;
+
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.subsystems.handoff.Handoff;
@@ -22,12 +24,17 @@ import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Superstructure extends SubsystemBase {
 
     private static final Superstructure instance;
+
+    private final Timer sotmStoppedTimer;
+    private final Timer fotmStoppedTimer;
 
     static {
         instance = new Superstructure();
@@ -53,6 +60,12 @@ public class Superstructure extends SubsystemBase {
 
         readyToShoot = BStream.create(this::atTolerance)
             .filtered(new BDebounce.Both(0.05));
+
+        sotmStoppedTimer = new Timer();
+        sotmStoppedTimer.restart();
+
+        fotmStoppedTimer = new Timer();
+        fotmStoppedTimer.restart();
     }
     
     public enum SuperstructureState {
@@ -147,9 +160,65 @@ public class Superstructure extends SubsystemBase {
         return turret.getCurrentDraw() + shooter.getCurrentDraw() + hood.getCurrentDraw();
     }
 
+    public boolean shouldStop() {
+        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+
+        boolean isSpindexerStopState = Spindexer.getInstance().getState() == SpindexerState.STOP;
+        boolean isHandOffStopState = Handoff.getInstance().getState() == HandoffState.STOP;
+
+        boolean isTurretWrapping = isTurretWrapping();
+        boolean isBehindHubWhileFerrying = getState() == SuperstructureState.FOTM
+                && swerve.isBehindHub();
+        boolean isOutsideAllianceZone = 
+            CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && 
+            getState() != SuperstructureState.FOTM;
+        boolean isUnderTrench = CommandSwerveDrivetrain.getInstance().isUnderTrench() 
+            && getState() != SuperstructureState.FOTM;
+        boolean inManualState =       
+            getState() == SuperstructureState.LEFT_CORNER &&
+            getState() == SuperstructureState.RIGHT_CORNER &&
+            getState() == SuperstructureState.KB;
+        boolean isBehindTower = swerve.isBehindTower() && getState() == SuperstructureState.SOTM;
+
+        boolean turretLaggingSOTM = !isTurretAtTolerance() && getState() == SuperstructureState.SOTM;
+
+
+        SmartDashboard.putBoolean("Spindexer/Should Stop/turret lagging sotm", turretLaggingSOTM);
+        SmartDashboard.putBoolean("Spindexer/Should Stop/is Behind Hub While Ferrying?", isBehindHubWhileFerrying);
+        SmartDashboard.putBoolean("Spindexer/Should Stop/is Turret Wrapping?", isTurretWrapping);
+        SmartDashboard.putBoolean("Spindexer/Should Stop/is Outside Alliance zone?", isOutsideAllianceZone);
+        SmartDashboard.putBoolean("Spindexer/Should Stop/is Under Trenche?", isUnderTrench);
+        SmartDashboard.putBoolean("Spindexer/Should Stop/turret lagging sotm", turretLaggingSOTM);
+        SmartDashboard.putBoolean("Spindexer/Should Stop/inManualState", inManualState);
+        
+        return isSpindexerStopState || 
+        isHandOffStopState ||
+        isTurretWrapping || 
+        (isBehindHubWhileFerrying && !inManualState) || 
+        turretLaggingSOTM || 
+        (isOutsideAllianceZone  && !inManualState) || 
+        (isUnderTrench && !inManualState) ||
+        isBehindTower;
+    }
+
     public void periodicAfterScheduler() {
         SuperstructureState state = getState();
         
+        if (getState() == SuperstructureState.SOTM && shouldStop() && DriverStation.isEnabled()) {
+            sotmStoppedTimer.start();
+        }
+        else if (getState() == SuperstructureState.FOTM && shouldStop() && DriverStation.isEnabled()) {
+            fotmStoppedTimer.start();
+        }
+        
+        if (getState() != SuperstructureState.SOTM) sotmStoppedTimer.stop();
+        if (getState() != SuperstructureState.FOTM) fotmStoppedTimer.stop();
+        
+        if (!shouldStop() || DriverStation.isDisabled()) {
+            sotmStoppedTimer.stop();
+            fotmStoppedTimer.stop();
+        }
+
         if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && state == SuperstructureState.SOTM &&
             Robot.getMode() != RobotMode.AUTON) { // allows us to start SOTM earlier in auto, but currently not desired in teleop
             setState(SuperstructureState.FOTM);
@@ -158,6 +227,9 @@ public class Superstructure extends SubsystemBase {
         }
 
         SmartDashboard.putString("Superstructure/State", state.name());
+
+        SmartDashboard.putNumber("Superstructure/SOTM stopped timer", sotmStoppedTimer.get());
+        SmartDashboard.putNumber("Superstructure/FOTM stopped timer", fotmStoppedTimer.get());
 
         SmartDashboard.putBoolean("Superstructure/Shooter At Tolerance?", isShooterAtTolerance());
         SmartDashboard.putBoolean("Superstructure/Hood At Tolerance?", isHoodAtTolerance());

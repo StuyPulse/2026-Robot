@@ -90,44 +90,6 @@ public class SpindexerImpl extends Spindexer {
         return leaderVelocity.getValueAsDouble() * Settings.SECONDS_IN_A_MINUTE * Settings.Spindexer.GEAR_RATIO;
     }
 
-    public boolean shouldStop() {
-        Superstructure superstructure = Superstructure.getInstance();
-        SuperstructureState superstructureState = superstructure.getState();
-        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-
-        boolean isStopState = getState() == SpindexerState.STOP;
-        boolean isTurretWrapping = superstructure.isTurretWrapping();
-        boolean isBehindHubWhileFerrying = superstructureState == SuperstructureState.FOTM
-                && swerve.isBehindHub();
-        boolean isOutsideAllianceZone = 
-            CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && 
-            superstructureState != SuperstructureState.FOTM;
-        boolean isUnderTrench = CommandSwerveDrivetrain.getInstance().isUnderTrench() 
-            && superstructureState != SuperstructureState.FOTM;
-        boolean inManualState =       
-            superstructureState == SuperstructureState.LEFT_CORNER &&
-            superstructureState == SuperstructureState.RIGHT_CORNER &&
-            superstructureState == SuperstructureState.KB;
-        boolean isBehindTower = swerve.isBehindTower() && superstructureState == SuperstructureState.SOTM;
-
-        boolean turretLaggingSOTM = !superstructure.isTurretAtTolerance() && superstructureState == SuperstructureState.SOTM;
-
-
-        SmartDashboard.putBoolean("Spindexer/Should Stop/turret lagging sotm", turretLaggingSOTM);
-        SmartDashboard.putBoolean("Spindexer/Should Stop/is Behind Hub While Ferrying?", isBehindHubWhileFerrying);
-        SmartDashboard.putBoolean("Spindexer/Should Stop/is Turret Wrapping?", isTurretWrapping);
-        SmartDashboard.putBoolean("Spindexer/Should Stop/is Outside Alliance zone?", isOutsideAllianceZone);
-        SmartDashboard.putBoolean("Spindexer/Should Stop/is Under Trenche?", isUnderTrench);
-        SmartDashboard.putBoolean("Spindexer/Should Stop/turret lagging sotm", turretLaggingSOTM);
-        SmartDashboard.putBoolean("Spindexer/Should Stop/inManualState", inManualState);
-        return isStopState || 
-        isTurretWrapping || 
-        (isBehindHubWhileFerrying && !inManualState) || 
-        turretLaggingSOTM || 
-        (isOutsideAllianceZone  && !inManualState) || 
-        (isUnderTrench && !inManualState) ||
-        isBehindTower;
-    }
 
     private boolean spindexerUnjam() {
         if (!hasStartedStallTimer && Handoff.getInstance().isHandoffStalling()) {
@@ -156,7 +118,7 @@ public class SpindexerImpl extends Spindexer {
             if (voltageOverride.isPresent()) {
                 leaderMotor.setVoltage(voltageOverride.get());
             } else {
-                if (shouldStop()) {
+                if (Superstructure.getInstance().shouldStop()) {
                     leaderMotor.stopMotor();
                 }             
                 else {
@@ -174,7 +136,7 @@ public class SpindexerImpl extends Spindexer {
         SmartDashboard.putNumber("Spindexer/Leader Supply Current (amps)", leaderSupplyCurrent.getValueAsDouble());
         SmartDashboard.putNumber("Spindexer/Leader Stator Current (amps)", leaderStatorCurrent.getValueAsDouble());
 
-    SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
+    // SmartDashboard.putBoolean("Spindexer/Should Stop?", shouldStop());
 
         if (Settings.DEBUG_MODE.get()) {
             if (Robot.getMode() == RobotMode.DISABLED && !Robot.fmsAttached) {

@@ -60,6 +60,11 @@
       "/SmartDashboard/Visualizers/Turret": "Mechanism2d"
     },
     "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Autonomous": {
         "window": {
           "visible": true
@@ -102,6 +107,9 @@
         },
         "States": {
           "open": false
+        },
+        "Superstructure": {
+          "open": true
         },
         "open": true
       }

@@ -85,11 +85,6 @@ public class InterpolationCalculator {
         Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
         double targetRPM = distanceRPMInterpolator.get(distanceMeters);
         double flightTime = distanceTOFInterpolator.get(distanceMeters);
-        
-
-        SmartDashboard.putNumber("InterpolationTesting/Interpolated Target Angle", targetAngle.getDegrees());
-        SmartDashboard.putNumber("InterpolationTesting/Interpolated RPM", targetRPM);
-        SmartDashboard.putNumber("InterpolationTesting/Interpolated TOF", flightTime);
 
         return new InterpolatedShotInfo(
             targetAngle, 

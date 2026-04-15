@@ -68,22 +68,6 @@ public class SpindexerSim extends Spindexer {
         return sim.getOutput(0) * 60.0 / (2.0 * Math.PI);
     }
 
-
-    public boolean shouldStop() {
-        Superstructure superstructure = Superstructure.getInstance();
-        SuperstructureState superstructureState = superstructure.getState();
-        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-
-        boolean isStopState = getState() == SpindexerState.STOP;
-        boolean isTurretWrapping = superstructure.isTurretWrapping();
-        boolean isBehindHubWhileFerrying = superstructureState == SuperstructureState.FOTM
-                && swerve.isBehindHub();
-        boolean turretLaggingSOTM = !superstructure.isTurretAtTolerance() && superstructureState == SuperstructureState.SOTM;
-        boolean isBehindTower = swerve.isBehindTower() && superstructureState == SuperstructureState.SOTM;
-
-        return isStopState || isTurretWrapping || isBehindHubWhileFerrying || turretLaggingSOTM || isBehindTower;
-    }
-
     private boolean spindexerUnjam() {
         if (!hasStartedStallTimer && Handoff.getInstance().isHandoffStalling()) {
             unjamTimer.start();
@@ -115,7 +99,7 @@ public class SpindexerSim extends Spindexer {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
                 SmartDashboard.putNumber("Spindexer/Input Voltage", voltageOverride.get());
-            } else if (shouldStop() && !isUnjamming) {
+            } else if (Superstructure.getInstance().shouldStop() && !isUnjamming) {
                 sim.setInput(0);
             } else {
                 SmartDashboard.putNumber("Spindexer/Input Voltage", controller.getU(0));
@@ -127,7 +111,6 @@ public class SpindexerSim extends Spindexer {
         }
 
         SmartDashboard.putNumber("Spindexer/Current RPM", getCurrentRPM());
-        SmartDashboard.putBoolean("Spindexer/Should Stop", shouldStop());
         SmartDashboard.putBoolean("Spindexer/Unjamming", isUnjamming);
         
         sim.update(Settings.DT);

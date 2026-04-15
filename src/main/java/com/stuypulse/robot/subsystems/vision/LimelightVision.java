@@ -5,16 +5,15 @@
 /** ************************************************************ */
 package com.stuypulse.robot.subsystems.vision;
 
-import java.nio.channels.Pipe;
 import java.util.Arrays;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Cameras;
-import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Cameras.Camera;
 import com.stuypulse.robot.constants.Cameras.Camera.Pipeline;
 import com.stuypulse.robot.constants.Cameras.Camera.RejectionValue;
+import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.vision.LimelightHelpers;
 import com.stuypulse.robot.util.vision.LimelightHelpers.IMUData;
@@ -25,12 +24,12 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.util.Units;
 
 public class LimelightVision extends SubsystemBase {
 
@@ -320,16 +319,6 @@ public class LimelightVision extends SubsystemBase {
 
                     //Rejection counters
                     Cameras.LimelightCameras[i].logRejections();
-                }
-
-                if (Settings.DEBUG_MODE.get()) {
-                    String limelightName = names[i];
-                    SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
-                    // this yaw is seems to be the robot yaw passed into the LL
-                    SmartDashboard.putNumber("Vision/Limelight Robot Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).robotYaw);
-                    // this is just the yaw of the internal imu 
-                    SmartDashboard.putNumber("Vision/Limelight Yaw " + limelightName, LimelightHelpers.getIMUData(limelightName).Yaw);
-                    SmartDashboard.putNumber("Vision/Limelight Robot Yaw Passed in", (CommandSwerveDrivetrain.getInstance().getPose().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360);
                 }
             }
 

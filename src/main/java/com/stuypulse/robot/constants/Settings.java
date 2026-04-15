@@ -113,31 +113,37 @@ public interface Settings {
 
         public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
+                {0.96, Units.degreesToRadians(15)},
                 {1.22, Units.degreesToRadians(20)},
                 {2.15, Units.degreesToRadians(27)},
                 {3.38, Units.degreesToRadians(34)}, 
                 {4.43, Units.degreesToRadians(39)},
-                {5.66, Units.degreesToRadians(39)}
+                {5.66, Units.degreesToRadians(39)},
+                {6.44, Units.degreesToRadians(44)}
             };
         }
 
         public interface RPMInterpolation{
             double[][] distanceRPMInterpolationValues = {
+                {0.96, 2800},
                 {1.22, 2600.0},
                 {2.15, 2805.0},
                 {3.38, 3075},
                 {4.43, 3350.0},
-                {5.66, 3650.0}
+                {5.66, 3650.0},
+                {6.44, 3800}
             };
         }
 
         public interface TOFInterpolation{
             double[][] distanceTOFInterpolationValues = {
+                {0.96, 1.055},
                 {1.22, 0.965}, // seconds
                 {2.15, 1.01},
                 {3.38, 1.02},  
                 {4.43, 1.165},
-                {5.50, 1.21}
+                {5.50, 1.21},
+                {6.44, 1.255}
             };
         }
 

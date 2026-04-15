@@ -5,8 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.superstructure;
 
-import javax.naming.directory.DirContext;
-
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.RobotMode;
 import com.stuypulse.robot.subsystems.handoff.Handoff;
@@ -168,7 +166,7 @@ public class Superstructure extends SubsystemBase {
 
         boolean isTurretWrapping = isTurretWrapping();
         boolean isBehindHubWhileFerrying = getState() == SuperstructureState.FOTM
-                && swerve.isBehindHub();
+                && swerve.getIsBehindHub();
         boolean isOutsideAllianceZone = 
             CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && 
             getState() != SuperstructureState.FOTM;
@@ -228,11 +226,13 @@ public class Superstructure extends SubsystemBase {
 
         SmartDashboard.putString("Superstructure/State", state.name());
 
-        SmartDashboard.putNumber("Superstructure/SOTM stopped timer", sotmStoppedTimer.get());
-        SmartDashboard.putNumber("Superstructure/FOTM stopped timer", fotmStoppedTimer.get());
+        SmartDashboard.putNumber("Superstructure/SOTM Stopped Timer", sotmStoppedTimer.get());
+        SmartDashboard.putNumber("Superstructure/FOTM Stopped Timer", fotmStoppedTimer.get());
 
         SmartDashboard.putBoolean("Superstructure/Shooter At Tolerance?", isShooterAtTolerance());
         SmartDashboard.putBoolean("Superstructure/Hood At Tolerance?", isHoodAtTolerance());
         SmartDashboard.putBoolean("Superstructure/Turret At Tolerance?", isTurretAtTolerance());
+
+        SmartDashboard.putBoolean("Superstructure/Should Stop?", shouldStop());
     }
 }

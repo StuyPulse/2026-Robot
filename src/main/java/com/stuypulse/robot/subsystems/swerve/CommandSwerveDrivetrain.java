@@ -76,6 +76,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	private StructPublisher<Pose2d> vertexBehindHubPublisher;
 	private StatusSignal<LinearAcceleration> robotAccelerationX;
 	private StatusSignal<LinearAcceleration> robotAccelerationY;
+	private boolean isBehindHub = false;
 
 	private StructPublisher<Pose2d> robotPose = NetworkTableInstance.getDefault()
 			.getStructTopic("Robot Pose", Pose2d.struct).publish();
@@ -570,7 +571,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	 * 
 	 * @return true if robot turret pose is behind the hub.
 	 */
-	public boolean isBehindHub() {
+	public void updateIsBehindHub() {
 		// === TRIANGLE === (CUSTOM VERTEX)
 		Translation2d turretTranslation = getTurretPose().getTranslation();
 
@@ -597,8 +598,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 		boolean withinHubY = rightY < getTurretPose().getY()
 							&& getTurretPose().getY() < leftY;
-			
-		return behindHubX && withinHubY;
+
+		isBehindHub =  behindHubX && withinHubY;
 
 		// === TRIANGLE === (FROM FERRY ZONES):
 		// Translation2d turretTranslation = getTurretPose().getTranslation();
@@ -633,6 +634,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 	public boolean isOutsideAllianceZone() {
 		return getPose().getX() > Field.AllianceRightTrench.rightEdge.getX() + Field.TRENCH_HOOD_TOLERANCE;
+	}
+
+	public boolean getIsBehindHub() {
+		return isBehindHub;
 	}
 
 	public void teleopInit() {
@@ -698,6 +703,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 		turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 
+		updateIsBehindHub();
+
 		ChassisSpeeds chassisSpeeds = getChassisSpeeds();
 		Vector2D fieldRelativeSpeeds = getFieldRelativeSpeeds();
 		SmartDashboard.putNumber("Swerve/Velocity Robot Relative X (m per s)", chassisSpeeds.vxMetersPerSecond);
@@ -723,7 +730,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 			SmartDashboard.putBoolean("FieldPositions/isBehindTower", isBehindTower());
 			SmartDashboard.putBoolean("FieldPositions/isUnderTrench", isUnderTrench());
-			SmartDashboard.putBoolean("FieldPositions/isBehindHub", isBehindHub());
 			SmartDashboard.putBoolean("FieldPositions/isInOpponentZone", isInOpponentZone());
 
 			SmartDashboard.putNumber("Superstructure/Turret/Dist From Hub",

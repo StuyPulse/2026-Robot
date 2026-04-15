@@ -58,38 +58,6 @@ public class HandoffSim extends Handoff {
         voltageOverride = Optional.empty();
     }
 
-
-    public boolean shouldStop() {
-        Superstructure superstructure = Superstructure.getInstance();
-        SuperstructureState superstructureState = superstructure.getState();
-        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-
-        boolean isStopState = getState() == HandoffState.STOP;
-        boolean isTurretWrapping = superstructure.isTurretWrapping();
-        boolean isBehindHubWhileFerrying = superstructureState == SuperstructureState.FOTM
-                && swerve.isBehindHub();
-        boolean isOutsideAllianceZone = 
-            CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && 
-            superstructureState != SuperstructureState.FOTM;
-        boolean isUnderTrench = CommandSwerveDrivetrain.getInstance().isUnderTrench() 
-            && superstructureState != SuperstructureState.FOTM;
-        boolean inManualState =       
-            superstructureState == SuperstructureState.LEFT_CORNER &&
-            superstructureState == SuperstructureState.RIGHT_CORNER &&
-            superstructureState == SuperstructureState.KB;
-        boolean isBehindTower = swerve.isBehindTower() && superstructureState == SuperstructureState.SOTM;
-
-        boolean turretLaggingSOTM = !superstructure.isTurretAtTolerance() && superstructureState == SuperstructureState.SOTM;
-
-        return isStopState || 
-        isTurretWrapping || 
-        (isBehindHubWhileFerrying && !inManualState) || 
-        turretLaggingSOTM || 
-        (isOutsideAllianceZone  && !inManualState) || 
-        (isUnderTrench && !inManualState) ||
-        isBehindTower;
-    }
-
     @Override
     public double getLeaderRPM() {
         return sim.getOutput(0) * 60.0 / (2.0 * Math.PI); // convert to RPM
@@ -109,7 +77,7 @@ public class HandoffSim extends Handoff {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
                 SmartDashboard.putNumber("Handoff/Input Voltage", voltageOverride.get());
-            } else if (shouldStop()) {
+            } else if (Superstructure.getInstance().shouldStop()) {
                 sim.setInput(0.0);
                 SmartDashboard.putNumber("Handoff/Input Voltage", 0.0);
             } else {
@@ -123,7 +91,6 @@ public class HandoffSim extends Handoff {
 
         sim.update(Settings.DT);
         
-    SmartDashboard.putBoolean("Handoff/Should Stop", shouldStop());
         SmartDashboard.putNumber("Handoff/Target Duty Cycle", getTargetDutyCycle());
     }
 

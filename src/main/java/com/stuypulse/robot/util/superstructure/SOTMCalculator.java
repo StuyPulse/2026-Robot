@@ -114,7 +114,7 @@ public class SOTMCalculator {
         
 
         InterpolatedShotInfo sol = InterpolationCalculator.interpolateShotInfo(turretPose, targetPose);
-
+        InterpolatedShotInfo newSol;
         
         double t_guess = sol.flightTimeSeconds();
         
@@ -133,8 +133,7 @@ public class SOTMCalculator {
                 targetPose.getY() - dy,
                 targetPose.getRotation());
 
-  
-            InterpolatedShotInfo newSol = InterpolationCalculator.interpolateShotInfo(turretPose, virtualPose);
+            newSol = InterpolationCalculator.interpolateShotInfo(turretPose, virtualPose);
 
             if (Math.abs(newSol.flightTimeSeconds() - t_guess) < timeTolerance) {
                 break;

@@ -44,7 +44,7 @@ public interface Field {
     public static final double OPPONENT_ZONE_X = LENGTH - Units.inchesToMeters(158.6);
 
     public static final double BEHIND_HUB_TOLERANCE_X = Units.inchesToMeters(144); // To extend the triangle vertex
-    public static final double BEHIND_HUB_TOLERANCE_Y = Units.inchesToMeters(12); // To extend base of triangle (colinear with back hub)
+    public static final double BEHIND_HUB_TOLERANCE_Y = Units.inchesToMeters(12) + Units.inchesToMeters(2); // To extend base of triangle (colinear with back hub)
 
     public static final Pose2d BEHIND_HUB_TRIANGLE_VERTEX = new Pose2d(Units.inchesToMeters(182.11) + Field.BEHIND_HUB_TOLERANCE_X, WIDTH / 2.0, new Rotation2d());
 
@@ -66,13 +66,13 @@ public interface Field {
 
     public final Pose2d INNER_LEFT_FERRY_ZONE = new Pose2d(
             Units.inchesToMeters(31.5),
-            WIDTH - Units.inchesToMeters(34.5) - Units.inchesToMeters(36),
+            WIDTH - Units.inchesToMeters(34.5) - Units.inchesToMeters(48),
             new Rotation2d()
     );
 
     public final Pose2d INNER_RIGHT_FERRY_ZONE = new Pose2d(
             Units.inchesToMeters(20.75),
-            Units.inchesToMeters(76) + Units.inchesToMeters(36),
+            Units.inchesToMeters(76) + Units.inchesToMeters(48),
             new Rotation2d()
     );
 

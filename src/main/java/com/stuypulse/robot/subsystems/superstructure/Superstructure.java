@@ -180,7 +180,6 @@ public class Superstructure extends SubsystemBase {
 
         boolean turretLaggingSOTM = !isTurretAtTolerance() && getState() == SuperstructureState.SOTM;
 
-
         DogLog.log("Spindexer/Should Stop/Is Behind Hub While Ferrying?", isBehindHubWhileFerrying);
         DogLog.log("Spindexer/Should Stop/Is Turret Wrapping?", isTurretWrapping);
         DogLog.log("Spindexer/Should Stop/Is Outside Alliance Zone?", isOutsideAllianceZone);

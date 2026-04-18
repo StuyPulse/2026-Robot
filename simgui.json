@@ -102,6 +102,12 @@
         "Intake": {
           "open": true
         },
+        "Robot": {
+          "Auton": {
+            "open": true
+          },
+          "open": true
+        },
         "Spindexer": {
           "open": true
         },

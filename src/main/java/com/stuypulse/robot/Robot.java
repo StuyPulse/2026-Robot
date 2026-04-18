@@ -208,6 +208,10 @@ public class Robot extends TimedRobot {
                 fmsAttached = true;
             }
         }
+
+        if (periodicCounter % 50 == 0 && robot.hasWaitTimeChanged()) {
+            robot.configureAutons();
+        }
     }
 
     /**

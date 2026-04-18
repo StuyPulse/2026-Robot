@@ -61,9 +61,12 @@ public class Superstructure extends SubsystemBase {
 
         sotmStoppedTimer = new Timer();
         sotmStoppedTimer.restart();
+        sotmStoppedTimer.stop();
+            
 
         fotmStoppedTimer = new Timer();
         fotmStoppedTimer.restart();
+        fotmStoppedTimer.stop();
     }
     
     public enum SuperstructureState {

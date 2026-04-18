@@ -156,7 +156,7 @@ public class TurretSim extends Turret {
             prevActualTargetAngle = actualTargetAngle;
         }
         isWrapping = Math.abs(actualTargetAngle - currentAngle) > 
-                     Settings.Superstructure.Turret.GAIN_SWITCHING_THRESHOLD.getDegrees();
+                     Settings.Superstructure.Turret.GAIN_SWITCHING_THRESHOLD_START.getDegrees();
         
         goal = new TrapezoidProfile.State(Units.degreesToRadians(actualTargetAngle), 0.0);
         setpoint = profile.calculate(Settings.DT, setpoint, goal);

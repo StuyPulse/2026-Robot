@@ -69,7 +69,7 @@ public class TurretImpl extends Turret {
 
                 .withSupplyCurrentLimitAmps(80)
                 .withStatorCurrentLimitEnabled(false)
-                .withRampRate(0.25)
+                .withRampRate(0.0)
 
                 .withPIDConstants(Gains.Superstructure.Turret.slot0.kP, Gains.Superstructure.Turret.slot0.kI,
                         Gains.Superstructure.Turret.slot0.kD, 0)
@@ -207,14 +207,14 @@ public class TurretImpl extends Turret {
     public void periodicAfterScheduler() {
         super.periodicAfterScheduler();
         
-        // turretConfig.updateGainsConfig(
-        //         turretMotor, 1,
-        //         Gains.Superstructure.Turret.slot1.kP,
-        //         Gains.Superstructure.Turret.slot1.kI,
-        //         Gains.Superstructure.Turret.slot1.kD,
-        //         Gains.Superstructure.Turret.slot1.kS,
-        //         Gains.Superstructure.Turret.slot1.kV,
-        //         Gains.Superstructure.Turret.slot1.kA);
+        turretConfig.updateGainsConfig(
+                turretMotor, 1,
+                Gains.Superstructure.Turret.slot1.kP,
+                Gains.Superstructure.Turret.slot1.kI,
+                Gains.Superstructure.Turret.slot1.kD,
+                Gains.Superstructure.Turret.slot1.kS,
+                Gains.Superstructure.Turret.slot1.kV,
+                Gains.Superstructure.Turret.slot1.kA);
 
         if (!hasUsedAbsoluteEncoder) {
             seedTurret();
@@ -241,8 +241,14 @@ public class TurretImpl extends Turret {
             prevActualTargetAngle = actualTargetAngle;
         }
 
-        isWrapping = Math.abs(getWrappedTargetAngle()
-                - currentAngle) > Settings.Superstructure.Turret.GAIN_SWITCHING_THRESHOLD.getDegrees();
+        if(isWrapping) {
+            isWrapping = Math.abs(getWrappedTargetAngle()
+                    - currentAngle) > Settings.Superstructure.Turret.GAIN_SWITCHING_THRESHOLD_END.getDegrees();
+        } else {
+            isWrapping = Math.abs(getWrappedTargetAngle()
+                    - currentAngle) > Settings.Superstructure.Turret.GAIN_SWITCHING_THRESHOLD_START.getDegrees();
+        }
+        
         int slot = 0;
 
         if (isWrapping) {

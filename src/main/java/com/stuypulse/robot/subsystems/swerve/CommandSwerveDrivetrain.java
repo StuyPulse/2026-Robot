@@ -72,9 +72,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private FieldObject2d turret2d = Field.FIELD2D.getObject("Turret 2D");
     private Pose2d turretPose = new Pose2d();
-    private StructPublisher<Pose2d> leftBehindHubYPlublisher;
-    private StructPublisher<Pose2d> rightBehindHubYPlublisher;
-    private StructPublisher<Pose2d> vertexBehindHubPublisher;
+    // private StructPublisher<Pose2d> leftBehindHubYPlublisher;
+    // private StructPublisher<Pose2d> rightBehindHubYPlublisher;
+    // private StructPublisher<Pose2d> vertexBehindHubPublisher;
     private StatusSignal<LinearAcceleration> robotAccelerationX;
     private StatusSignal<LinearAcceleration> robotAccelerationY;
 
@@ -85,8 +85,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Optional<Boolean> isUnderTrench = Optional.empty();
     private Optional<Boolean> isBehindTower = Optional.empty();
 
-    private StructPublisher<Pose2d> robotPose = NetworkTableInstance.getDefault()
-            .getStructTopic("Robot Pose", Pose2d.struct).publish();
+    // private StructPublisher<Pose2d> robotPose = NetworkTableInstance.getDefault()
+    //         .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
     static {
         instance = TunerConstants.createDrivetrain();
@@ -248,9 +248,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
 
-        leftBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/LeftBehindHubY", Pose2d.struct).publish();
-        rightBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/RightBehindHubY", Pose2d.struct).publish();
-        vertexBehindHubPublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/VertexBehindHub", Pose2d.struct).publish();
+        // leftBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/LeftBehindHubY", Pose2d.struct).publish();
+        // rightBehindHubYPlublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/RightBehindHubY", Pose2d.struct).publish();
+        // vertexBehindHubPublisher = NetworkTableInstance.getDefault().getStructTopic("FieldPositions/VertexBehindHub", Pose2d.struct).publish();
 
         robotAccelerationX = this.getPigeon2().getAccelerationX();
         robotAccelerationY = this.getPigeon2().getAccelerationY();
@@ -592,9 +592,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     * (turretTranslation.getX() - hubFarRightCornerWithTolerance.getX()) + hubFarRightCornerWithTolerance.getY(); // *(robotX - hubCornerX) + (hubCornerY)
 
             // Debug:
-            leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY, new Rotation2d()));
-            rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY, new Rotation2d()));
-            vertexBehindHubPublisher.set(Field.BEHIND_HUB_TRIANGLE_VERTEX);
+            // leftBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), leftY, new Rotation2d()));
+            // rightBehindHubYPlublisher.set(new Pose2d(getTurretPose().getX(), rightY, new Rotation2d()));
+            // vertexBehindHubPublisher.set(Field.BEHIND_HUB_TRIANGLE_VERTEX);
 
             boolean withinHubY = rightY < getTurretPose().getY()
                     && getTurretPose().getY() < leftY;
@@ -704,7 +704,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         Settings.Superstructure.Turret.TURRET_OFFSET.getTranslation().rotateBy(pose.getRotation())),
                 pose.getRotation().plus(Turret.getInstance().getAngle()));
 
-        robotPose.set(pose);
+        // robotPose.set(pose);
 
         turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 
@@ -719,6 +719,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         DogLog.log("Swerve/Angular Velocity (rad per s)", chassisSpeeds.omegaRadiansPerSecond);
         DogLog.log("Swerve/Distance From Hub (meters)", Field.HUB_CENTER.getTranslation().getDistance(pose.getTranslation()));
+
+        DogLog.log("Swerve/Pose", pose);
 
         Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? pose : Field.transformToOppositeAlliance(pose));
 

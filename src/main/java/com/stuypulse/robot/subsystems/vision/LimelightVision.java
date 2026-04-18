@@ -50,9 +50,9 @@ public class LimelightVision extends SubsystemBase {
 
     private Pose2d[] limelightPoseArray;
 
-    private StructPublisher<Pose2d> leftLimelightPosePublisher;
-    private StructPublisher<Pose2d> rightLimelightPosePublisher;
-    private StructPublisher<Pose2d> backLimelightPosePublisher;
+    // private StructPublisher<Pose2d> leftLimelightPosePublisher;
+    // private StructPublisher<Pose2d> rightLimelightPosePublisher;
+    // private StructPublisher<Pose2d> backLimelightPosePublisher;
 
     private boolean hasData;
     private BStream debouncedHasData;
@@ -73,9 +73,9 @@ public class LimelightVision extends SubsystemBase {
 
     public LimelightVision() {
         limelightPoseArray = new Pose2d[Cameras.LimelightCameras.length];
-        leftLimelightPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight/Pose Left", Pose2d.struct).publish();
-        rightLimelightPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight/Pose Right", Pose2d.struct).publish();
-        backLimelightPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight/Pose Back", Pose2d.struct).publish();
+        // leftLimelightPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight/Pose Left", Pose2d.struct).publish();
+        // rightLimelightPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight/Pose Right", Pose2d.struct).publish();
+        // backLimelightPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight/Pose Back", Pose2d.struct).publish();
 
         names = new String[Cameras.LimelightCameras.length];
 
@@ -295,14 +295,14 @@ public class LimelightVision extends SubsystemBase {
                         DogLog.log("Vision/Pose Estimate Y " + limelightName, poseEstimate.pose.getY());
                         DogLog.log("Vision/Pose Estimate Theta " + limelightName, poseEstimate.pose.getRotation().getDegrees());
 
-                        switch (limelightName) {
-                            case "limelight-right" ->
-                                rightLimelightPosePublisher.set(robotPose);
-                            case "limelight-left" ->
-                                leftLimelightPosePublisher.set(robotPose);
-                            case "limelight-back" ->
-                                backLimelightPosePublisher.set(robotPose);
-                        }
+                        // switch (limelightName) {
+                        //     case "limelight-right" ->
+                        //         rightLimelightPosePublisher.set(robotPose);
+                        //     case "limelight-left" ->
+                        //         leftLimelightPosePublisher.set(robotPose);
+                        //     case "limelight-back" ->
+                        //         backLimelightPosePublisher.set(robotPose);
+                        // }
 
                         DogLog.log("Vision/" + names[i] + " Has Data", true);
                         
@@ -318,7 +318,7 @@ public class LimelightVision extends SubsystemBase {
                     DogLog.log("Vision/Limelight Yaw", LimelightHelpers.getIMUData(limelightName).Yaw);
 
                     //Rejection counters
-                    Cameras.LimelightCameras[i].logRejections();
+                    Cameras.LimelightCameras[i].log();
                 }
             }
 

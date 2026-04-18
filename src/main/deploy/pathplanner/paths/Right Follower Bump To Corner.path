@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.9263338088445074,
+        "y": 2.514707560627676
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.9596576319543506,
+        "y": 2.320627674750357
+      },
+      "isLocked": false,
+      "linkedName": "Right Follower Bump Post"
+    },
+    {
+      "anchor": {
+        "x": 1.3219400855920111,
+        "y": 0.8844365192582018
+      },
+      "prevControl": {
+        "x": 1.4383880171184018,
+        "y": 1.3114122681883031
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Corner"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 300.0,
+    "maxAngularAcceleration": 900.0,
+    "nominalVoltage": 12.7,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Follower",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

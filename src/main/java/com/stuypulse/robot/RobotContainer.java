@@ -8,8 +8,10 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.auton.regular.Depot;
+import com.stuypulse.robot.commands.auton.regular.LeftFollower;
 import com.stuypulse.robot.commands.auton.regular.LeftMiddy;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
+import com.stuypulse.robot.commands.auton.regular.RightFollower;
 import com.stuypulse.robot.commands.auton.regular.RightMiddy;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
@@ -380,6 +382,15 @@ public class RobotContainer {
         AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,  
         "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
         RIGHT_TWO_CYCLE.register(autonChooser);
+
+        // FOLLOWERS
+        AutonConfig LEFT_FOLLOWER = new AutonConfig("Left Follower", LeftFollower::new,
+        "Left Follower To Bump", "Left Follower Over Bump", "Left Follower Bump To Corner");
+        LEFT_FOLLOWER.register(autonChooser);
+
+        AutonConfig RIGHT_FOLLOWER = new AutonConfig("Right Follower", RightFollower::new,
+        "Right Follower To Bump", "Right Follower Over Bump", "Right Follower Bump To Corner");
+        RIGHT_FOLLOWER.register(autonChooser);
 
         SmartDashboard.putData("Autonomous", autonChooser);
 

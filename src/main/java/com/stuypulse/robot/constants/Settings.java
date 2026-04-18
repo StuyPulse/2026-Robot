@@ -85,7 +85,7 @@ public interface Settings {
         double PIVOT_STALL_CURRENT = 0; //TODO: set value
         double PIVOT_STALL_DEBOUNCE = 1.0; //TODO: VERIFY
 
-        double ROLLER_STALL_DEBOUNCE = 1.0; //TODO: VERIFY
+        double ROLLER_STALL_DEBOUNCE = 0.1; //TODO: VERIFY
         double ROLLER_STALL_CURRENT = 50.0;
     }
 

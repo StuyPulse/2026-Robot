@@ -142,8 +142,8 @@ public class IntakeImpl extends Intake {
                 .filtered(new BDebounce.Both(Settings.Intake.PIVOT_STALL_DEBOUNCE));
 
         rollersStalling = BStream.create(
-                () -> Math.abs(rollerLeaderSupplyCurrent.getValueAsDouble()) > Settings.Intake.ROLLER_STALL_CURRENT)
-                .filtered(new BDebounce.Both(Settings.Intake.ROLLER_STALL_DEBOUNCE));
+                () -> Math.abs(rollerLeaderStatorCurrent.getValueAsDouble()) > Settings.Intake.ROLLER_STALL_CURRENT)
+                .filtered(new BDebounce.Rising(Settings.Intake.ROLLER_STALL_DEBOUNCE));
     }
 
     @Override

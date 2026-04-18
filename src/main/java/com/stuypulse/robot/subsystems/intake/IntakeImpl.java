@@ -56,6 +56,7 @@ public class IntakeImpl extends Intake {
     private PositionVoltage positionVoltage;
 
     private BStream pivotStalling;
+    private BStream rollersStalling;
 
     StatusSignal<Current> pivotSupplyCurrent;
     StatusSignal<Current> pivotStatorCurrent;
@@ -137,8 +138,12 @@ public class IntakeImpl extends Intake {
                 rollerLeaderVoltage, rollerFollowerVoltage);
 
         pivotStalling = BStream.create(
-                () -> Math.abs(pivotSupplyCurrent.getValueAsDouble()) > Settings.Intake.STALL_CURRENT_LIMIT)
-                .filtered(new BDebounce.Both(Settings.Intake.STALL_DEBOUNCE));
+                () -> Math.abs(pivotSupplyCurrent.getValueAsDouble()) > Settings.Intake.PIVOT_STALL_CURRENT)
+                .filtered(new BDebounce.Both(Settings.Intake.PIVOT_STALL_DEBOUNCE));
+
+        rollersStalling = BStream.create(
+                () -> Math.abs(rollerLeaderSupplyCurrent.getValueAsDouble()) > Settings.Intake.ROLLER_STALL_CURRENT)
+                .filtered(new BDebounce.Both(Settings.Intake.ROLLER_STALL_DEBOUNCE));
     }
 
     @Override
@@ -205,12 +210,16 @@ public class IntakeImpl extends Intake {
                     pivot.setControl(positionVoltage.withPosition(getPivotState().getTargetAngle().getRotations()));
                 }
 
-                // ROLLERS
-                if (pivotState == PivotState.DEPLOY
-                        && getPivotAngle().getDegrees() <= Settings.Intake.THRESHOLD_TO_START_ROLLERS.getDegrees()) {
-                    rollerLeader.setControl(rollerController.withOutput(getRollerState().getTargetDutyCycle()));
-                } else {
+
+                if (pivotState != PivotState.DEPLOY && getPivotAngle().getDegrees() >= Settings.Intake.THRESHOLD_TO_START_ROLLERS.getDegrees()) {
                     rollerLeader.stopMotor();
+                }
+
+                else {
+                    double dutyCycle = rollersStalling.get()
+                            ? Intake.RollerState.OUTTAKE.getTargetDutyCycle()
+                            : getRollerState().getTargetDutyCycle();
+                    rollerLeader.setControl(rollerController.withOutput(dutyCycle));
                 }
                 rollerFollower.setControl(follower);
             }

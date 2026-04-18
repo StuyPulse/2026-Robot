@@ -82,8 +82,11 @@ public interface Settings {
 
         double GEAR_RATIO = 37.93;
         
-        double STALL_CURRENT_LIMIT = 0; //TODO: set value
-        double STALL_DEBOUNCE = 1.0; //TODO: VERIFY
+        double PIVOT_STALL_CURRENT = 0; //TODO: set value
+        double PIVOT_STALL_DEBOUNCE = 1.0; //TODO: VERIFY
+
+        double ROLLER_STALL_DEBOUNCE = 1.0; //TODO: VERIFY
+        double ROLLER_STALL_CURRENT = 50.0;
     }
 
     public interface Spindexer {

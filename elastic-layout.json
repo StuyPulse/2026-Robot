@@ -362,9 +362,8 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/time left in shift",
+              "topic": "/Robot/FMSUtil/time left in shift",
               "period": 0.06,
-              "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 20,
               "yellow_start_time": 30
@@ -436,7 +435,7 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/Robot/Match Time",
+              "topic": "/Robot/Match Time",
               "period": 0.5,
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 20,
@@ -508,14 +507,28 @@
             }
           },
           {
-            "title": "Wait Time",
+            "title": "Wait Time 2",
+            "x": 980.0,
+            "y": 560.0,
+            "width": 140.0,
+            "height": 140.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "SmartDashboard/Robot/Auton/Wait Time 2",
+              "period": 0.5,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Wait Time 1",
             "x": 840.0,
             "y": 560.0,
             "width": 140.0,
             "height": 140.0,
             "type": "Text Display",
             "properties": {
-              "topic": "SmartDashboard/Robot/Auton/Wait Time",
+              "topic": "SmartDashboard/Robot/Auton/Wait Time 1",
               "period": 0.5,
               "data_type": "double",
               "show_submit_button": false
@@ -842,7 +855,7 @@
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/is active shift",
+              "topic": "/Robot/is active shift",
               "period": 0.06,
               "true_color": 4283215696,
               "false_color": 4294198070,
@@ -858,7 +871,7 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/time left in shift",
+              "topic": "/Robot/FMSUtil/time left in shift",
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
@@ -874,9 +887,8 @@
             "height": 140.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/No Auto Winner Data",
+              "topic": "/Robot/FMSUtil/No Auto Winner Data",
               "period": 0.06,
-              "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
@@ -977,7 +989,7 @@
             "height": 140.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/Robot/Match Time",
+              "topic": "/Robot/Match Time",
               "period": 0.5,
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 20,
@@ -1103,7 +1115,7 @@
             "height": 140.0,
             "type": "Large Text Display",
             "properties": {
-              "topic": "/SmartDashboard/FMSUtil/Field State",
+              "topic": "/Robot/FMSUtil/Field State",
               "period": 0.06
             }
           }

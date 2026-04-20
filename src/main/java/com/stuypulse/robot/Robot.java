@@ -204,7 +204,7 @@ public class Robot extends TimedRobot {
             }
         }
 
-        if (periodicCounter % 50 == 0 && robot.hasWaitTimeChanged()) {
+        if ((periodicCounter % 50 == 0 && robot.hasWaitTimeOneChanged()) ||  (periodicCounter % 50 == 0 && robot.hasWaitTimeTwoChanged())) {
             robot.configureAutons();
         }
     }

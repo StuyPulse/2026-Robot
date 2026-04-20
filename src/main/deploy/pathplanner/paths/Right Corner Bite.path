@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 8.244122681883024,
-        "y": 3.174579172610556
+        "x": 8.237722419928826,
+        "y": 3.4271055753262156
       },
       "prevControl": {
-        "x": 7.694160604322244,
-        "y": 1.874021386157379
+        "x": 7.687760342368046,
+        "y": 2.1265477888730384
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right NZ Corner"
+      "linkedName": "Right NZ"
     }
   ],
   "rotationTargets": [
@@ -45,7 +45,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.4780553679945946,
+      "minWaypointRelativePos": 0.5077650236326793,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.5,

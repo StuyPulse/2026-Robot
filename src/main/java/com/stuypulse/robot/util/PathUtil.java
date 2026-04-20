@@ -30,13 +30,15 @@ public class PathUtil {
         private final String name;
         private final Function<PathPlannerPath[], Command> auton;
         private final String[] paths;
-        private final Optional<Double> waitTime;
+        private final Optional<Double> waitTimeOne;
+        private final Optional<Double> waitTimeTwo;
 
-        public AutonConfig(String name, Function<PathPlannerPath[], Command> auton, double waitTime, String... paths) {
+        public AutonConfig(String name, Function<PathPlannerPath[], Command> auton, double waitTimeOne, double waitTimeTwo, String... paths) {
             this.name = name;
             this.auton = auton;
             this.paths = paths;
-            this.waitTime = Optional.of(waitTime);
+            this.waitTimeOne = Optional.of(waitTimeOne);
+            this.waitTimeTwo = Optional.of(waitTimeTwo);
 
             for (String path : paths) {
                 try {
@@ -48,13 +50,13 @@ public class PathUtil {
         }
 
         public AutonConfig(String name, Function<PathPlannerPath[], Command> auton, String... paths) {
-            this(name, auton, 0.0, paths);
+            this(name, auton, 0.0, 0.0, paths);
         }
 
         private Command buildCommand() {
             Command autonCommand = auton.apply(loadPaths(paths));
-            if (waitTime.isPresent() && waitTime.get() > 0.0) {
-                return Commands.sequence(new WaitCommand(waitTime.get()), autonCommand);
+            if (waitTimeOne.isPresent() && waitTimeOne.get() > 0.0) {
+                return Commands.sequence(new WaitCommand(waitTimeOne.get()), autonCommand);
             }
             return autonCommand;
         }

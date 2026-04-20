@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.244122681883024,
-        "y": 3.174579172610556
+        "x": 8.295877318116975,
+        "y": 3.45922967189729
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.525958036561901,
-        "y": 4.151225380451245
+        "x": 7.577712672795853,
+        "y": 4.435875879737979
       },
       "isLocked": false,
       "linkedName": "Right NZ Corner"
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Trench Score"
+      "linkedName": null
     }
   ],
   "rotationTargets": [

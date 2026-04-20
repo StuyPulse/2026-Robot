@@ -135,9 +135,12 @@ public class RobotContainer {
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
-    private static SmartNumber waitTime = new SmartNumber("Robot/Auton/Wait Time", 0.0);
-    private static double prevWaitTime = 0.0;
-    private static boolean hasWaitTimeChanged = false;
+    private static SmartNumber waitTimeOne = new SmartNumber("Robot/Auton/Wait Time 1", 0.0);
+    private static SmartNumber waitTimeTwo = new SmartNumber("Robot/Auton/Wait Time 2", 0.0);
+    private static double prevWaitTimeOne = 0.0;
+    private static double prevWaitTimeTwo = 0.0;
+    private static boolean hasWaitTimeOneChanged = false;
+    private static boolean hasWaitTimeTwoChanged = false;
 
     // Robot container
     public RobotContainer() {
@@ -373,42 +376,42 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
 
         // DEPOT
-        AutonConfig DEPOT_ONLY = new AutonConfig("Depot Only", Depot::new,  
+        AutonConfig DEPOT_ONLY = new AutonConfig("Depot Only", Depot::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Center Hub To Depot");
         DEPOT_ONLY.register(autonChooser);
 
-        AutonConfig LEFT_BUMP = new AutonConfig("Left Bump", LeftBump::new,  
+        AutonConfig LEFT_BUMP = new AutonConfig("Left Bump", LeftBump::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Left Bump To Score (Start)", "Left Bump To Score", "Left Bump Score To Depot");
         LEFT_BUMP.register(autonChooser);
 
-        AutonConfig RIGHT_BUMP = new AutonConfig("Right Bump", RightBump::new,  
+        AutonConfig RIGHT_BUMP = new AutonConfig("Right Bump", RightBump::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Right Bump To Score (Start)", "Right Bump To Score", "Right Bump Score To Depot");
         RIGHT_BUMP.register(autonChooser);
 
         // TWO CYCLES (TRENCH)
-        AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,
+        AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Score To NZ (F)", "Left NZ To Score");
         LEFT_TWO_CYCLE.register(autonChooser);
 
-        AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,
+        AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
         RIGHT_TWO_CYCLE.register(autonChooser);
 
         // TWO CYCLES (CORNER)
-        AutonConfig LEFT_TWO_CORNER = new AutonConfig("Left Two Corner", LeftTwoCorner::new,
-        "Left Corner Bite", "Left Corner Bite To Score", "Left Bite Score To Score", "Left Score To NZ (F)", "Left NZ To Score");
+        AutonConfig LEFT_TWO_CORNER = new AutonConfig("Left Two Corner", LeftTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Left Corner Bite", "Left NZ To Score", "Left Bite Score To Score", "Left Score To NZ (F)", "Left NZ To Score");
         LEFT_TWO_CORNER.register(autonChooser);
 
-        AutonConfig RIGHT_TWO_CORNER = new AutonConfig("Right Two Corner", RightTwoCorner::new,
-        "Right Corner Bite", "Right Corner Bite To Score", "Right Bite Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
+        AutonConfig RIGHT_TWO_CORNER = new AutonConfig("Right Two Corner", RightTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Right Corner Bite", "Right NZ To Score", "Right Bite Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
         RIGHT_TWO_CORNER.register(autonChooser);
 
         // FOLLOWS
-        AutonConfig LEFT_FOLLOW = new AutonConfig("Left Follow", LeftFollow::new, prevWaitTime,
+        AutonConfig LEFT_FOLLOW = new AutonConfig("Left Follow", LeftFollow::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Left Follow To Bump", "Left Follow To Score");
         LEFT_FOLLOW.register(autonChooser);
 
-        AutonConfig RIGHT_FOLLOW = new AutonConfig("Right Follow", RightFollow::new, prevWaitTime,
+        AutonConfig RIGHT_FOLLOW = new AutonConfig("Right Follow", RightFollow::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Right Follow To Bump", "Right Follow To Score");
         RIGHT_FOLLOW.register(autonChooser);
 
@@ -416,10 +419,17 @@ public class RobotContainer {
 
     }
 
-    public boolean hasWaitTimeChanged() {
-        hasWaitTimeChanged = prevWaitTime != getWaitTime();
-        prevWaitTime = getWaitTime();
-        return hasWaitTimeChanged;
+    public boolean hasWaitTimeOneChanged() {
+        hasWaitTimeOneChanged = prevWaitTimeOne != getWaitTimeOne();
+        prevWaitTimeOne = getWaitTimeOne();
+        prevWaitTimeTwo = getWaitTimeTwo();
+        return hasWaitTimeOneChanged;
+    }
+
+    public boolean hasWaitTimeTwoChanged() {
+        hasWaitTimeTwoChanged = prevWaitTimeTwo != getWaitTimeTwo();
+        prevWaitTimeTwo = getWaitTimeTwo();
+        return hasWaitTimeTwoChanged;
     }
 
     public void configureSysids() {
@@ -486,8 +496,12 @@ public class RobotContainer {
         }
     }
 
-    public double getWaitTime() {
-        return waitTime.get();
+    public static double getWaitTimeOne() {
+        return waitTimeOne.get();
+    }
+
+    public static double getWaitTimeTwo() {
+        return waitTimeTwo.get();
     }
 
     public void periodicAfterScheduler() {

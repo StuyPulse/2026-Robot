@@ -57,7 +57,7 @@
       },
       "nextControl": {
         "x": 6.053793108756849,
-        "y": 0.22451723817625546
+        "y": 0.22451723817625524
       },
       "isLocked": false,
       "linkedName": null
@@ -73,7 +73,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Trench Score"
+      "linkedName": null
     }
   ],
   "rotationTargets": [

@@ -12,6 +12,7 @@ import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.subsystems.vision.LimelightVision.MegaTagMode;
 import com.stuypulse.robot.util.vision.LimelightHelpers;
+import com.stuypulse.robot.util.vision.LimelightHelpers.RawFiducial;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
 import dev.doglog.DogLog;
@@ -124,13 +125,19 @@ public interface Cameras {
             DogLog.log(keyName + "# Rejected Invalid Position", rejectedCounterInvalidPosition);
 
             DogLog.log(keyName + "Heartbeat", LimelightHelpers.getHeartbeat(name));
-            DogLog.log(keyName + "Temp (C)", LimelightHelpers.getLimelightNTString(name, "hw"));
+            DogLog.log(keyName + "Temp (C)", LimelightHelpers.getLimelightDoubleArrayEntry(name, "hw").get());
             DogLog.log(keyName + "Pose MT1", (Robot.isBlue()
                                 ? LimelightHelpers.getBotPoseEstimate_wpiBlue(name).pose
                                 : LimelightHelpers.getBotPoseEstimate_wpiRed(name).pose));
             DogLog.log(keyName + "Pose MT2", (Robot.isBlue()
                                 ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).pose
                                 : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(name).pose));
+            DogLog.log(keyName + "Pipeline", LimelightHelpers.getCurrentPipelineIndex(name));
+            
+            RawFiducial[] rawFiducials = LimelightHelpers.getRawFiducials(name);
+            for(Integer i = 0; i < rawFiducials.length; i++) {
+                DogLog.log(keyName + "Raw Fiducials[" + i.toString() + "]", rawFiducials[i].id);
+            }
         }
 
         public String getName() {

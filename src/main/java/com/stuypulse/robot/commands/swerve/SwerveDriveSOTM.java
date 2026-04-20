@@ -52,7 +52,6 @@ public class SwerveDriveSOTM extends Command {
         swerve = CommandSwerveDrivetrain.getInstance();
         superstructure = Superstructure.getInstance();
 
-
         speed = VStream.create(this::getDriverInputAsVelocity)
         .filtered(
             new VDeadZone(Drive.DEADBAND), 
@@ -115,5 +114,4 @@ public class SwerveDriveSOTM extends Command {
             return true;
         }
     }
-
 }

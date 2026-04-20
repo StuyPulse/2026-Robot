@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.613851640513552,
-        "y": 7.625477888730385
+        "x": 6.639728958630526,
+        "y": 7.677232524964337
       },
       "isLocked": false,
       "linkedName": "Left Trench Start"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 8.231184022824536,
-        "y": 4.882482168330956
+        "y": 5.257703281027104
       },
       "prevControl": {
-        "x": 7.334057616386011,
-        "y": 7.394914974879136
+        "x": 6.782054208273893,
+        "y": 7.276134094151212
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6022957461174885,
+      "minWaypointRelativePos": 0.6212018906144481,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.5,

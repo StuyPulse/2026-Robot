@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 8.231184022824536,
-        "y": 4.882482168330956
+        "y": 5.257703281027104
       },
       "prevControl": null,
       "nextControl": {
         "x": 6.648308686286153,
-        "y": 3.901477029087409
+        "y": 4.276698141783557
       },
       "isLocked": false,
       "linkedName": "Left NZ Corner"

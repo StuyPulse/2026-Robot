@@ -1,6 +1,7 @@
 package com.stuypulse.robot.commands.auton.regular;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
@@ -34,7 +35,7 @@ public class RightFollow extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 new HandoffRun(),
                 new SpindexerRun(),
-                new WaitCommand(3.0)
+                new WaitCommand(RobotContainer.getWaitTimeOne() + 1.0)
             ),
 
             // To NZ
@@ -42,21 +43,20 @@ public class RightFollow extends SequentialCommandGroup {
                 new HandoffStop(),
                 new SpindexerStop(),
                 CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]),
-                new WaitCommand(0.75).andThen(new IntakeDeploy())
+                new WaitCommand(0.5).andThen(new IntakeDeploy())
             ),
 
-            new WaitCommand(1.0),
+            new WaitCommand(RobotContainer.getWaitTimeTwo()),
 
             // Back
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]),
-
-            new WaitCommand(0.5),
 
             // SOTM To Corner
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new ParallelCommandGroup(
                 new HandoffRun(),
-                new SpindexerRun()
+                new SpindexerRun(),
+                new IntakeAutoDigest().repeatedly()
             )
 
         );

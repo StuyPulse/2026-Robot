@@ -10,6 +10,7 @@ import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
 import com.stuypulse.robot.commands.intake.IntakeDigest;
+import com.stuypulse.robot.commands.intake.IntakeStopRollers;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.superstructure.SuperstructureAutoInterpolation;
@@ -41,14 +42,13 @@ public class LeftTwoCorner extends SequentialCommandGroup {
 
             // Trip 1 To Score
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new SuperstructureAutoInterpolation()
-            ),
+                new SuperstructureAutoInterpolation()),
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().andThen(
                 new SpindexerRun()
             ).andThen(new WaitCommand(0.5)
-                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
+                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(5.0),
             new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             // NZ Trip 2

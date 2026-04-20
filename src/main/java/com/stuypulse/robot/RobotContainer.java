@@ -14,6 +14,7 @@ import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
 import com.stuypulse.robot.commands.auton.regular.RightFollower;
 import com.stuypulse.robot.commands.auton.regular.RightMiddy;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
+import com.stuypulse.robot.commands.auton.test.BoxTest;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
@@ -82,6 +83,7 @@ import com.stuypulse.robot.util.superstructure.InterpolationCalculator;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -131,6 +133,9 @@ public class RobotContainer {
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
+    private static SmartNumber waitTime = new SmartNumber("Robot/Auton/Wait Time", 0.0);
+    private static double prevWaitTime = 0.0;
+    private static boolean hasWaitTimeChanged = false;
 
     // Robot container
     public RobotContainer() {
@@ -361,7 +366,6 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
-
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
 
         // DEPOT
@@ -376,11 +380,11 @@ public class RobotContainer {
         RIGHT_MIDDY.register(autonChooser);
 
         // TWO CYCLES (TRENCH)
-        AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  
+        AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,
         "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Score To NZ (F)", "Left NZ To Score");
         LEFT_TWO_CYCLE.register(autonChooser);
 
-        AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,  
+        AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,
         "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
         RIGHT_TWO_CYCLE.register(autonChooser);
 
@@ -395,6 +399,17 @@ public class RobotContainer {
 
         SmartDashboard.putData("Autonomous", autonChooser);
 
+        AutonConfig BOX = new AutonConfig("Skibidi", BoxTest::new,  
+        "Right Trench To NZ");
+        BOX.register(autonChooser);
+
+        SmartDashboard.putData("Autonomous", autonChooser);
+    }
+
+    public boolean hasWaitTimeChanged() {
+        hasWaitTimeChanged = prevWaitTime != getWaitTime();
+        prevWaitTime = getWaitTime();
+        return hasWaitTimeChanged;
     }
 
     public void configureSysids() {
@@ -459,6 +474,10 @@ public class RobotContainer {
         else {
             return autonChooser.getSelected();
         }
+    }
+
+    public double getWaitTime() {
+        return waitTime.get();
     }
 
     public void periodicAfterScheduler() {

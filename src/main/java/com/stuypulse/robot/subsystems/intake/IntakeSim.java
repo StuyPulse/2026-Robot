@@ -143,6 +143,9 @@ public class IntakeSim extends Intake {
     }
 
     @Override
+    public void setIntakeDigesting(boolean isDigesting) {}
+
+    @Override
     public void periodic() {
         super.periodic();
 

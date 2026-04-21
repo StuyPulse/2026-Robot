@@ -71,13 +71,22 @@ public class Gains {
 
     public interface Intake {
         public interface Pivot {
-            SmartNumber kP = new SmartNumber("Intake/Pivot/Gains/kP", 200.0);
-            SmartNumber kI = new SmartNumber("Intake/Pivot/Gains/kI", 0.0);
-            SmartNumber kD = new SmartNumber("Intake/Pivot/Gains/kD", 10.0);
-            
-            SmartNumber kS = new SmartNumber("Intake/Pivot/Gains/kS", 0.0);
-            SmartNumber kV = new SmartNumber("Intake/Pivot/Gains/kV", 0.12);
-            SmartNumber kA = new SmartNumber("Intake/Pivot/Gains/kA", 0.0);
+            public interface slot0 {
+                SmartNumber kP = new SmartNumber("Intake/Pivot/Gains/Slot0/kP", 200.0);
+                SmartNumber kI = new SmartNumber("Intake/Pivot/Gains/Slot0/kI", 0.0);
+                SmartNumber kD = new SmartNumber("Intake/Pivot/Gains/Slot0/kD", 10.0);
+                SmartNumber kS = new SmartNumber("Intake/Pivot/Gains/Slot0/kS", 0.0);
+                SmartNumber kV = new SmartNumber("Intake/Pivot/Gains/Slot0/kV", 0.12);
+                SmartNumber kA = new SmartNumber("Intake/Pivot/Gains/Slot0/kA", 0.0);     
+            }
+            public interface slot1 {
+                SmartNumber kP = new SmartNumber("Intake/Pivot/Gains/Slot1/kP", 200.0);
+                SmartNumber kI = new SmartNumber("Intake/Pivot/Gains/Slot1/kI", 0.0);
+                SmartNumber kD = new SmartNumber("Intake/Pivot/Gains/Slot1/kD", 10.0);
+                SmartNumber kS = new SmartNumber("Intake/Pivot/Gains/Slot1/kS", 0.0);
+                SmartNumber kV = new SmartNumber("Intake/Pivot/Gains/Slot1/kV", 0.12);
+                SmartNumber kA = new SmartNumber("Intake/Pivot/Gains/Slot1/kA", 0.0);     
+            }
 
             double kG = 0.5;
         }

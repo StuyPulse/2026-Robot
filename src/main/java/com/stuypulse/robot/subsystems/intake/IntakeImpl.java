@@ -57,6 +57,8 @@ public class IntakeImpl extends Intake {
 
     private BStream pivotStalling;
 
+    private boolean isDigesting;
+
     StatusSignal<Current> pivotSupplyCurrent;
     StatusSignal<Current> pivotStatorCurrent;
     StatusSignal<Current> rollerLeaderSupplyCurrent;
@@ -80,11 +82,16 @@ public class IntakeImpl extends Intake {
                 .withStatorCurrentLimitEnabled(false)
                 .withRampRate(0.25)
 
-                .withPIDConstants(Gains.Intake.Pivot.kP.get(), Gains.Intake.Pivot.kI.get(), Gains.Intake.Pivot.kD.get(),
+                .withPIDConstants(Gains.Intake.Pivot.slot0.kP.get(), Gains.Intake.Pivot.slot0.kI.get(), Gains.Intake.Pivot.slot0.kD.get(),
                         0)
-                .withFFConstants(Gains.Intake.Pivot.kS.get(), Gains.Intake.Pivot.kV.get(), Gains.Intake.Pivot.kA.get(),
+                .withFFConstants(Gains.Intake.Pivot.slot0.kS.get(), Gains.Intake.Pivot.slot0.kV.get(), Gains.Intake.Pivot.slot0.kA.get(),
                         Gains.Intake.Pivot.kG, 0)
                 .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign, 0)
+                .withPIDConstants(Gains.Intake.Pivot.slot1.kP.get(), Gains.Intake.Pivot.slot1.kI.get(), Gains.Intake.Pivot.slot1.kD.get(),
+                        1)
+                .withFFConstants(Gains.Intake.Pivot.slot1.kS.get(), Gains.Intake.Pivot.slot1.kV.get(), Gains.Intake.Pivot.slot1.kA.get(),
+                        Gains.Intake.Pivot.kG, 1)
+                .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign, 1)
                 .withGravityType(GravityTypeValue.Arm_Cosine)
 
                 .withSensorToMechanismRatio(Settings.Intake.GEAR_RATIO);
@@ -117,6 +124,8 @@ public class IntakeImpl extends Intake {
         pivotVoltageOverride = Optional.empty();
 
         pivot.setPosition(Settings.Intake.PIVOT_MAX_ANGLE.getRotations());
+
+        isDigesting = false;
 
         pivotSupplyCurrent = pivot.getSupplyCurrent();
         pivotStatorCurrent = pivot.getStatorCurrent();
@@ -168,6 +177,13 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
+    public void setIntakeDigesting(boolean isDigesting) {
+        this.isDigesting = isDigesting;
+    }
+
+
+
+    @Override
     public void periodicAfterScheduler() {
         super.periodicAfterScheduler();
 
@@ -183,6 +199,8 @@ public class IntakeImpl extends Intake {
         //         Gains.Intake.Pivot.kS,
         //         Gains.Intake.Pivot.kV,
         //         Gains.Intake.Pivot.kA);
+
+        int slot = (isDigesting) ? 1 : 0;
 
         boolean applyingPushdownCurrent = false;
         if (EnabledSubsystems.INTAKE.get()) {
@@ -202,7 +220,7 @@ public class IntakeImpl extends Intake {
                 } else if (pivotState == PivotState.HOMING) {
                     pivot.setControl(voltageOut.withOutput(-Settings.Intake.HOMING_VOLTAGE));
                 } else {
-                    pivot.setControl(positionVoltage.withPosition(getPivotState().getTargetAngle().getRotations()));
+                    pivot.setControl(positionVoltage.withPosition(getPivotState().getTargetAngle().getRotations()).withSlot(slot));
                 }
 
                 // ROLLERS
@@ -256,6 +274,7 @@ public class IntakeImpl extends Intake {
                         rollerFollowerSupplyCurrent.getValueAsDouble());
                 DogLog.log("Intake/Roller Follower Stator Current (amps)",
                         rollerFollowerStatorCurrent.getValueAsDouble());
+                DogLog.log("Intake/Digesting", isDigesting);
 
                 // Pivot
                 DogLog.log("Intake/Pivot Voltage (volts)", pivotMotorVoltage.getValueAsDouble());

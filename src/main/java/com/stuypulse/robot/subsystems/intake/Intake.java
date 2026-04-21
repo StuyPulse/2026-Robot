@@ -7,6 +7,8 @@ package com.stuypulse.robot.subsystems.intake;
 
 import java.util.Optional;
 
+import javax.swing.AbstractAction;
+
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
@@ -98,6 +100,7 @@ public abstract class Intake extends SubsystemBase {
     public abstract void seedPivotStowed();
 
     public abstract double getCurrentDraw();
+    public abstract void setIntakeDigesting(boolean a);
 
     public void periodicAfterScheduler() {
         DogLog.log("Intake/Pivot State", getPivotState().toString());

@@ -20,6 +20,8 @@ import com.stuypulse.robot.subsystems.superstructure.shooter.Shooter.ShooterStat
 import com.stuypulse.robot.subsystems.superstructure.turret.Turret;
 import com.stuypulse.robot.subsystems.superstructure.turret.Turret.TurretState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -50,6 +52,7 @@ public class Superstructure extends SubsystemBase {
     private final Shooter shooter;
     private final Turret turret;
 
+    private final BStream currentlyShooting;
     // private final BStream readyToShoot;
 
     public Superstructure() {
@@ -60,6 +63,9 @@ public class Superstructure extends SubsystemBase {
 
         // readyToShoot = BStream.create(this::atTolerance)
         //     .filtered(new BDebounce.Both(0.05));
+
+        currentlyShooting = BStream.create(() -> (!isShooterAtTolerance()))
+                .filtered(new BDebounce.Falling(0.5));
 
         sotmStoppedTimer = new Timer();
         sotmStoppedTimer.restart();
@@ -213,6 +219,10 @@ public class Superstructure extends SubsystemBase {
 
     public void clearMemoized() {
         this.shouldStop = Optional.empty();
+    }
+
+    public boolean isShooting() {
+        return currentlyShooting.get();
     }
 
     public void periodicAfterScheduler() {

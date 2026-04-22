@@ -52,7 +52,6 @@ public class Superstructure extends SubsystemBase {
     private final Shooter shooter;
     private final Turret turret;
 
-    private final BStream currentlyShooting;
     // private final BStream readyToShoot;
 
     public Superstructure() {
@@ -63,9 +62,6 @@ public class Superstructure extends SubsystemBase {
 
         // readyToShoot = BStream.create(this::atTolerance)
         //     .filtered(new BDebounce.Both(0.05));
-
-        currentlyShooting = BStream.create(() -> (!isShooterAtTolerance()))
-                .filtered(new BDebounce.Falling(0.5));
 
         sotmStoppedTimer = new Timer();
         sotmStoppedTimer.restart();
@@ -222,7 +218,7 @@ public class Superstructure extends SubsystemBase {
     }
 
     public boolean isShooting() {
-        return currentlyShooting.get();
+        return shooter.isShooting();
     }
 
     public void periodicAfterScheduler() {

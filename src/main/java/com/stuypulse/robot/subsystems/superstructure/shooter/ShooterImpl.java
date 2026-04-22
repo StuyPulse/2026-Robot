@@ -23,6 +23,8 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -52,6 +54,8 @@ public class ShooterImpl extends Shooter {
     private StatusSignal<Double> shooterLeaderClosedLoopError;
     private StatusSignal<Temperature> shooterLeaderTemperature;
     private StatusSignal<Temperature> shooterFollowerTemperature;
+	
+	private final BStream currentlyShooting;
 
     public ShooterImpl() {
         shooterConfig = new Motors.TalonFXConfig()
@@ -105,6 +109,9 @@ public class ShooterImpl extends Shooter {
 
         shooterLeaderTemperature = shooterLeader.getDeviceTemp();
         shooterFollowerTemperature = shooterFollower.getDeviceTemp();
+
+        currentlyShooting = BStream.create(() -> (shooterLeadStatorCurrent.getValueAsDouble() > Settings.Superstructure.Shooter.IS_SHOOTING_CURRENT))
+                .filtered(new BDebounce.Falling(0.5));
 
         PhoenixUtil.registerToRio(shooterLeaderSpeed, shooterFollowerSpeed, shooterFollowSupplyCurrent, 
                 shooterFollowStatorCurrent, shooterLeadSupplyCurrent, shooterLeadStatorCurrent, 
@@ -216,4 +223,9 @@ public class ShooterImpl extends Shooter {
         return Double.max(0, shooterLeadSupplyCurrent.getValueAsDouble()) +
                 Double.max(0, shooterFollowSupplyCurrent.getValueAsDouble());
     }
+
+	@Override
+	public boolean isShooting() {
+		return currentlyShooting.get();
+	}
 }

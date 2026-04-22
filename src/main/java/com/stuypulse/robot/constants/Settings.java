@@ -194,6 +194,8 @@ public interface Settings {
 
         public interface Shooter {
             
+            public final double IS_SHOOTING_CURRENT = 25.0;
+            
             public final double GEAR_RATIO = 1.0;
             public final double FLYWHEEL_RADIUS = Units.inchesToMeters(3.965 / 2.0);
             

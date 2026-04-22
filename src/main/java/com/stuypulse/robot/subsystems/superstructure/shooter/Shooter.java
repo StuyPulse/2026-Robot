@@ -108,13 +108,13 @@ public abstract class Shooter extends SubsystemBase {
         return readyToShoot.get();
     }
 
-    
-
     public abstract double getRPM();
 
     public abstract SysIdRoutine getShooterSysIdRoutine();
     
     public abstract double getCurrentDraw();
+
+    public abstract boolean isShooting();
 
     public void periodicAfterScheduler() {
         DogLog.log("Superstructure/Shooter/State", state.name());

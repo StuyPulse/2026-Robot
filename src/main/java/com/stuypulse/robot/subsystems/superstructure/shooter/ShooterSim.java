@@ -105,4 +105,9 @@ public class ShooterSim extends Shooter {
     public double getCurrentDraw() {
         return 0;
     }
+
+    @Override
+    public boolean isShooting() {
+        return true;
+    }
 }

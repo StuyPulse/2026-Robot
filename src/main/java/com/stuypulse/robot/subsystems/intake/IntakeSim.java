@@ -36,6 +36,7 @@ public class IntakeSim extends Intake {
 
     private final SingleJointedArmSim pivotSim;
     private final LinearSystemLoop<N2, N1, N2> pivotController;
+    private boolean isDigesting;
 
     private final LinearSystemSim<N1, N1, N1> rollerLeaderSim;
     private final LinearSystemSim<N1, N1, N1> rollerFollowerSim;
@@ -114,6 +115,7 @@ public class IntakeSim extends Intake {
         rollerFollowerController = new LinearSystemLoop<>(rollerSystem, rollerLQR, rollerFollowerKalman, 12.0, Settings.DT);
 
         pivotVoltageOverride = Optional.empty();
+        isDigesting = false;
     }
 
     @Override
@@ -143,7 +145,9 @@ public class IntakeSim extends Intake {
     }
 
     @Override
-    public void setIntakeDigesting(boolean isDigesting) {}
+    public void setIntakeDigesting(boolean isDigesting) {
+        this.isDigesting = isDigesting;
+    }
 
     @Override
     public void periodic() {
@@ -193,6 +197,7 @@ public class IntakeSim extends Intake {
             DogLog.log("Intake/Sim Pivot Velocity (deg per s)", Units.radiansToDegrees(pivotSim.getVelocityRadPerSec()));
             DogLog.log("Intake/Sim Roller Leader Velocity (RPM)", rollerLeaderSim.getOutput(0) * 60.0 / (2.0 * Math.PI));
             DogLog.log("Intake/Sim Roller Follower Velocity (RPM)", rollerFollowerSim.getOutput(0) * 60.0 / (2.0 * Math.PI));
+            DogLog.log("Intake/Is Digesting", isDigesting);
         }
     }
 

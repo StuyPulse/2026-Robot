@@ -100,7 +100,7 @@ public abstract class Intake extends SubsystemBase {
     public abstract void seedPivotStowed();
 
     public abstract double getCurrentDraw();
-    public abstract void setIntakeDigesting(boolean a);
+    public abstract void setIntakeDigesting(boolean digesting);
 
     public void periodicAfterScheduler() {
         DogLog.log("Intake/Pivot State", getPivotState().toString());

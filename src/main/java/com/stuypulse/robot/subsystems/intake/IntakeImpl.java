@@ -210,7 +210,7 @@ public class IntakeImpl extends Intake {
                 // PIVOT
                 if (pivotState == PivotState.DEPLOY && 
                     getPivotAngle().getDegrees() <= Settings.Intake.ANGLE_THRESHOLD_FOR_HOLDING_VOLTAGE.getDegrees()
-                    && rollerState != RollerState.STOP) {
+                    && rollerState != RollerState.STOP && !isDigesting) {
                         // pivot.setControl(new VoltageOut(Settings.Intake.PUSHDOWN_VOLTAGE)); // applying 3 volts
                         double pushdownCurrent = 
                             Robot.getMode() == RobotMode.AUTON ? 

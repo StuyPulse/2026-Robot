@@ -10,8 +10,10 @@ import com.stuypulse.robot.constants.DriverConstants.Driver.Drive;
 import com.stuypulse.robot.constants.DriverConstants.Driver.Turn;
 import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
 import com.stuypulse.robot.commands.intake.IntakeDeploy;
+import com.stuypulse.robot.commands.intake.IntakeSetDigesting;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve;
+import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -53,31 +55,30 @@ public class SwerveDriveSOTM extends Command {
         superstructure = Superstructure.getInstance();
 
         speed = VStream.create(this::getDriverInputAsVelocity)
-        .filtered(
-            new VDeadZone(Drive.DEADBAND), 
-            x -> x.clamp(1),
-            x -> x.pow(Drive.POWER),
-            x -> x.mul(Swerve.Constraints.MAX_VELOCITY_SOTM_M_PER_S),
-            new VRateLimit(Settings.Swerve.Constraints.MAX_ACCEL_M_PER_S_SQUARED_SOTM),
-            new VLowPassFilter(Drive.RC)
-        );
+                .filtered(
+                        new VDeadZone(Drive.DEADBAND),
+                        x -> x.clamp(1),
+                        x -> x.pow(Drive.POWER),
+                        x -> x.mul(Swerve.Constraints.MAX_VELOCITY_SOTM_M_PER_S),
+                        new VRateLimit(Settings.Swerve.Constraints.MAX_ACCEL_M_PER_S_SQUARED_SOTM),
+                        new VLowPassFilter(Drive.RC));
 
         turn = IStream.create(driver::getRightX)
-        .filtered(
-            x -> SLMath.deadband(x, Turn.DEADBAND),
-            x -> SLMath.spow(x, Turn.POWER),
-            x -> x * Swerve.Constraints.MAX_ANGULAR_VEL_SOTM_RAD_PER_S,
-            new LowPassFilter(Turn.RC)
-        );
+                .filtered(
+                        x -> SLMath.deadband(x, Turn.DEADBAND),
+                        x -> SLMath.spow(x, Turn.POWER),
+                        x -> x * Swerve.Constraints.MAX_ANGULAR_VEL_SOTM_RAD_PER_S,
+                        new LowPassFilter(Turn.RC));
 
         isIdle = BStream.create(
-            () -> getDriverInputAsVelocity().magnitude() <= Drive.DEADBAND && Math.abs(driver.getRightX()) <= Turn.DEADBAND)
+                () -> getDriverInputAsVelocity().magnitude() <= Drive.DEADBAND
+                        && Math.abs(driver.getRightX()) <= Turn.DEADBAND)
                 .filtered(new BDebounce.Rising(0.5), new BDebounce.Falling(0.1));
 
         this.driver = driver;
         isIdleInit = false;
 
-       addRequirements(swerve);
+        addRequirements(swerve);
     }
 
     private Vector2D getDriverInputAsVelocity() {
@@ -95,23 +96,25 @@ public class SwerveDriveSOTM extends Command {
 
         if (isIdle.get()) {
             swerve.setControl(new SwerveRequest.SwerveDriveBrake());
-            // this runs the intake somewhat violently 
-            // if (!isIdleInit) { 
-            //     CommandScheduler.getInstance().schedule(new IntakeAutoDigest().repeatedly().onlyWhile(() -> isIdle.get()).andThen(new IntakeDeploy()));
-            // }
+            // this runs the intake somewhat violently
+            if (!isIdleInit) {
+                CommandScheduler.getInstance()
+                        .schedule(new IntakeAutoDigest().repeatedly().onlyWhile(() -> isIdle.get())
+                                .andThen(new IntakeDeploy()).finallyDo(() -> Intake.getInstance().setIntakeDigesting(false)));
+            }
             isIdleInit = true;
         } else {
             Vector2D velocity = speed.get();
             swerve.setControl(swerve.getFieldCentricSwerveRequest()
-                .withVelocityX(velocity.x)
-                .withVelocityY(velocity.y)
-                .withRotationalRate(-turn.get()));
+                    .withVelocityX(velocity.x)
+                    .withVelocityY(velocity.y)
+                    .withRotationalRate(-turn.get()));
             isIdleInit = false;
         }
 
     }
 
-    @Override 
+    @Override
     public boolean isFinished() {
         SuperstructureState state = superstructure.getState();
         if (state == SuperstructureState.SOTM) {

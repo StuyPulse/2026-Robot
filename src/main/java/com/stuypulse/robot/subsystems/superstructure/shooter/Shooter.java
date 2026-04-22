@@ -121,6 +121,5 @@ public abstract class Shooter extends SubsystemBase {
         DogLog.log("Superstructure/Shooter/State", state.name());
         DogLog.log("Superstructure/Shooter/Current RPM (Leader)", getRPM());
         DogLog.log("Superstructure/Shooter/Target RPM", getTargetRPM());
-        DogLog.log("Superstructure/Shooter/Is Shooting", Superstructure.getInstance().isShooting());
     }
 }

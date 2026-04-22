@@ -217,8 +217,8 @@ public class Superstructure extends SubsystemBase {
         this.shouldStop = Optional.empty();
     }
 
-    public boolean isShooting() {
-        return shooter.isShooting();
+    public boolean isHopperEmpty() {
+        return !shooter.isShooting();
     }
 
     public void periodicAfterScheduler() {
@@ -255,6 +255,7 @@ public class Superstructure extends SubsystemBase {
         DogLog.log("Superstructure/Hood At Tolerance?", isHoodAtTolerance());
         DogLog.log("Superstructure/Turret At Tolerance?", isTurretAtTolerance());
 
+        DogLog.log("Superstructure/Is Hopper Empty?", isHopperEmpty());
         DogLog.log("Superstructure/Is Ready To Shoot?", isReadyToShoot());
 
         DogLog.log("Superstructure/Should Stop?", shouldStop());

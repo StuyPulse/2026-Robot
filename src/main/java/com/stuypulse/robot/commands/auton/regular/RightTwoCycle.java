@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.auton.regular;
 
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
@@ -18,10 +19,13 @@ import com.stuypulse.robot.commands.swerve.SwerveResetPose;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+
+import java.util.Set;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -32,6 +36,8 @@ public class RightTwoCycle extends SequentialCommandGroup {
         addCommands(
 
             new SwerveResetPose(paths[0].getStartingHolonomicPose().get()),
+
+            Commands.defer(() -> new WaitCommand(RobotContainer.getWaitTimeOne()), Set.of()),
             
             // NZ Trip 1
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]).alongWith(

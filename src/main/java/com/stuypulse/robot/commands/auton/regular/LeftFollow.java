@@ -1,5 +1,7 @@
 package com.stuypulse.robot.commands.auton.regular;
 
+import java.util.Set;
+
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
@@ -16,6 +18,7 @@ import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -35,21 +38,22 @@ public class LeftFollow extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 new HandoffRun(),
                 new SpindexerRun(),
-                new WaitCommand(RobotContainer.getWaitTimeOne() + 1.0)
+                Commands.defer(() -> new WaitCommand(RobotContainer.getWaitTimeOne() + 1.0), Set.of()),
+                new WaitCommand(1.0).andThen(new IntakeDeploy())
             ),
 
             // To NZ
             new ParallelCommandGroup(
                 new HandoffStop(),
                 new SpindexerStop(),
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]),
-                new WaitCommand(0.5).andThen(new IntakeDeploy())
+                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0])
             ),
 
-            new WaitCommand(RobotContainer.getWaitTimeTwo()),
+            Commands.defer(() -> new WaitCommand(RobotContainer.getWaitTimeTwo()), Set.of()),
 
             // Back
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]),
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]),
 
             // SOTM To Corner
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),

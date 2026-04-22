@@ -5,12 +5,8 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
-import org.jspecify.annotations.Nullable;
-
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer;
-import com.stuypulse.robot.subsystems.vision.LimelightVision;
-import com.stuypulse.robot.subsystems.vision.LimelightVision.MegaTagMode;
 import com.stuypulse.robot.util.vision.LimelightHelpers;
 import com.stuypulse.robot.util.vision.LimelightHelpers.RawFiducial;
 import com.stuypulse.stuylib.network.SmartBoolean;
@@ -19,7 +15,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.struct.StructSerializable;
 
 /** This interface stores information about each camera. */
 public interface Cameras {

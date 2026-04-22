@@ -1,6 +1,9 @@
 package com.stuypulse.robot.commands.auton.regular;
 
+import java.util.Set;
+
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
@@ -14,6 +17,7 @@ import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -26,6 +30,8 @@ public class LeftBump extends SequentialCommandGroup {
         addCommands(
             
             new SwerveResetPose(paths[0].getStartingHolonomicPose().get()),
+
+            Commands.defer(() -> new WaitCommand(RobotContainer.getWaitTimeOne()), Set.of()),
 
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),

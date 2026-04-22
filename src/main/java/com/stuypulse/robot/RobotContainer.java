@@ -408,7 +408,7 @@ public class RobotContainer {
 
         // FOLLOWS
         AutonConfig LEFT_FOLLOW = new AutonConfig("Left Follow", LeftFollow::new, prevWaitTimeOne, prevWaitTimeTwo,
-        "Left Follow To Bump", "Left Follow To Score");
+        "Left Follow To Bump", "Left Follow To Score", "Left Corner To Depot");
         LEFT_FOLLOW.register(autonChooser);
 
         AutonConfig RIGHT_FOLLOW = new AutonConfig("Right Follow", RightFollow::new, prevWaitTimeOne, prevWaitTimeTwo,

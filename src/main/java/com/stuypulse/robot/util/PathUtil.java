@@ -55,9 +55,9 @@ public class PathUtil {
 
         private Command buildCommand() {
             Command autonCommand = auton.apply(loadPaths(paths));
-            if (waitTimeOne.isPresent() && waitTimeOne.get() > 0.0) {
-                return Commands.sequence(new WaitCommand(waitTimeOne.get()), autonCommand);
-            }
+            // if (waitTimeOne.isPresent() && waitTimeOne.get() > 0.0) {
+            //     return Commands.sequence(new WaitCommand(waitTimeOne.get()), autonCommand);
+            // }
             return autonCommand;
         }
         

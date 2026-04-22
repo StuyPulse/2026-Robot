@@ -65,25 +65,14 @@ public class RightTwoCorner extends SequentialCommandGroup {
 
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
-            new HandoffRun().andThen(
-                new SpindexerRun()
-            ).andThen(new WaitCommand(0.5)
-                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(15.0),
-            new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
-
             new ParallelCommandGroup(
                 CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]),
-                new HandoffStop(),
-                new SpindexerStop()
+                new HandoffRun().andThen(
+                    new SpindexerRun()
+                        ).andThen(new WaitCommand(0.5)
+                    .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(15.0)
+                    // .andThen(new IntakeAutoDigest()).repeatedly()).alongWith(new WaitUntilCommand(() -> !Superstructure.getInstance().isShooting()).withTimeout(4.0)),
             )
-
-            // new SuperstructureSOTM(),
-            // new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
-            // new HandoffRun().andThen(
-            //     new SpindexerRun()
-            // ).andThen(new WaitCommand(2.5)
-            //     .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
-            // new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy())
         
         );
 

@@ -7,6 +7,7 @@ package com.stuypulse.robot.subsystems.superstructure.shooter;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.util.superstructure.InterpolationCalculator;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
 import com.stuypulse.stuylib.streams.booleans.BStream;
@@ -118,8 +119,8 @@ public abstract class Shooter extends SubsystemBase {
 
     public void periodicAfterScheduler() {
         DogLog.log("Superstructure/Shooter/State", state.name());
-
         DogLog.log("Superstructure/Shooter/Current RPM (Leader)", getRPM());
         DogLog.log("Superstructure/Shooter/Target RPM", getTargetRPM());
+        DogLog.log("Superstructure/Shooter/Is Shooting", Superstructure.getInstance().isShooting());
     }
 }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.648308686286153,
-        "y": 4.276698141783557
+        "x": 7.403109843081312,
+        "y": 4.339058487874465
       },
       "isLocked": false,
       "linkedName": "Left NZ Corner"
@@ -46,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2899786780383839,
+      "waypointRelativePos": 0.2558635394456302,
       "rotationDegrees": 180.0
     },
     {

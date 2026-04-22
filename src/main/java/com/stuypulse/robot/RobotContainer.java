@@ -395,7 +395,7 @@ public class RobotContainer {
         LEFT_TWO_CYCLE.register(autonChooser);
 
         AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new, prevWaitTimeOne, prevWaitTimeTwo,
-        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
+        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Trench Score To Corner");
         RIGHT_TWO_CYCLE.register(autonChooser);
 
         // TWO CYCLES (CORNER)
@@ -404,7 +404,7 @@ public class RobotContainer {
         LEFT_TWO_CORNER.register(autonChooser);
 
         AutonConfig RIGHT_TWO_CORNER = new AutonConfig("Right Two Corner", RightTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
-        "Right Corner Bite", "Right NZ To Score", "Right Bite Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
+        "Right Corner Bite", "Right NZ To Score", "Right Bite Score To Score", "Right Trench Score To Corner");
         RIGHT_TWO_CORNER.register(autonChooser);
 
         // FOLLOWS

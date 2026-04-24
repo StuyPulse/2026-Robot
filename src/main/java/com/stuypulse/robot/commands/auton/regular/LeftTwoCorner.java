@@ -52,19 +52,19 @@ public class LeftTwoCorner extends SequentialCommandGroup {
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new ParallelCommandGroup(
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]).repeatedly().until(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(3.5),
                 new HandoffRun(),
                 new SpindexerRun(),
                 new WaitCommand(0.5)
-                    .andThen(new IntakeAutoDigest()).repeatedly().until(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(3.0),
+                    .andThen(new IntakeAutoDigest().repeatedly().withTimeout(4.0))
+                        .until(() -> Superstructure.getInstance().isHopperEmpty()),
                 new WaitCommand(1.0).andThen(
-                    new WaitUntilCommand(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(2.5))
+                    new WaitUntilCommand(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(3.5))
             ),
             new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             // NZ Trip 2
             new ParallelCommandGroup(
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]),
+                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]),
                 new HandoffStop(),
                 new SpindexerStop()
             ),
@@ -72,8 +72,8 @@ public class LeftTwoCorner extends SequentialCommandGroup {
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new ParallelCommandGroup(
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]).repeatedly(),
-                new HandoffRun().andThen(
+                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]),
+                new HandoffRun().alongWith(
                     new SpindexerRun()
                         ).andThen(new WaitCommand(0.5)
                     .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(15.0)

@@ -19,19 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Score Jiggle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "Left Bite Score To Score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Score Jiggle"
+            "pathName": "Left Trench Score To Corner"
           }
         }
       ]

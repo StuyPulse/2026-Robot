@@ -56,8 +56,7 @@ public class RightTwoCycle extends SequentialCommandGroup {
                 new HandoffRun(),
                 new SpindexerRun(),
                 new WaitCommand(0.5)
-                    .andThen(new IntakeAutoDigest().repeatedly().withTimeout(4.0))
-                        .until(() -> Superstructure.getInstance().isHopperEmpty()),
+                    .andThen(new IntakeAutoDigest().until(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(15.0)),
                 new WaitCommand(1.0).andThen(
                     new WaitUntilCommand(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(3.5))
             ),
@@ -77,10 +76,8 @@ public class RightTwoCycle extends SequentialCommandGroup {
                 new HandoffRun(),
                 new SpindexerRun(),
                 new WaitCommand(0.5)
-                    .andThen(new IntakeAutoDigest().repeatedly().withTimeout(15.0))
-                        .until(() -> Superstructure.getInstance().isHopperEmpty()),
-                new WaitCommand(1.0).andThen(
-                    new WaitUntilCommand(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(15.0))
+                    .andThen(new IntakeAutoDigest().until(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(15.0)),
+                new WaitUntilCommand(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(15.0)
             ),
 
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[4])

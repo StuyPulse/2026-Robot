@@ -25,7 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Score To Corner"
+            "pathName": "Left Score To NZ (F)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left NZ To Score"
           }
         }
       ]

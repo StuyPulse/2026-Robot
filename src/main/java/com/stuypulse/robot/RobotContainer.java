@@ -392,20 +392,20 @@ public class RobotContainer {
 
         // TWO CYCLES (TRENCH)
         AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new, prevWaitTimeOne, prevWaitTimeTwo,
-        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Trench Score To Corner", "Left Score To NZ (F)");
+        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Score To NZ (F)", "Left NZ To Score");
         LEFT_TWO_CYCLE.register(autonChooser);
 
         AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new, prevWaitTimeOne, prevWaitTimeTwo,
-        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Trench Score To Corner", "Right Score To NZ (F)");
+        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
         RIGHT_TWO_CYCLE.register(autonChooser);
 
         // TWO CYCLES (CORNER)
         AutonConfig LEFT_TWO_CORNER = new AutonConfig("Left Two Corner", LeftTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
-        "Left Corner Bite", "Left NZ To Score", "Left Bite Score To Score", "Left Trench Score To Corner", "Left Score To NZ (F)");
+        "Left Corner Bite", "Left NZ To Score", "Left Bite Score To Score", "Left Score To NZ (F)", "Left NZ To Score");
         LEFT_TWO_CORNER.register(autonChooser);
 
         AutonConfig RIGHT_TWO_CORNER = new AutonConfig("Right Two Corner", RightTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
-        "Right Corner Bite", "Right NZ To Score", "Right Bite Score To Score", "Right Trench Score To Corner", "Right Score To NZ (F)");
+        "Right Corner Bite", "Right NZ To Score", "Right Bite Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
         RIGHT_TWO_CORNER.register(autonChooser);
 
         // FOLLOWS
@@ -416,10 +416,6 @@ public class RobotContainer {
         AutonConfig RIGHT_FOLLOW = new AutonConfig("Right Follow", RightFollow::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Right Follow To Bump", "Right Follow To Score");
         RIGHT_FOLLOW.register(autonChooser);
-
-        AutonConfig EMPTY_TEST = new AutonConfig("Empty Test", EmptyTest::new, prevWaitTimeOne, prevWaitTimeTwo,
-            "Right Trench Score To Corner");
-        EMPTY_TEST.register(autonChooser);
 
         SmartDashboard.putData("Autonomous", autonChooser);
 
@@ -439,10 +435,10 @@ public class RobotContainer {
     }
 
     public void configureSysids() {
-        autonChooser.addOption("SysID Module Translation Dynamic Forwards", swerve.sysIdDynamic(Direction.kForward));
-        autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
-        autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
-        autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse)); 
+        // autonChooser.addOption("SysID Module Translation Dynamic Forwards", swerve.sysIdDynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse)); 
 
         // autonChooser.addOption("SysID Rotation Translation Dynamic Forwards", swerve.sysidRotationDynamic(Direction.kForward));
         // autonChooser.addOption("SysID Rotation Translation Dynamic Backwards", swerve.sysidRotationDynamic(Direction.kReverse));

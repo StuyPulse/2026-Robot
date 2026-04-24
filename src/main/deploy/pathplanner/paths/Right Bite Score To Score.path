@@ -12,7 +12,7 @@
         "y": 0.5997860199714706
       },
       "isLocked": false,
-      "linkedName": "Right Jiggle"
+      "linkedName": "Right Trench Score"
     },
     {
       "anchor": {
@@ -52,12 +52,12 @@
         "y": 2.0877318116975756
       },
       "prevControl": {
-        "x": 6.009732033987853,
-        "y": 3.174435940086786
+        "x": 6.018673323823109,
+        "y": 3.174579172610556
       },
       "nextControl": {
-        "x": 6.070427960057061,
-        "y": 0.15987161198288136
+        "x": 6.053793108756849,
+        "y": 0.22451723817625524
       },
       "isLocked": false,
       "linkedName": null
@@ -73,7 +73,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Trench Score"
+      "linkedName": null
     }
   ],
   "rotationTargets": [

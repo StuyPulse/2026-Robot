@@ -1,6 +1,9 @@
 package com.stuypulse.robot.commands.auton.regular;
 
+import java.util.Set;
+
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
@@ -10,53 +13,40 @@ import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.superstructure.SuperstructureAutoInterpolation;
 import com.stuypulse.robot.commands.superstructure.SuperstructureSOTM;
 import com.stuypulse.robot.commands.swerve.SwerveResetPose;
+import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
-public class RightMiddy extends SequentialCommandGroup {
+public class Depot extends SequentialCommandGroup {
     
-    public RightMiddy(PathPlannerPath... paths) {
+    public Depot(PathPlannerPath... paths) {
 
         addCommands(
             
             new SwerveResetPose(paths[0].getStartingHolonomicPose().get()),
 
-            // NZ Trip 1
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]).alongWith(
-                new WaitCommand(0.75).andThen(new IntakeDeploy())
-            ),
+            Commands.defer(() -> new WaitCommand(RobotContainer.getWaitTimeOne()), Set.of()),
 
-            // Trip 1 To Score
-            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[1]).alongWith(
-                new SuperstructureAutoInterpolation()
-            ),
-
-            // SOTM To Depot
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
             new HandoffRun().alongWith(new SpindexerRun()),
             new ParallelCommandGroup(
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[2]),
-                new WaitCommand(3.0).andThen(
-                    new IntakeAutoDigest().repeatedly().withTimeout(3.0).andThen(new IntakeDeploy())
-                ),
-                new WaitCommand(6.0).andThen(
-                    new HandoffStop().alongWith(new SpindexerStop())
-                )
+                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]),
+                new WaitCommand(4.5).andThen(new HandoffStop().alongWith(new SpindexerStop())),
+                new WaitCommand(0.5).andThen(new IntakeDeploy())
             ),
 
-            // Off Depot
-            new ParallelCommandGroup(
-                CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]),
-                new WaitCommand(1.0).andThen(new HandoffRun().alongWith(new SpindexerRun())),
-                new WaitCommand(3.0).andThen(new IntakeAutoDigest().repeatedly())
-            )
+            new WaitCommand(0.5),
 
+            new HandoffRun().alongWith(new SpindexerRun())
+
+            
         );
 
     }

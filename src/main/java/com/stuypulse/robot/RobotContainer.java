@@ -7,10 +7,17 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.auton.regular.LeftMiddy;
+import com.stuypulse.robot.commands.auton.regular.Depot;
+import com.stuypulse.robot.commands.auton.regular.LeftBump;
+import com.stuypulse.robot.commands.auton.regular.LeftFollow;
+import com.stuypulse.robot.commands.auton.regular.LeftTwoCorner;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
-import com.stuypulse.robot.commands.auton.regular.RightMiddy;
+import com.stuypulse.robot.commands.auton.regular.RightBump;
+import com.stuypulse.robot.commands.auton.regular.RightFollow;
+import com.stuypulse.robot.commands.auton.regular.RightTwoCorner;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
+import com.stuypulse.robot.commands.auton.test.BoxTest;
+import com.stuypulse.robot.commands.auton.test.EmptyTest;
 import com.stuypulse.robot.commands.handoff.HandoffReverse;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
@@ -25,6 +32,7 @@ import com.stuypulse.robot.commands.intake.IntakeRunRollers;
 import com.stuypulse.robot.commands.intake.IntakeSetState;
 import com.stuypulse.robot.commands.intake.IntakeStopRollers;
 import com.stuypulse.robot.commands.intake.IntakeStow;
+import com.stuypulse.robot.commands.intake.IntakeTeleopDigest;
 import com.stuypulse.robot.commands.intake.SeedPivotDeployed;
 import com.stuypulse.robot.commands.intake.SeedPivotStowed;
 import com.stuypulse.robot.commands.leds.LEDApplyPattern;
@@ -75,10 +83,13 @@ import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.subsystems.vision.LimelightVision.MegaTagMode;
 import com.stuypulse.robot.util.PathUtil.AutonConfig;
+import com.stuypulse.robot.util.superstructure.InterpolationCalculator;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -88,6 +99,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 
 public class RobotContainer {
@@ -126,6 +138,12 @@ public class RobotContainer {
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
+    private static SmartNumber waitTimeOne = new SmartNumber("Robot/Auton/Wait Time 1", 0.0);
+    private static SmartNumber waitTimeTwo = new SmartNumber("Robot/Auton/Wait Time 2", 0.0);
+    private static double prevWaitTimeOne = 0.0;
+    private static double prevWaitTimeTwo = 0.0;
+    private static boolean hasWaitTimeOneChanged = false;
+    private static boolean hasWaitTimeTwoChanged = false;
 
     // Robot container
     public RobotContainer() {
@@ -178,7 +196,7 @@ public class RobotContainer {
 
         // Digest (TR)
         driver.getTopButton()
-            .whileTrue(new IntakeAutoDigest().repeatedly())
+            .whileTrue(new IntakeTeleopDigest().repeatedly())
             .onFalse(new IntakeDeploy());
 
         // Intake Stow
@@ -230,7 +248,7 @@ public class RobotContainer {
                 () -> superstructure.getState() == SuperstructureState.SOTM && swerve.canShootIntoHub())
             );
 
-        // FOTM
+        // FOTM (BL)
         driver.getLeftMenuButton()
             .onTrue(new LEDApplyPattern(Settings.LED.FOTM_ON))
             .onTrue(new IntakeRunRollers())
@@ -355,36 +373,77 @@ public class RobotContainer {
     /*** AUTONS ***/
     /**************/
 
+
     public void configureAutons() {
 
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
 
         // DEPOT
-        AutonConfig LEFT_MIDDY = new AutonConfig("Left Middy", LeftMiddy::new,  
-        "Left Bump To NZ", "Left Middy To Bump Score", "Left Bump Score To Depot", "Depot To Score");
-        LEFT_MIDDY.register(autonChooser);
-        AutonConfig RIGHT_MIDDY = new AutonConfig("Right Middy", RightMiddy::new,  
-        "Right Bump To NZ", "Right Middy To Bump Score", "Right Bump Score To Depot", "Depot To Score");
-        RIGHT_MIDDY.register(autonChooser);
+        AutonConfig DEPOT_ONLY = new AutonConfig("Depot Only", Depot::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Center Hub To Depot");
+        DEPOT_ONLY.register(autonChooser);
+
+        AutonConfig LEFT_BUMP = new AutonConfig("Left Bump", LeftBump::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Left Bump To Score (Start)", "Left Bump To Score", "Left Bump Score To Depot");
+        LEFT_BUMP.register(autonChooser);
+
+        AutonConfig RIGHT_BUMP = new AutonConfig("Right Bump", RightBump::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Right Bump To Score (Start)", "Right Bump To Score", "Right Bump Score To Depot");
+        RIGHT_BUMP.register(autonChooser);
 
         // TWO CYCLES (TRENCH)
-        AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new,  
-        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Score To NZ (F)", "Left NZ To Score");
+        AutonConfig LEFT_TWO_CYCLE = new AutonConfig("Left Two Cycle", LeftTwoCycle::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Left Trench To NZ", "Left NZ To Score", "Left Score To Score", "Left Score To Corner", "Left Score To NZ (F)");
         LEFT_TWO_CYCLE.register(autonChooser);
 
-        AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new,  
-        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To NZ (F)", "Right NZ To Score");
+        AutonConfig RIGHT_TWO_CYCLE = new AutonConfig("Right Two Cycle", RightTwoCycle::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Right Trench To NZ", "Right NZ To Score", "Right Score To Score", "Right Score To Corner", "Right Score To NZ (F)");
         RIGHT_TWO_CYCLE.register(autonChooser);
+
+        // TWO CYCLES (CORNER)
+        AutonConfig LEFT_TWO_CORNER = new AutonConfig("Left Two Corner", LeftTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Left Corner Bite", "Left NZ To Score", "Left Bite Score To Score", "Left Score To Corner", "Left Score To NZ (F)");
+        LEFT_TWO_CORNER.register(autonChooser);
+
+        AutonConfig RIGHT_TWO_CORNER = new AutonConfig("Right Two Corner", RightTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Right Corner Bite", "Right NZ To Score", "Right Bite Score To Score", "Right Score To Corner", "Right Score To NZ (F)");
+        RIGHT_TWO_CORNER.register(autonChooser);
+
+        // FOLLOWS
+        AutonConfig LEFT_FOLLOW = new AutonConfig("Left Follow", LeftFollow::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Left Follow To Bump", "Left Follow To Score", "Left Corner To Depot");
+        LEFT_FOLLOW.register(autonChooser);
+
+        AutonConfig RIGHT_FOLLOW = new AutonConfig("Right Follow", RightFollow::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Right Follow To Bump", "Right Follow To Score");
+        RIGHT_FOLLOW.register(autonChooser);
+
+        AutonConfig EMPTY_TEST = new AutonConfig("Empty Test", EmptyTest::new, prevWaitTimeOne, prevWaitTimeTwo,
+            "Right Trench Score To Corner");
+        EMPTY_TEST.register(autonChooser);
 
         SmartDashboard.putData("Autonomous", autonChooser);
 
     }
 
+    public boolean hasWaitTimeOneChanged() {
+        hasWaitTimeOneChanged = prevWaitTimeOne != getWaitTimeOne();
+        prevWaitTimeOne = getWaitTimeOne();
+        prevWaitTimeTwo = getWaitTimeTwo();
+        return hasWaitTimeOneChanged;
+    }
+
+    public boolean hasWaitTimeTwoChanged() {
+        hasWaitTimeTwoChanged = prevWaitTimeTwo != getWaitTimeTwo();
+        prevWaitTimeTwo = getWaitTimeTwo();
+        return hasWaitTimeTwoChanged;
+    }
+
     public void configureSysids() {
-        // autonChooser.addOption("SysID Module Translation Dynamic Forwards", swerve.sysIdDynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse)); 
+        autonChooser.addOption("SysID Module Translation Dynamic Forwards", swerve.sysIdDynamic(Direction.kForward));
+        autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
+        autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
+        autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse)); 
 
         // autonChooser.addOption("SysID Rotation Translation Dynamic Forwards", swerve.sysidRotationDynamic(Direction.kForward));
         // autonChooser.addOption("SysID Rotation Translation Dynamic Backwards", swerve.sysidRotationDynamic(Direction.kReverse));
@@ -444,6 +503,14 @@ public class RobotContainer {
         }
     }
 
+    public static double getWaitTimeOne() {
+        return waitTimeOne.get();
+    }
+
+    public static double getWaitTimeTwo() {
+        return waitTimeTwo.get();
+    }
+
     public void periodicAfterScheduler() {
         //TODO: get from energy util after testing
         double totalCurrentDraw = handoff.getCurrentDraw() +
@@ -452,7 +519,7 @@ public class RobotContainer {
                                   superstructure.getCurrentDraw() +
                                   swerve.getTotalDriveSupplyCurrent() +
                                   swerve.getTotalSteerSupplyCurrent();      
-        SmartDashboard.putNumber("Robot/Total Current Draw", totalCurrentDraw);
+        DogLog.log("Robot/Total Current Draw", totalCurrentDraw);
 
         handoff.periodicAfterScheduler();
         intake.periodicAfterScheduler();

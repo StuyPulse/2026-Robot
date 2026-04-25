@@ -8,6 +8,8 @@ package com.stuypulse.robot.util;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class PathUtil {
@@ -27,11 +30,15 @@ public class PathUtil {
         private final String name;
         private final Function<PathPlannerPath[], Command> auton;
         private final String[] paths;
+        private final Optional<Double> waitTimeOne;
+        private final Optional<Double> waitTimeTwo;
 
-        public AutonConfig(String name, Function<PathPlannerPath[], Command> auton, String... paths) {
+        public AutonConfig(String name, Function<PathPlannerPath[], Command> auton, double waitTimeOne, double waitTimeTwo, String... paths) {
             this.name = name;
             this.auton = auton;
             this.paths = paths;
+            this.waitTimeOne = Optional.of(waitTimeOne);
+            this.waitTimeTwo = Optional.of(waitTimeTwo);
 
             for (String path : paths) {
                 try {
@@ -41,9 +48,21 @@ public class PathUtil {
                 }
             }
         }
+
+        public AutonConfig(String name, Function<PathPlannerPath[], Command> auton, String... paths) {
+            this(name, auton, 0.0, 0.0, paths);
+        }
+
+        private Command buildCommand() {
+            Command autonCommand = auton.apply(loadPaths(paths));
+            // if (waitTimeOne.isPresent() && waitTimeOne.get() > 0.0) {
+            //     return Commands.sequence(new WaitCommand(waitTimeOne.get()), autonCommand);
+            // }
+            return autonCommand;
+        }
         
         public AutonConfig register(SendableChooser<Command> chooser) {
-            chooser.addOption(name, auton.apply(loadPaths(paths)));
+            chooser.addOption(name, buildCommand());
             return this;
         }
                 

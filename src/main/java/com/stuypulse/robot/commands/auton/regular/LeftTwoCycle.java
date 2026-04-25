@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.auton.regular;
 
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.handoff.HandoffRun;
 import com.stuypulse.robot.commands.handoff.HandoffStop;
 import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
@@ -19,10 +20,14 @@ import com.stuypulse.robot.commands.swerve.SwerveResetPose;
 import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+
+import java.util.Set;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -34,9 +39,11 @@ public class LeftTwoCycle extends SequentialCommandGroup {
 
             new SwerveResetPose(paths[0].getStartingHolonomicPose().get()),
 
+            Commands.defer(() -> new WaitCommand(RobotContainer.getWaitTimeOne()), Set.of()),
+
             // NZ Trip 1
             CommandSwerveDrivetrain.getInstance().followPathCommand(paths[0]).alongWith(
-                new WaitCommand(0.5).andThen(new IntakeDeploy())
+                new WaitCommand(0.2).andThen(new IntakeDeploy())
             ),
 
             // Trip 1 To Score
@@ -45,10 +52,14 @@ public class LeftTwoCycle extends SequentialCommandGroup {
             ),
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
-            new HandoffRun().andThen(
-                new SpindexerRun()
-            ).andThen(new WaitCommand(1.75)
-                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.0),
+            new ParallelCommandGroup(
+                new HandoffRun(),
+                new SpindexerRun(),
+                new WaitCommand(0.5)
+                    .andThen(new IntakeAutoDigest().until(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(15.0)),
+                new WaitCommand(1.0).andThen(
+                    new WaitUntilCommand(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(4.0))
+            ),
             new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
 
             // NZ Trip 2
@@ -60,25 +71,16 @@ public class LeftTwoCycle extends SequentialCommandGroup {
 
             new SuperstructureSOTM(),
             new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
-            new HandoffRun().andThen(
-                new SpindexerRun()
-            ).andThen(new WaitCommand(1.75)
-                .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(15.0),
-            new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy()),
-
             new ParallelCommandGroup(
                 CommandSwerveDrivetrain.getInstance().followPathCommand(paths[3]),
-                new HandoffStop(),
-                new SpindexerStop()
-            )
+                new HandoffRun(),
+                new SpindexerRun(),
+                new WaitCommand(0.5)
+                    .andThen(new IntakeAutoDigest().until(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(15.0)),
+                new WaitUntilCommand(() -> Superstructure.getInstance().isHopperEmpty()).withTimeout(15.0)
+            ),
 
-            // new SuperstructureSOTM(),
-            // new WaitUntilCommand(() -> Superstructure.getInstance().atTolerance()),
-            // new HandoffRun().andThen(
-            //     new SpindexerRun()
-            // ).andThen(new WaitCommand(2.5)
-            //     .andThen(new IntakeAutoDigest()).repeatedly()).withTimeout(4.5),
-            // new SuperstructureAutoInterpolation().alongWith(new IntakeDeploy())
+            CommandSwerveDrivetrain.getInstance().followPathCommand(paths[4]).alongWith(new IntakeDeploy())
         
         );
 

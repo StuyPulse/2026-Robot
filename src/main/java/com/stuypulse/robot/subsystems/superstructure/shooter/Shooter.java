@@ -7,15 +7,20 @@ package com.stuypulse.robot.subsystems.superstructure.shooter;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
 import com.stuypulse.robot.util.superstructure.InterpolationCalculator;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public abstract class Shooter extends SubsystemBase {
     private static final Shooter instance;
+
+    private BStream readyToShoot;
 
     private ShooterState state;
 
@@ -46,6 +51,9 @@ public abstract class Shooter extends SubsystemBase {
 
     public Shooter() {
         state = ShooterState.MANUAL_OVERRIDE;
+
+        readyToShoot = BStream.create(this::atTolerance)
+            .filtered(new BDebounce.Both(0.05));
     }
 
     public void setState(ShooterState state) {
@@ -64,12 +72,12 @@ public abstract class Shooter extends SubsystemBase {
         return switch(state) {
             case STOP -> 0;
             case MANUAL_OVERRIDE -> getShootRPM();
-            case FERRY -> InterpolationCalculator.interpolateFerryingInfo().targetRPM();
+            case FERRY -> InterpolationCalculator.getInterpolatedFerryRPM();
             case REVERSE -> Settings.Superstructure.Shooter.RPM.REVERSE;
             case KB -> Settings.Superstructure.Shooter.RPM.KB;
             case LEFT_CORNER -> Settings.Superstructure.Shooter.RPM.LEFT_CORNER;
             case RIGHT_CORNER -> Settings.Superstructure.Shooter.RPM.RIGHT_CORNER;
-            case INTERPOLATION -> InterpolationCalculator.interpolateShotInfo().targetRPM();
+            case INTERPOLATION -> InterpolationCalculator.getInterpolatedShotRPM();
             case SOTM -> SOTMCalculator.calculateShooterRPMSOTM();
             case FOTM -> SOTMCalculator.calculateShooterRPMFOTM();
         };
@@ -97,16 +105,21 @@ public abstract class Shooter extends SubsystemBase {
         return error > -toleranceLow && error < toleranceHigh;
     }
 
+    public boolean shooterReadyToShoot() {
+        return readyToShoot.get();
+    }
+
     public abstract double getRPM();
 
     public abstract SysIdRoutine getShooterSysIdRoutine();
     
     public abstract double getCurrentDraw();
 
-    public void periodicAfterScheduler() {
-        SmartDashboard.putString("Superstructure/Shooter/State", state.name());
+    public abstract boolean isShooting();
 
-        SmartDashboard.putNumber("Superstructure/Shooter/Current RPM (Leader)", getRPM());
-        SmartDashboard.putNumber("Superstructure/Shooter/Target RPM", getTargetRPM());
+    public void periodicAfterScheduler() {
+        DogLog.log("Superstructure/Shooter/State", state.name());
+        DogLog.log("Superstructure/Shooter/Current RPM (Leader)", getRPM());
+        DogLog.log("Superstructure/Shooter/Target RPM", getTargetRPM());
     }
 }

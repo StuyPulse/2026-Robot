@@ -1,13 +1,15 @@
-/************************ PROJECT TRIBECBOT *************************/
+/** ********************** PROJECT TRIBECBOT ************************ */
 /* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
-/* Use of this source code is governed by an MIT-style license */
-/* that can be found in the repository LICENSE file.           */
-/***************************************************************/
+ /* Use of this source code is governed by an MIT-style license */
+ /* that can be found in the repository LICENSE file.           */
+/** ************************************************************ */
 package com.stuypulse.robot;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -28,16 +30,22 @@ import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.util.EnergyUtil;
 import com.stuypulse.robot.util.FMSUtil;
 import com.stuypulse.robot.util.PhoenixUtil;
+import com.stuypulse.robot.util.superstructure.InterpolationCalculator;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
 
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 public class Robot extends TimedRobot {
 
     public enum RobotMode {
@@ -56,7 +64,7 @@ public class Robot extends TimedRobot {
     private GcStatsCollector gcStatsCollector;
     public static boolean fmsAttached;
 
-    private static int periodicCounter = 0; 
+    private static int periodicCounter = 0;
 
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
@@ -74,12 +82,12 @@ public class Robot extends TimedRobot {
         return periodicCounter;
     }
 
-    /*************************/
-    /*** ROBOT SCHEDULEING ***/
-    /*************************/
-
+    /**************************/
+    /**** ROBOT SCHEDULEING ***/
+    /**************************/
     @Override
     public void robotInit() {
+        DogLog.setOptions(new DogLogOptions().withCaptureDs(true));
         robot = new RobotContainer();
         mode = RobotMode.DISABLED;
         energyUtil = new EnergyUtil();
@@ -93,8 +101,34 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
         energyUtil = new EnergyUtil();
 
+
+        // TODO: UNCOMMENT WHEN TESTING ALL OF THESE CHANGES.
+        try {
+            Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");
+            watchdogField.setAccessible(true);
+            Watchdog watchdog = (Watchdog) watchdogField.get(this);
+            watchdog.setTimeout(Settings.WATCHDOG_TIMEOUT);
+        } catch (Exception e) {
+            DriverStation.reportWarning("Failed to disable loop overrun warnings.", false);
+        }
+        CommandScheduler.getInstance().setPeriod(Settings.WATCHDOG_TIMEOUT);
+
         CommandScheduler.getInstance().schedule(new SwerveAutonInit());
-        RobotController.setBrownoutVoltage(6.3);
+        RobotController.setBrownoutVoltage(5.5);
+
+        // BiConsumer<Command, Boolean> logCommandFunction
+        //         = (Command command, Boolean active) -> {
+        //             String name = command.getName();
+        //             SmartDashboard.putBoolean(
+        //                     "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
+        //         };
+
+        // CommandScheduler.getInstance()
+        //         .onCommandInitialize((Command command) -> logCommandFunction.accept(command, true));
+        // CommandScheduler.getInstance()
+        //         .onCommandFinish((Command command) -> logCommandFunction.accept(command, false));
+        // CommandScheduler.getInstance()
+        //         .onCommandInterrupt((Command command) -> logCommandFunction.accept(command, false));
     }
 
     @Override
@@ -122,21 +156,30 @@ public class Robot extends TimedRobot {
         if (!Robot.isReal()) {
             SmartDashboard.putData(CommandScheduler.getInstance());
         }
-        
 
-        SmartDashboard.putNumber("Robot/Match Time", DriverStation.getMatchTime());
+        DogLog.log("Robot/Match Time", DriverStation.getMatchTime());
         SmartDashboard.putData("Robot/Scheduled Commands", CommandScheduler.getInstance());
-        SmartDashboard.putNumber("Robot/Battery Voltage", batteryVoltage);
-        SmartDashboard.putNumber("Robot/CPU Temperature (C)", RobotController.getCPUTemp());
-        
+        DogLog.log("Robot/Battery Voltage", batteryVoltage);
+        DogLog.log("Robot/CPU Temperature (C)", RobotController.getCPUTemp());
+
         robot.periodicAfterScheduler();
+
+        //clearing memoized values
+        InterpolationCalculator.clearMemoized(); 
+        CommandSwerveDrivetrain.getInstance().clearMemoized();
+        Superstructure.getInstance().clearMemoized();
         energyUtil.periodic();
     }
 
-    /*********************/
-    /*** DISABLED MODE ***/
-    /*********************/
-
+    /**
+     * ******************
+     */
+    /**
+     * * DISABLED MODE **
+     */
+    /**
+     * ******************
+     */
     @Override
     public void disabledInit() {
         mode = RobotMode.DISABLED;
@@ -160,12 +203,21 @@ public class Robot extends TimedRobot {
                 fmsAttached = true;
             }
         }
+
+        if ((periodicCounter % 50 == 0 && robot.hasWaitTimeOneChanged()) ||  (periodicCounter % 50 == 0 && robot.hasWaitTimeTwoChanged())) {
+            robot.configureAutons();
+        }
     }
 
-    /***********************/
-    /*** AUTONOMOUS MODE ***/
-    /***********************/
-
+    /**
+     * ********************
+     */
+    /**
+     * * AUTONOMOUS MODE **
+     */
+    /**
+     * ********************
+     */
     @Override
     public void autonomousInit() {
         mode = RobotMode.AUTON;
@@ -189,10 +241,15 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().schedule(new SwerveTeleopInit());
     }
 
-    /*******************/
-    /*** TELEOP MODE ***/
-    /*******************/
-
+    /**
+     * ****************
+     */
+    /**
+     * * TELEOP MODE **
+     */
+    /**
+     * ****************
+     */
     @Override
     public void teleopInit() {
         mode = RobotMode.TELEOP;
@@ -208,9 +265,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putNumber("FMSUtil/time left in shift", fmsUtil.getTimeLeftInShift());
-        SmartDashboard.putBoolean("FMSUtil/is active shift", fmsUtil.isActiveShift());
-        SmartDashboard.putBoolean("FMSUtil/won auto?", fmsUtil.didWinAuto());
+        DogLog.log("FMSUtil/time left in shift", fmsUtil.getTimeLeftInShift());
+        DogLog.log("FMSUtil/is active shift", fmsUtil.isActiveShift());
+        DogLog.log("FMSUtil/won auto?", fmsUtil.didWinAuto());
 
         if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && Superstructure.getInstance().getState() == SuperstructureState.SOTM) {
             CommandScheduler.getInstance().schedule(
@@ -225,10 +282,15 @@ public class Robot extends TimedRobot {
     public void teleopExit() {
     }
 
-    /*****************/
-    /*** TEST MODE ***/
-    /*****************/
-
+    /**
+     * **************
+     */
+    /**
+     * * TEST MODE **
+     */
+    /**
+     * **************
+     */
     @Override
     public void testInit() {
         mode = RobotMode.TEST;
@@ -244,6 +306,7 @@ public class Robot extends TimedRobot {
     }
 
     private static final class GcStatsCollector {
+
         private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
         private final long[] lastTimes = new long[gcBeans.size()];
         private final long[] lastCounts = new long[gcBeans.size()];
@@ -266,10 +329,10 @@ public class Robot extends TimedRobot {
             totalTime += (int) accumTime;
             totalCount += (int) accumCounts;
 
-            SmartDashboard.putNumber("Robot/GC Time MS", (double) accumTime);
-            SmartDashboard.putNumber("Robot/GC Counts", (double) accumCounts);
-            SmartDashboard.putNumber("Robot/Sum of GC Time MS", totalTime);
-            SmartDashboard.putNumber("Robot/Sum of GC Counts", totalCount);
+            DogLog.log("Robot/GC Time MS", (double) accumTime);
+            DogLog.log("Robot/GC Counts", (double) accumCounts);
+            DogLog.log("Robot/Sum of GC Time MS", totalTime);
+            DogLog.log("Robot/Sum of GC Counts", totalCount);
 
             // Logger.recordOutput("LoggedRobot/GCTimeMS", (double) accumTime);
             // Logger.recordOutput("LoggedRobot/GCCounts", (double) accumCounts);

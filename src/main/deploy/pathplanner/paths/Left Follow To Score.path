@@ -3,56 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.500057251908398,
-        "y": 5.122881679389313
+        "x": 8.489957203994294,
+        "y": 7.4572753209700435
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.378759541984733,
-        "y": 5.315353053435115
+        "x": 7.907824662507084,
+        "y": 7.468414584642698
       },
       "isLocked": false,
-      "linkedName": "Left Bump Start"
+      "linkedName": "Left Follower Bump"
     },
     {
       "anchor": {
-        "x": 6.110973282442748,
-        "y": 4.562204198473283
+        "x": 3.5036773428232504,
+        "y": 7.4572753209700435
       },
       "prevControl": {
-        "x": 5.914394099487028,
-        "y": 5.110601060796104
+        "x": 5.1102575154516465,
+        "y": 7.487520923728483
       },
       "nextControl": {
-        "x": 6.354700620229008,
-        "y": 3.8822781488549625
+        "x": 2.0296678529062877,
+        "y": 7.429525504151838
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.144475190839694,
-        "y": 4.026631679389314
+        "x": 1.4701897983392653,
+        "y": 5.966275207591934
       },
       "prevControl": {
-        "x": 7.03148854961832,
-        "y": 3.951316793893131
+        "x": 1.5239857651245559,
+        "y": 7.730782918149466
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Middy"
+      "linkedName": "Left Follower Bump Post"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.6600517687661842,
+      "minWaypointRelativePos": 0.8317617866005099,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 1.75,
-        "maxAcceleration": 7.0,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 900.0,
         "nominalVoltage": 12.7,
@@ -72,13 +72,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "To NZ",
+  "folder": "Follow",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

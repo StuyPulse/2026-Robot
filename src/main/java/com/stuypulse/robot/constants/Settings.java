@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public interface Settings {
     public final double DT = 0.020;
+    public final double WATCHDOG_TIMEOUT = 0.2;
     public final int LOGGING_FREQUENCY = 5;
     public final double SECONDS_IN_A_MINUTE = 60.0;
     public final SmartBoolean DEBUG_MODE = new SmartBoolean("Robot/DebugMode", true);
@@ -50,6 +51,8 @@ public interface Settings {
         double REVERSE_TIME = 2.0;
         double RPM_SOTM_TOLERANCE = 700.0;
         SmartNumber HANDOFF_RPM = new SmartNumber("Handoff/Target RPM", HANDOFF_MAX);
+
+        double IS_EMPTY_AMPERAGE = 8; //TODO: update IS EMPTY VALUE
 
         double FORWARD_DUTY_CYCLE = 1.0;
         double REVERSE_DUTY_CYCLE = -1.0;
@@ -77,14 +80,17 @@ public interface Settings {
         double PUSHDOWN_CURRENT_TELEOP = -75.0;//new SmartNumber("Intake/Pushdown Current", -65.0); //TODO: GET ACTUAL TYTY
         double PUSHDOWN_CURRENT_AUTON = -80.0;
 
-        double GEAR_RATIO = 37.93;
+        double GEAR_RATIO = 32.0/20.0 * 64.0/18.0 * 60.0/8.0;
         
-        double STALL_CURRENT_LIMIT = 0; //TODO: set value
-        double STALL_DEBOUNCE = 1.0; //TODO: VERIFY
+        double PIVOT_STALL_CURRENT = 0; //TODO: set value
+        double PIVOT_STALL_DEBOUNCE = 1.0; //TODO: VERIFY
+
+        double ROLLER_STALL_DEBOUNCE = 0.05; //TODO: VERIFY
+        double ROLLER_STALL_CURRENT = 50.0;
     }
 
     public interface Spindexer {
-        double FORWARD_DUTY_CYCLE = 1.0; //TODO: GET
+        double FORWARD_DUTY_CYCLE = 1.0;
         double ANTI_POPCORN_DUTY_CYCLE = 0.2;
         double REVERSE_DUTY_CYCLE = -1.0;
         double STOP_SPEED = 0.0;
@@ -96,8 +102,10 @@ public interface Settings {
         double TOLERANCE_TO_START_INTAKE_ROLLERS_DURING_SCORING_ROUTINE = 1500.0;
         double STALL_CURRENT_LIMIT = 40.0; // random number as of 3/9
 
+        double IS_EMPTY_AMPERAGE = 10; //TODO: update IS EMPTY VALUE
+
         /* CONSTANTS */
-        double GEAR_RATIO = 9.6 / 1.0;
+        double GEAR_RATIO = 11.04 / 1.0;
     }
     
     public interface Superstructure {
@@ -107,6 +115,9 @@ public interface Settings {
         public final double SHOOTER_SOTM_TOLERANCE_RPM_LOW = 100.0;
         public final double SHOOTER_FOTM_TOLERANCE_RPM_HIGH = 150.0;
         public final double SHOOTER_FOTM_TOLERANCE_RPM_LOW = 250.0;
+
+        public final double IS_EMPTY_RPM_TOLERANCE = 150; //TODO: update IS EMPTY VALUE
+        public final double IS_EMPTY_DEBOUNCE_TIME = 0.4; //TODO: update IS EMPTY VALUE
         
         public final Rotation2d HOOD_TOLERANCE = Rotation2d.fromDegrees(0.5);
         public final Rotation2d HOOD_SOTM_TOLERANCE = Rotation2d.fromDegrees(2);
@@ -149,18 +160,17 @@ public interface Settings {
 
         public interface FerryRPMInterpolation {
             double[][] ferryDistanceRPMInterpolation = {
+                //Lab
                 {1, 2000},
                 {5.16, 3300.0},
                 {6.94, 3600.0},
                 {7.87, 3800.0},
                 {9.77, 4300.0},
-                {10.694, 4700.0},       //STARTING FROM HERE THE DATA IS UNRELIABLE!!!
+                {10.694, 4700.0},       //STARTING FROM HERE THE DATA IS EXTRAPOLATED!!!
                 {11.516, 4900.0},
                 {12.416, 5200.0},
                 {13.316, 5500.0},
                 {14.216, 5600.0}
-                // {15.148, 5200.0},
-                // {16.54, 5300}           //FIELD LENGTH
             };
         }
 
@@ -181,6 +191,8 @@ public interface Settings {
         }
 
         public interface Shooter {
+            
+            public final double IS_SHOOTING_CURRENT = 25.0;
             
             public final double GEAR_RATIO = 1.0;
             public final double FLYWHEEL_RADIUS = Units.inchesToMeters(3.965 / 2.0);
@@ -241,7 +253,9 @@ public interface Settings {
             public final Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
             public final Rotation2d TOLERANCE = Rotation2d.fromDegrees(2.0);
-            public final SmartNumber SOTM_TOLERANCE = new SmartNumber("Superstructure/Turret/SOTM Tolerance", 6);//Rotation2d.fromDegrees(10.0);
+            public final SmartNumber SOTM_TOLERANCE_THRESHOLD_METERS = new SmartNumber("Superstructure/Turret/SOTM Tolerance Dist Threshold (Meters)", 1.75);
+            public final SmartNumber SOTM_TOLERANCE_CLOSE = new SmartNumber("Superstructure/Turret/SOTM Tolerance (Close)", 10.0);
+            public final SmartNumber SOTM_TOLERANCE_FAR = new SmartNumber("Superstructure/Turret/SOTM Tolerance (Far)", 6.0);//Rotation2d.fromDegrees(10.0);
             public final Rotation2d FOTM_TOLERANCE = Rotation2d.fromDegrees(10.0);
             
             public final Rotation2d KB = Rotation2d.fromDegrees(0.0);
@@ -259,8 +273,9 @@ public interface Settings {
             public final double RANGE_CW = 90.0;//-360.0;
             public final double RANGE_CCW = -360.0;//85.0; // -397.0 is further
         
-            public final Rotation2d GAIN_SWITCHING_THRESHOLD = Rotation2d.fromDegrees(30);
-        
+            public final Rotation2d GAIN_SWITCHING_THRESHOLD_START = Rotation2d.fromDegrees(30);
+            public final Rotation2d GAIN_SWITCHING_THRESHOLD_END = Rotation2d.fromDegrees(3);
+
             public final Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(-4.0), Units.inchesToMeters(8.0), Rotation2d.kZero);
             public final double TURRET_HEIGHT = Units.inchesToMeters(0.0);
         

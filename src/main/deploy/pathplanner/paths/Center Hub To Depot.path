@@ -3,59 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4833206106870227,
-        "y": 2.9220133587786257
+        "x": 3.6767760342368048,
+        "y": 4.015592011412268
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.4749809160305345,
-        "y": 2.813225190839695
+        "x": 1.8783024251069897,
+        "y": 4.106162624821684
       },
       "isLocked": false,
-      "linkedName": "Right Bump Start"
+      "linkedName": "Center Hub"
     },
     {
       "anchor": {
-        "x": 6.336917938931298,
-        "y": 3.4492175572519077
+        "x": 1.9947503566333804,
+        "y": 5.374151212553495
       },
       "prevControl": {
-        "x": 6.36674218315174,
-        "y": 2.6439629632999404
+        "x": 1.9947503566333804,
+        "y": 4.339058487874466
       },
       "nextControl": {
-        "x": 6.3034446564885505,
-        "y": 4.352996183206107
+        "x": 1.9947503566333804,
+        "y": 5.859787410660789
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.144475190839694,
-        "y": 4.026631679389314
+        "x": 0.5456205420827387,
+        "y": 5.930513552068473
       },
       "prevControl": {
-        "x": 7.144475190839694,
-        "y": 4.026631679389314
+        "x": 1.6583452211126959,
+        "y": 6.059900142653353
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Middy"
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.6496980155306307,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.7771775827143685,
       "constraints": {
-        "maxVelocity": 1.75,
-        "maxAcceleration": 7.0,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 900.0,
-        "nominalVoltage": 12.7,
+        "nominalVoltage": 12.0,
         "unlimited": false
       }
     }
@@ -63,22 +63,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.19,
+    "maxVelocity": 1.75,
     "maxAcceleration": 10.0,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 900.0,
-    "nominalVoltage": 12.7,
+    "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "To NZ",
+  "folder": "To Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

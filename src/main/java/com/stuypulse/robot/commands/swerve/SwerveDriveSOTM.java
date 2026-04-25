@@ -5,6 +5,16 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.swerve;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.stuypulse.robot.constants.DriverConstants.Driver.Drive;
+import com.stuypulse.robot.constants.DriverConstants.Driver.Turn;
+import com.stuypulse.robot.commands.intake.IntakeAutoDigest;
+import com.stuypulse.robot.commands.intake.IntakeDeploy;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Swerve;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure;
+import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
+import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
@@ -17,17 +27,13 @@ import com.stuypulse.stuylib.streams.vectors.filters.VDeadZone;
 import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
-import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.stuypulse.robot.constants.DriverConstants.Driver.Drive;
-import com.stuypulse.robot.constants.DriverConstants.Driver.Turn;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Swerve;
-import com.stuypulse.robot.subsystems.superstructure.Superstructure;
-import com.stuypulse.robot.subsystems.superstructure.Superstructure.SuperstructureState;
-import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import dev.doglog.DogLog;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class SwerveDriveSOTM extends Command {
 
@@ -40,6 +46,7 @@ public class SwerveDriveSOTM extends Command {
     private final IStream turn;
 
     private final BStream isIdle;
+    private boolean isIdleInit;
 
     public SwerveDriveSOTM(Gamepad driver) {
         swerve = CommandSwerveDrivetrain.getInstance();
@@ -68,8 +75,9 @@ public class SwerveDriveSOTM extends Command {
                 .filtered(new BDebounce.Rising(0.5), new BDebounce.Falling(0.1));
 
         this.driver = driver;
+        isIdleInit = false;
 
-        addRequirements(swerve);
+       addRequirements(swerve);
     }
 
     private Vector2D getDriverInputAsVelocity() {
@@ -78,18 +86,23 @@ public class SwerveDriveSOTM extends Command {
 
     @Override
     public void execute() {
+        DogLog.log("Swerve/SOTM/Idle?", isIdle.get());
+
         if (isIdle.get()) {
-            swerve.setControl(new SwerveRequest.SwerveDriveBrake());
+            // if (!isIdleInit) {
+            //     CommandScheduler.getInstance().schedule(new IntakeAutoDigest().repeatedly().onlyWhile(() -> isIdle.get()).andThen(new IntakeDeploy()));
+                swerve.setControl(new SwerveRequest.SwerveDriveBrake());
+            // }
+            isIdleInit = true;
         } else {
             Vector2D velocity = speed.get();
-
             swerve.setControl(swerve.getFieldCentricSwerveRequest()
                 .withVelocityX(velocity.x)
                 .withVelocityY(velocity.y)
                 .withRotationalRate(-turn.get()));
+            isIdleInit = false;
         }
 
-        SmartDashboard.putBoolean("Swerve/SOTM/Idle?", isIdle.get());
     }
 
     @Override 

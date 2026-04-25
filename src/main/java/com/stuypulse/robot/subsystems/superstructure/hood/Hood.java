@@ -5,8 +5,6 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.superstructure.hood;
 
-import com.stuypulse.stuylib.input.Gamepad;
-
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer.EnabledSubsystems;
 import com.stuypulse.robot.constants.Settings;
@@ -14,9 +12,12 @@ import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.superstructure.InterpolationCalculator;
 import com.stuypulse.robot.util.superstructure.SOTMCalculator;
 import com.stuypulse.robot.util.superstructure.VisualizerHood;
+import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -24,6 +25,7 @@ public abstract class Hood extends SubsystemBase{
     private static final Hood instance;
     
     private HoodState state;
+    private BStream readyToShoot;
 
     private Rotation2d driverInput;
 
@@ -57,6 +59,8 @@ public abstract class Hood extends SubsystemBase{
 
     public Hood() {
         state = HoodState.STOW;
+        readyToShoot = BStream.create(this::atTolerance)
+            .filtered(new BDebounce.Both(0.05));
     }
 
     public HoodState getState(){
@@ -74,12 +78,12 @@ public abstract class Hood extends SubsystemBase{
 
         return switch(state) {
             case STOW -> Settings.Superstructure.Hood.Angles.STOW;
-            case FERRY -> Settings.Superstructure.Hood.Angles.FERRY_ANGLE;
+            case FERRY -> InterpolationCalculator.getInterpolatedFerryAngle();
             case MANUAL_OVERRIDE -> Rotation2d.fromDegrees(Settings.Superstructure.Hood.Angles.MANUAL_OVERRIDE.get());
             case KB -> Settings.Superstructure.Hood.Angles.KB;
             case LEFT_CORNER -> Settings.Superstructure.Hood.Angles.LEFT_CORNER;
             case RIGHT_CORNER -> Settings.Superstructure.Hood.Angles.RIGHT_CORNER;
-            case INTERPOLATION -> InterpolationCalculator.interpolateShotInfo().targetHoodAngle();
+            case INTERPOLATION -> InterpolationCalculator.getInterpolatedShotAngle();
             case HOMING_UPPER -> new Rotation2d(); //should just apply a voltage, not an angle!
             case HOMING_LOWER -> new Rotation2d();
             case SOTM -> SOTMCalculator.calculateHoodAngleSOTM();
@@ -100,6 +104,10 @@ public abstract class Hood extends SubsystemBase{
         } else {
             return Math.abs(error) < Settings.Superstructure.HOOD_TOLERANCE.getRotations() + (5 / 360.0);
         }
+    }
+
+    public boolean hoodReadyToShoot() {
+        return readyToShoot.get();
     }
 
     public abstract Rotation2d getAngle();
@@ -130,10 +138,10 @@ public abstract class Hood extends SubsystemBase{
 
 
     public void periodicAfterScheduler() {
-        SmartDashboard.putString("Superstructure/Hood/State", state.name());
+        DogLog.log("Superstructure/Hood/State", state.name());
 
-        SmartDashboard.putNumber("Superstructure/Hood/Target Angle (deg)", getTargetAngle().getDegrees());
-        SmartDashboard.putNumber("Superstructure/Hood/Current Angle (deg)", getAngle().getDegrees());
+        DogLog.log("Superstructure/Hood/Target Angle (deg)", getTargetAngle().getDegrees());
+        DogLog.log("Superstructure/Hood/Current Angle (deg)", getAngle().getDegrees());
 
         if (Settings.DEBUG_MODE.get()) {
             if (EnabledSubsystems.HOOD.get()) {

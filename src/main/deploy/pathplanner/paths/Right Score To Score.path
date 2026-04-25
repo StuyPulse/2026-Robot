@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.575035663338087,
-        "y": 0.6515406562054205
+        "x": 7.0796433666191145,
+        "y": 0.5868473609129818
       },
       "isLocked": false,
-      "linkedName": "Right Trench Score"
+      "linkedName": "Right Jiggle"
     },
     {
       "anchor": {
@@ -52,7 +52,7 @@
         "y": 0.5868473609129818
       },
       "prevControl": {
-        "x": 7.673089129599265,
+        "x": 7.673089129599263,
         "y": 0.5487960706826538
       },
       "nextControl": null,
@@ -78,11 +78,11 @@
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.289978678038381,
+      "waypointRelativePos": 2.1812366737739914,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.6703967446591785,
+      "waypointRelativePos": 2.4179104477611943,
       "rotationDegrees": 0.0
     }
   ],

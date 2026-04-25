@@ -3,6 +3,8 @@
   "robotLength": 0.762,
   "holonomicMode": true,
   "pathFolders": [
+    "Bump Stuff",
+    "Follow",
     "To Depot",
     "To NZ",
     "To Score"

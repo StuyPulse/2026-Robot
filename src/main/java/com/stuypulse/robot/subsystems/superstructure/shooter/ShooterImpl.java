@@ -23,11 +23,14 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.PhoenixUtil;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class ShooterImpl extends Shooter {
@@ -49,6 +52,10 @@ public class ShooterImpl extends Shooter {
     private StatusSignal<Voltage> shooterLeaderVoltage;
     private StatusSignal<Voltage> shooterFollowerVoltage;
     private StatusSignal<Double> shooterLeaderClosedLoopError;
+    private StatusSignal<Temperature> shooterLeaderTemperature;
+    private StatusSignal<Temperature> shooterFollowerTemperature;
+	
+	private final BStream currentlyShooting;
 
     public ShooterImpl() {
         shooterConfig = new Motors.TalonFXConfig()
@@ -99,12 +106,21 @@ public class ShooterImpl extends Shooter {
         shooterLeaderVoltage = shooterLeader.getMotorVoltage();
         shooterFollowerVoltage = shooterLeader.getMotorVoltage();
         shooterLeaderClosedLoopError = shooterLeader.getClosedLoopError();
+
+        shooterLeaderTemperature = shooterLeader.getDeviceTemp();
+        shooterFollowerTemperature = shooterFollower.getDeviceTemp();
+
+        currentlyShooting = BStream.create(() -> (shooterLeadStatorCurrent.getValueAsDouble() > Settings.Superstructure.Shooter.IS_SHOOTING_CURRENT))
+                .filtered(new BDebounce.Falling(1.0));
+
         PhoenixUtil.registerToRio(shooterLeaderSpeed, shooterFollowerSpeed, shooterFollowSupplyCurrent, 
                 shooterFollowStatorCurrent, shooterLeadSupplyCurrent, shooterLeadStatorCurrent, 
-                shooterLeaderVoltage, shooterFollowerVoltage, shooterLeaderClosedLoopError);
+                shooterLeaderVoltage, shooterFollowerVoltage, shooterLeaderClosedLoopError,
+                shooterLeaderTemperature, shooterFollowerTemperature);
         voltageOverride = Optional.empty();
     }
 
+    //TODO: make all this RPM stuff one method. Should use a paramaeter to identify the RPM to get - like the motor
     @Override
     public double getRPM() {
         return getLeaderRPM();
@@ -137,33 +153,41 @@ public class ShooterImpl extends Shooter {
             shooterLeader.stopMotor();
         }
 
-        SmartDashboard.putNumber("Superstructure/Shooter/Leader RPM", getLeaderRPM());
-        SmartDashboard.putNumber("Superstructure/Shooter/Follower RPM", getFollowerRPM());
+        DogLog.log("Superstructure/Shooter/Leader RPM", getLeaderRPM());
+        DogLog.log("Superstructure/Shooter/Follower RPM", getFollowerRPM());
 
         if (Settings.DEBUG_MODE.get()) {
-            SmartDashboard.putNumber("InterpolationTesting/Shooter Applied Voltage",
+            DogLog.log("InterpolationTesting/Shooter Applied Voltage",
                     shooterLeaderVoltage.getValueAsDouble());
 
-            SmartDashboard.putNumber("Superstructure/Shooter/Leader Voltage (volts)",
+            DogLog.log("Superstructure/Shooter/Leader Voltage (volts)",
                     shooterLeaderVoltage.getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Shooter/Leader Supply Current (amps)",
+            DogLog.log("Superstructure/Shooter/Leader Supply Current (amps)",
                     shooterLeadSupplyCurrent.getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Shooter/Leader Stator Current (amps)",
+            DogLog.log("Superstructure/Shooter/Leader Stator Current (amps)",
                     shooterLeadStatorCurrent.getValueAsDouble());
 
-            SmartDashboard.putNumber("Superstructure/Shooter/Follower Voltage (volts)",
+            DogLog.log("Superstructure/Shooter/Leader Motor Temp (C)",
+                    shooterLeaderTemperature.getValueAsDouble());
+
+            DogLog.log("Superstructure/Shooter/Follower Voltage (volts)",
                     shooterFollowerVoltage.getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Shooter/Follower Supply Current (amps)",
+            DogLog.log("Superstructure/Shooter/Follower Supply Current (amps)",
                     shooterFollowSupplyCurrent.getValueAsDouble());
-            SmartDashboard.putNumber("Superstructure/Shooter/Follower Stator Current (amps)",
+            DogLog.log("Superstructure/Shooter/Follower Stator Current (amps)",
                     shooterFollowStatorCurrent.getValueAsDouble());
+                    
+            DogLog.log("Superstructure/Shooter/Follower Motor Temp (C)",
+                    shooterFollowerTemperature.getValueAsDouble());
+
+            
 
             if (Robot.getMode() == RobotMode.DISABLED && !Robot.fmsAttached) {
-                SmartDashboard.putBoolean(
+                DogLog.log(
                         "Robot/CAN/Main/Shooter Leader Motor Connected? (ID "
                                 + String.valueOf(Ports.Superstructure.Shooter.MOTOR_LEAD) + ")",
                         shooterLeader.isConnected());
-                SmartDashboard.putBoolean(
+                DogLog.log(
                         "Robot/CAN/Main/Shooter Follower Motor Connected? (ID "
                                 + String.valueOf(Ports.Superstructure.Shooter.MOTOR_FOLLOW) + ")",
                         shooterFollower.isConnected());
@@ -171,10 +195,10 @@ public class ShooterImpl extends Shooter {
            Robot.getEnergyUtil().logEnergyUsage(getName(), getCurrentDraw());
         }
 
-        SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error (RPM)",
+        DogLog.log("InterpolationTesting/Shooter Closed Loop Error (RPM)",
                 shooterLeaderClosedLoopError.getValueAsDouble() * 60.0);
 
-        SmartDashboard.putNumber("Superstructure/Shooter/Implemented Error (RPM)", getTargetRPM() - getLeaderRPM());
+        DogLog.log("Superstructure/Shooter/Implemented Error (RPM)", getTargetRPM() - getLeaderRPM());
     }
 
     private void setVoltageOverride(Optional<Double> voltageOverride) {
@@ -199,4 +223,9 @@ public class ShooterImpl extends Shooter {
         return Double.max(0, shooterLeadSupplyCurrent.getValueAsDouble()) +
                 Double.max(0, shooterFollowSupplyCurrent.getValueAsDouble());
     }
+
+	@Override
+	public boolean isShooting() {
+		return currentlyShooting.get();
+	}
 }

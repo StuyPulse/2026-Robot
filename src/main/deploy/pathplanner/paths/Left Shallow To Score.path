@@ -3,32 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.295104961832061,
-        "y": 4.65425572519084
+        "x": 8.24489503816794,
+        "y": 5.382299618320611
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.4670307820888375,
-        "y": 3.7356109320382007
+        "x": 6.713492366412213,
+        "y": 7.675219465648856
       },
       "isLocked": false,
-      "linkedName": "Left NZ Corner"
-    },
-    {
-      "anchor": {
-        "x": 6.125962127480992,
-        "y": 6.067266414244474
-      },
-      "prevControl": {
-        "x": 6.122182596291013,
-        "y": 4.183794579172611
-      },
-      "nextControl": {
-        "x": 6.129040098834367,
-        "y": 7.601126584153624
-      },
-      "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Shallow"
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 7.440906488549619
       },
       "prevControl": {
-        "x": 6.755965196937856,
-        "y": 7.6125392296718974
+        "x": 6.09859528645011,
+        "y": 7.650114503816795
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,19 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2558635394456302,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 0.7249466950959463,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 1.117270788912574,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 1.518123667377378,
+      "waypointRelativePos": 0.6174785100286533,
       "rotationDegrees": 0.0
     }
   ],
@@ -78,7 +50,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "To Score",
+  "folder": "Non-Collision",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

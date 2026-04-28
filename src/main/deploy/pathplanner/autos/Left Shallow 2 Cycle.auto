@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left To Shallow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Shallow To Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Bite Score To Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Score To Corner"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

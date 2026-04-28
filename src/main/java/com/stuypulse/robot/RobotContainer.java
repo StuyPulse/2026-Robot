@@ -11,10 +11,12 @@ import com.stuypulse.robot.commands.auton.regular.Depot;
 import com.stuypulse.robot.commands.auton.regular.LeftBump;
 import com.stuypulse.robot.commands.auton.regular.LeftFollow;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCorner;
+import com.stuypulse.robot.commands.auton.regular.LeftTwoCornerShallow;
 import com.stuypulse.robot.commands.auton.regular.LeftTwoCycle;
 import com.stuypulse.robot.commands.auton.regular.RightBump;
 import com.stuypulse.robot.commands.auton.regular.RightFollow;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCorner;
+import com.stuypulse.robot.commands.auton.regular.RightTwoCornerShallow;
 import com.stuypulse.robot.commands.auton.regular.RightTwoCycle;
 import com.stuypulse.robot.commands.auton.test.BoxTest;
 import com.stuypulse.robot.commands.auton.test.EmptyTest;
@@ -408,6 +410,14 @@ public class RobotContainer {
         AutonConfig RIGHT_TWO_CORNER = new AutonConfig("Right Two Corner", RightTwoCorner::new, prevWaitTimeOne, prevWaitTimeTwo,
         "Right Corner Bite", "Right NZ To Score", "Right Bite Score To Score", "Right Score To Corner", "Right Score To NZ (F)");
         RIGHT_TWO_CORNER.register(autonChooser);
+
+        AutonConfig LEFT_TWO_CORNER_SHALLOW = new AutonConfig("Left Two Corner Shallow", LeftTwoCornerShallow::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Left To Shallow", "Left Shallow To Score", "Left Bite Score To Score", "Left Trench Score To Corner", "Left Score To NZ (F)");
+        LEFT_TWO_CORNER_SHALLOW.register(autonChooser);
+
+        AutonConfig RIGHT_TWO_CORNER_SHALLOW = new AutonConfig("Right Two Corner Shallow", RightTwoCornerShallow::new, prevWaitTimeOne, prevWaitTimeTwo,
+        "Right To Shallow", "Right Shallow To Score", "Right Bite Score To Score", "Right Trench Score To Corner", "Right Score To NZ (F)");
+        RIGHT_TWO_CORNER_SHALLOW.register(autonChooser);
 
         // FOLLOWS
         AutonConfig LEFT_FOLLOW = new AutonConfig("Left Follow", LeftFollow::new, prevWaitTimeOne, prevWaitTimeTwo,

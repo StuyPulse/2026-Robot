@@ -167,8 +167,9 @@ public interface Settings {
                 {7.87, 3800.0},
                 {9.77, 4300.0},
                 {10.694, 4700.0},       //STARTING FROM HERE THE DATA IS EXTRAPOLATED!!!
-                {11.516, 5200.0},
-                {12.416, 5500.0}       // AFTER OPP ALLIANCE ZONE, RPM SHOULD BE AT 5500 -blay
+                {11.516, 4900.0}
+                // {11.516, 5200.0},
+                // {12.416, 5500.0},       // AFTER OPP ALLIANCE ZONE, RPM SHOULD BE AT 5500 -blay
                 // {13.316, 5500.0},
                 // {14.216, 5600.0}
             };
@@ -238,9 +239,9 @@ public interface Settings {
 
             public interface Angles {
                 public final SmartNumber MANUAL_OVERRIDE = new SmartNumber("InterpolationTesting/Shoot State Target Angle (deg)", 20.0);
-                public final Rotation2d FERRY_ANGLE = Rotation2d.fromDegrees(44.0);
                 public final Rotation2d MAX = FORWARD_SOFT_LIMIT;
                 public final Rotation2d MIN = REVERSE_SOFT_LIMIT;
+                public final Rotation2d FERRY_ANGLE = MAX;//Rotation2d.fromDegrees(44.0);
 
                 public final Rotation2d STOW = Rotation2d.fromDegrees(21.0);
                 public final Rotation2d KB = Rotation2d.fromDegrees(20.0);

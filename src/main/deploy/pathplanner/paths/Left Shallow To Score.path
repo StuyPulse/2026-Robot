@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.713492366412213,
-        "y": 7.675219465648856
+        "x": 6.911440798858774,
+        "y": 7.819557774607704
       },
       "isLocked": false,
       "linkedName": "Left Shallow"
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6174785100286533,
+      "waypointRelativePos": 0.3816631130063977,
       "rotationDegrees": 0.0
     }
   ],

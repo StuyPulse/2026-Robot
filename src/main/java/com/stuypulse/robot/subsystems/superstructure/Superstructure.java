@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.RobotMode;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.handoff.Handoff;
 import com.stuypulse.robot.subsystems.handoff.Handoff.HandoffState;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
@@ -143,6 +144,11 @@ public class Superstructure extends SubsystemBase {
         return turret.atTolerance();
     }
 
+    public boolean isTurretLaggingFOTM() {
+        double error = Math.abs(turret.getAngle().minus(turret.getTargetAngle()).getRotations());
+        return error >= Settings.Superstructure.Turret.GAIN_SWITCHING_THRESHOLD_START.getRotations() && getState() == SuperstructureState.FOTM;
+    }
+
     public double getTargetRPM() {
         return shooter.getTargetRPM();
     }
@@ -176,7 +182,7 @@ public class Superstructure extends SubsystemBase {
         boolean isSpindexerStopState = Spindexer.getInstance().getState() == SpindexerState.STOP;
         boolean isHandOffStopState = Handoff.getInstance().getState() == HandoffState.STOP;
 
-        boolean isTurretWrapping = isTurretWrapping();
+        // boolean isTurretWrapping = isTurretWrapping();
         boolean isBehindHubWhileFerrying = getState() == SuperstructureState.FOTM
                 && swerve.isBehindHub();
         boolean isOutsideAllianceZone = 
@@ -191,19 +197,22 @@ public class Superstructure extends SubsystemBase {
         boolean isBehindTower = swerve.isBehindTower() && getState() == SuperstructureState.SOTM;
 
         boolean turretLaggingSOTM = !isTurretAtTolerance() && getState() == SuperstructureState.SOTM;
+        boolean turretLaggingFOTM = isTurretLaggingFOTM();
 
+        DogLog.log("Spindexer/Should Stop/Is Behind Tower?", isBehindTower);
         DogLog.log("Spindexer/Should Stop/Is Behind Hub While Ferrying?", isBehindHubWhileFerrying);
-        DogLog.log("Spindexer/Should Stop/Is Turret Wrapping?", isTurretWrapping);
+        // DogLog.log("Spindexer/Should Stop/Is Turret Wrapping?", isTurretWrapping);
         DogLog.log("Spindexer/Should Stop/Is Outside Alliance Zone?", isOutsideAllianceZone);
         DogLog.log("Spindexer/Should Stop/Is Under Trench?", isUnderTrench);
         DogLog.log("Spindexer/Should Stop/Turret Lagging SOTM", turretLaggingSOTM);
+        DogLog.log("Spindexer/Should Stop/Turret Lagging FOTM", turretLaggingFOTM);
         DogLog.log("Spindexer/Should Stop/In Manual State", inManualState);
         
         boolean shouldStop = isSpindexerStopState || 
             isHandOffStopState ||
-            isTurretWrapping || 
             (isBehindHubWhileFerrying && !inManualState) || 
             turretLaggingSOTM || 
+            turretLaggingFOTM ||
             (isOutsideAllianceZone  && !inManualState) || 
             (isUnderTrench && !inManualState) ||
             isBehindTower;

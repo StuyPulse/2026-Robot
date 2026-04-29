@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.512652671755725,
-        "y": 0.4868320610687009
+        "x": 6.549158345221112,
+        "y": 0.27631954350927357
       },
       "isLocked": false,
       "linkedName": "Right Shallow NZ"
@@ -20,8 +20,8 @@
         "y": 0.5868473609129818
       },
       "prevControl": {
-        "x": 6.044026717557253,
-        "y": 0.5370419847328243
+        "x": 6.018673323823109,
+        "y": 0.392767475035663
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6647564469914042,
+      "waypointRelativePos": 0.37526652452025683,
       "rotationDegrees": 0.0
     }
   ],

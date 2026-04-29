@@ -241,7 +241,7 @@ public class Superstructure extends SubsystemBase {
 
         if (CommandSwerveDrivetrain.getInstance().isOutsideAllianceZone() && state == SuperstructureState.SOTM &&
             Robot.getMode() != RobotMode.AUTON) { // allows us to start SOTM earlier in auto, but currently not desired in teleop
-            setState(SuperstructureState.FOTM);
+            setState(SuperstructureState.STOW);
             Spindexer.getInstance().setState(SpindexerState.STOP);
             Handoff.getInstance().setState(HandoffState.STOP);
         }

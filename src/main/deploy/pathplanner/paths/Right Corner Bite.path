@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.349484732824428,
-        "y": 0.5705152671755729
+        "x": 7.584251069900143,
+        "y": 0.48333808844507875
       },
       "isLocked": false,
       "linkedName": "Right Trench Start"
@@ -20,8 +20,8 @@
         "y": 3.4271055753262156
       },
       "prevControl": {
-        "x": 7.617270992366413,
-        "y": 2.0684446564885492
+        "x": 7.998288159771754,
+        "y": 1.906590584878745
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.45842217484008524,
       "rotationDegrees": 55.0
     },
     {

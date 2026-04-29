@@ -167,10 +167,10 @@ public interface Settings {
                 {7.87, 3800.0},
                 {9.77, 4300.0},
                 {10.694, 4700.0},       //STARTING FROM HERE THE DATA IS EXTRAPOLATED!!!
-                {11.516, 4900.0},
-                {12.416, 5200.0},
-                {13.316, 5500.0},
-                {14.216, 5600.0}
+                {11.516, 5200.0},
+                {12.416, 5500.0}       // AFTER OPP ALLIANCE ZONE, RPM SHOULD BE AT 5500 -blay
+                // {13.316, 5500.0},
+                // {14.216, 5600.0}
             };
         }
 
